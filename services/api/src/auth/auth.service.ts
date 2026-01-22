@@ -64,7 +64,7 @@ export class AuthService {
     });
 
     // Отправка email с подтверждением
-    await this.sendVerificationEmail(user.email, verificationToken);
+    void this.sendVerificationEmail(user.email, verificationToken);
 
     // Генерация JWT токена
     const accessToken = this.generateAccessToken(user.id, user.email);

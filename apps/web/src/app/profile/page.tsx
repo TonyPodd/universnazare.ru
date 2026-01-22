@@ -181,13 +181,13 @@ export default function ProfilePage() {
     try {
       setPurchasing(typeId);
       await apiClient.users.purchaseSubscription(typeId);
-      alert('Абонемент успешно приобретён!');
+      addToast('Абонемент успешно приобретён!', 'success');
       await loadData();
       await refreshSubscription();
       setShowPurchaseModal(false);
     } catch (error: any) {
       console.error('Ошибка покупки абонемента:', error);
-      alert(error.response?.data?.message || 'Не удалось приобрести абонемент');
+      addToast(error.response?.data?.message || 'Не удалось приобрести абонемент', 'error', 8000);
     } finally {
       setPurchasing(null);
     }
@@ -208,11 +208,11 @@ export default function ProfilePage() {
 
     try {
       await apiClient.groupEnrollments.cancelEnrollment(enrollmentId);
-      alert('Вы успешно отписались от направления');
+      addToast('Вы успешно отписались от направления', 'success');
       await loadData();
     } catch (error: any) {
       console.error('Ошибка отмены зачисления:', error);
-      alert(error.response?.data?.message || 'Не удалось отменить запись');
+      addToast(error.response?.data?.message || 'Не удалось отменить запись', 'error', 8000);
     }
   };
 
@@ -223,7 +223,7 @@ export default function ProfilePage() {
 
     try {
       await apiClient.bookings.cancel(bookingId);
-      alert('Запись успешно отменена');
+      addToast('Запись успешно отменена', 'success');
       await loadData();
       // Обновляем список занятий для открытого направления
       if (expandedEnrollment) {
@@ -232,7 +232,7 @@ export default function ProfilePage() {
       }
     } catch (error: any) {
       console.error('Ошибка отмены записи:', error);
-      alert(error.response?.data?.message || 'Не удалось отменить запись');
+      addToast(error.response?.data?.message || 'Не удалось отменить запись', 'error', 8000);
     }
   };
 
@@ -267,7 +267,7 @@ export default function ProfilePage() {
       setEnrollmentSessions(prev => ({ ...prev, [enrollmentId]: sessions }));
     } catch (error) {
       console.error('Ошибка загрузки занятий:', error);
-      alert('Не удалось загрузить список занятий');
+      addToast('Не удалось загрузить список занятий', 'error', 8000);
     } finally {
       setLoadingSessions(null);
     }
@@ -720,7 +720,7 @@ export default function ProfilePage() {
                                     setSelectedOrderQR(qrCode);
                                   } catch (error) {
                                     console.error('Ошибка загрузки QR-кода:', error);
-                                    alert('Не удалось загрузить QR-код');
+                                    addToast('Не удалось загрузить QR-код', 'error', 8000);
                                   }
                                 }}
                                 className={styles.viewQRButton}

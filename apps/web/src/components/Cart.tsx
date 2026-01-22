@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { apiClient } from '../lib/api';
 import { useRouter } from 'next/navigation';
 import styles from './Cart.module.css';
@@ -10,6 +11,7 @@ import styles from './Cart.module.css';
 export default function Cart() {
   const { items, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
+  const { addToast } = useToast();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -46,10 +48,10 @@ export default function Cart() {
       // Перенаправить на страницу профиля с заказами
       router.push('/profile');
 
-      alert('Заказ успешно создан! Вы можете забрать его в нашей мастерской.');
+      addToast('Заказ успешно создан! Вы можете забрать его в нашей мастерской.', 'success', 7000);
     } catch (error) {
       console.error('Ошибка создания заказа:', error);
-      alert('Не удалось создать заказ. Попробуйте снова.');
+      addToast('Не удалось создать заказ. Попробуйте снова.', 'error', 7000);
     } finally {
       setIsProcessing(false);
     }

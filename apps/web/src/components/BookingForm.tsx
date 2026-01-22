@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CalendarEvent, BookingParticipant, PaymentMethod } from '@mss/shared';
 import { apiClient } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { validatePhone, validateEmail } from '../lib/validation';
 import Link from 'next/link';
 import styles from './BookingForm.module.css';
@@ -17,6 +18,7 @@ interface BookingFormProps {
 
 export default function BookingForm({ event, groupSessionId, onSuccess, onCancel }: BookingFormProps) {
   const { user, isAuthenticated, activeSubscription } = useAuth();
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
 
@@ -156,7 +158,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
 
     const hasEmptyFields = participants.some(p => !p.fullName || !p.phone);
     if (hasEmptyFields) {
-      alert('Пожалуйста, заполните ФИО и телефон для всех участников');
+      addToast('Пожалуйста, заполните ФИО и телефон для всех участников', 'warning');
       setLoading(false);
       return;
     }
@@ -182,10 +184,12 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
         subscriptionId: paymentMethod === PaymentMethod.SUBSCRIPTION && activeSubscription ? activeSubscription.id : undefined,
       });
 
-      alert(
+      addToast(
         groupSessionId
-          ? 'Вы успешно записались на занятие! Письмо с деталями придёт на ' + contactEmail
-          : 'Вы успешно записались на мастер-класс! Письмо с деталями придёт на ' + contactEmail
+          ? `Вы успешно записались на занятие! Письмо с деталями придёт на ${contactEmail}`
+          : `Вы успешно записались на мастер-класс! Письмо с деталями придёт на ${contactEmail}`,
+        'success',
+        7000
       );
       onSuccess();
     } catch (error: any) {
@@ -193,9 +197,13 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
       const errorMessage = error.response?.data?.message || error.message || 'Неизвестная ошибка';
 
       if (errorMessage.includes('достаточным балансом') || errorMessage.includes('Недостаточно средств')) {
-        alert(`⚠️ Недостаточно средств на абонементе\n\n${errorMessage}\n\nВы можете:\n• Пополнить баланс абонемента в профиле\n• Выбрать оплату на месте`);
+        addToast(
+          'Недостаточно средств на абонементе. Пополните баланс в профиле или выберите оплату на месте.',
+          'warning',
+          8000
+        );
       } else {
-        alert(`Не удалось записаться: ${errorMessage}`);
+        addToast(`Не удалось записаться: ${errorMessage}`, 'error', 8000);
       }
     } finally {
       setLoading(false);

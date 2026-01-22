@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
+import { validatePhone, formatPhone } from '../../lib/validation';
 import styles from './register.module.css';
 
 export default function RegisterPage() {
@@ -42,6 +43,11 @@ export default function RegisterPage() {
       return;
     }
 
+    if (formData.phone && !validatePhone(formData.phone)) {
+      setError('Введите корректный номер телефона (например, +7 999 123-45-67)');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -51,7 +57,7 @@ export default function RegisterPage() {
         firstName: formData.firstName,
         lastName: formData.lastName,
         age: formData.age ? parseInt(formData.age) : undefined,
-        phone: formData.phone || undefined,
+        phone: formData.phone ? formatPhone(formData.phone) : undefined,
       });
       window.location.href = '/';
     } catch (err: any) {

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
 import { apiClient } from '../../lib/api';
 import { getImageUrl } from '../../lib/utils';
 import { useRouter } from 'next/navigation';
@@ -13,6 +14,7 @@ import styles from './cart.module.css';
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
   const { user, isAuthenticated, activeSubscription } = useAuth();
+  const { addToast } = useToast();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.ON_SITE);
@@ -47,16 +49,20 @@ export default function CartPage() {
 
       router.push('/profile');
 
-      alert('Заказ успешно создан! Вы можете забрать его в нашей мастерской.');
+      addToast('Заказ успешно создан! Вы можете забрать его в нашей мастерской.', 'success', 7000);
     } catch (error: any) {
       console.error('Ошибка создания заказа:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Не удалось создать заказ. Попробуйте снова.';
 
       // Проверяем, если это ошибка о недостатке средств
       if (errorMessage.includes('достаточным балансом') || errorMessage.includes('Недостаточно средств')) {
-        alert(`⚠️ Недостаточно средств на абонементе\n\n${errorMessage}\n\nВы можете:\n• Пополнить баланс абонемента\n• Оплатить при получении`);
+        addToast(
+          'Недостаточно средств на абонементе. Пополните баланс или выберите оплату при получении.',
+          'warning',
+          8000
+        );
       } else {
-        alert(errorMessage);
+        addToast(errorMessage, 'error', 8000);
       }
     } finally {
       setIsProcessing(false);

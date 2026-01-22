@@ -6,6 +6,12 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
   private readonly logger = new Logger(EmailService.name);
 
+  private formatCurrency(value: number): string {
+    if (!Number.isFinite(value)) return '0';
+    const rounded = Math.round((value + Number.EPSILON) * 100) / 100;
+    return rounded.toFixed(2).replace(/\.00$/, '');
+  }
+
   constructor() {
     // Для разработки используем ethereal.email (тестовый SMTP)
     // В продакшене нужно настроить реальный SMTP сервер через переменные окружения
@@ -187,7 +193,7 @@ export class EmailService {
                             <span style="color: #8b7b70; font-size: 15px;">💰 Стоимость:</span>
                           </td>
                           <td style="padding: 12px 0; text-align: right;">
-                            <strong style="color: #d97757; font-size: 18px;">${bookingData.totalPrice} ₽</strong>
+                            <strong style="color: #d97757; font-size: 18px;">${this.formatCurrency(bookingData.totalPrice)} ₽</strong>
                           </td>
                         </tr>
                       </table>
@@ -432,7 +438,7 @@ export class EmailService {
                             <span style="color: #8b7b70; font-size: 15px;">💰 Стоимость:</span>
                           </td>
                           <td style="padding: 12px 0; text-align: right;">
-                            <strong style="color: #d97757; font-size: 18px;">${bookingData.totalPrice} ₽</strong>
+                            <strong style="color: #d97757; font-size: 18px;">${this.formatCurrency(bookingData.totalPrice)} ₽</strong>
                           </td>
                         </tr>
                       </table>

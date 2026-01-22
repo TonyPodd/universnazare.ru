@@ -2,10 +2,14 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { EnrollmentStatus } from '@prisma/client';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class GroupEnrollmentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
   async create(userId: string, dto: CreateEnrollmentDto) {
     // Проверяем существование группы
@@ -69,6 +73,43 @@ export class GroupEnrollmentsService {
 
     // Автоматически создаем bookings для всех будущих запланированных занятий
     await this.createBookingsForEnrollment(enrollment.id, userId, dto.groupId);
+
+    const nextSession = await this.prisma.groupSession.findFirst({
+      where: {
+        groupId: dto.groupId,
+        date: {
+          gte: new Date(),
+        },
+        status: 'SCHEDULED',
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    });
+
+    if (nextSession) {
+      const participants = enrollment.participants as any[];
+      const participantsCount = participants.length || 1;
+      const price = group.price * 0.9;
+      const totalPrice = price * participantsCount;
+      const startDate = new Date(nextSession.date);
+      const endDate = new Date(startDate.getTime() + nextSession.duration * 60 * 1000);
+
+      try {
+        await this.emailService.sendGroupSessionBookingEmail(dto.contactEmail, {
+          groupName: group.name,
+          startDate,
+          endDate,
+          price: group.price,
+          participants,
+          totalPrice,
+          paymentMethod: 'SUBSCRIPTION',
+          notes: dto.notes,
+        });
+      } catch (error) {
+        console.error('Failed to send group enrollment email:', error);
+      }
+    }
 
     return enrollment;
   }

@@ -47,18 +47,23 @@ export default function ShopPage() {
       const data = await apiClient.products.getAvailable();
       setProducts(data);
 
-      // Получаем уникальные категории
-      const uniqueCategories = [
-        ...new Set(
-          data.flatMap((product) =>
-            product.category
-              .split(',')
-              .map((item) => item.trim())
-              .filter(Boolean)
-          )
-        ),
-      ];
-      setCategories(uniqueCategories);
+      const categoryCounts = new Map<string, number>();
+      data.forEach((product) => {
+        const parsedCategories = product.category
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean);
+        parsedCategories.forEach((category) => {
+          categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+        });
+      });
+
+      const popularCategories = Array.from(categoryCounts.entries())
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 6)
+        .map(([category]) => category);
+
+      setCategories(popularCategories);
     } catch (error) {
       console.error('Ошибка загрузки товаров:', error);
     } finally {
