@@ -72,8 +72,9 @@ export default function ProfilePage() {
         apiClient.groupEnrollments.getMyEnrollments(),
         user ? apiClient.orders.getMyOrders(user.id) : Promise.resolve([]),
       ]);
+      const masterClassHistory = bookingHistory.filter((booking) => booking.eventId);
       setSubscriptions(subs);
-      setBookings(bookingHistory);
+      setBookings(masterClassHistory);
       setUpcomingBookings(upcoming);
       setEnrollments(myEnrollments);
       setOrders(myOrders);
@@ -414,6 +415,26 @@ export default function ProfilePage() {
 
           {/* Правая колонка - Табы */}
           <div className={styles.rightColumn}>
+            <div className={styles.mobileNav}>
+              {([
+                { key: 'upcoming', label: 'Предстоящие', icon: '📅', count: upcomingBookings.length },
+                { key: 'subscriptions', label: 'Абонемент', icon: '🎫', count: subscriptions.length },
+                { key: 'enrollments', label: 'Направления', icon: '🧭', count: enrollments.filter(e => e.status === 'ACTIVE').length },
+                { key: 'bookings', label: 'История', icon: '🗂️', count: bookings.length },
+                { key: 'orders', label: 'Заказы', icon: '🛍️', count: orders.length },
+              ] as const).map((tab) => (
+                <button
+                  key={tab.key}
+                  className={`${styles.mobileNavButton} ${activeTab === tab.key ? styles.mobileNavButtonActive : ''}`}
+                  onClick={() => setActiveTab(tab.key)}
+                >
+                  <span className={styles.mobileNavIcon}>{tab.icon}</span>
+                  <span className={styles.mobileNavLabel}>{tab.label}</span>
+                  <span className={styles.mobileNavCount}>{tab.count}</span>
+                </button>
+              ))}
+            </div>
+
             <div className={`${styles.tabsWrapper} ${tabsHasScroll ? styles.hasScroll : ''}`}>
               <div className={styles.tabs} ref={tabsRef}>
                 <button
@@ -456,6 +477,23 @@ export default function ProfilePage() {
             </div>
 
             <div className={styles.tabContent}>
+              <div className={styles.mobileSectionHeader}>
+                <span className={styles.mobileSectionTitle}>
+                  {activeTab === 'upcoming' && 'Предстоящие'}
+                  {activeTab === 'subscriptions' && 'Абонемент'}
+                  {activeTab === 'enrollments' && 'Направления'}
+                  {activeTab === 'bookings' && 'История'}
+                  {activeTab === 'orders' && 'Заказы'}
+                </span>
+                <span className={styles.mobileSectionCount}>
+                  {activeTab === 'upcoming' && upcomingBookings.length}
+                  {activeTab === 'subscriptions' && subscriptions.length}
+                  {activeTab === 'enrollments' && enrollments.filter(e => e.status === 'ACTIVE').length}
+                  {activeTab === 'bookings' && bookings.length}
+                  {activeTab === 'orders' && orders.length}
+                </span>
+              </div>
+
               {activeTab === 'upcoming' && (
                 <div className={styles.upcomingList}>
                   {upcomingBookings.length === 0 ? (
