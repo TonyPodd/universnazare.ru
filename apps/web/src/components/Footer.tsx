@@ -35,6 +35,10 @@ export default function Footer() {
             <span className={styles.separator}>·</span>
             <a href="/terms">Оферта</a>
             <span className={styles.separator}>·</span>
+            <a href="/payments">Оплата и доставка</a>
+            <span className={styles.separator}>·</span>
+            <a href="/requisites">Реквизиты</a>
+            <span className={styles.separator}>·</span>
             <span>© {new Date().getFullYear()}</span>
           </div>
         </div>
