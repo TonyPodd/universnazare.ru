@@ -5,6 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export enum PaymentMethod {
   SUBSCRIPTION = 'SUBSCRIPTION',
   ON_SITE = 'ON_SITE',
+  ONLINE = 'ONLINE',
 }
 
 class OrderItemDto {

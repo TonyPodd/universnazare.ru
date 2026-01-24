@@ -122,6 +122,7 @@ export interface BookingParticipant {
 export enum PaymentMethod {
   SUBSCRIPTION = 'SUBSCRIPTION', // Оплата с абонемента
   ON_SITE = 'ON_SITE', // Оплата на месте
+  ONLINE = 'ONLINE', // Онлайн-оплата
 }
 
 // Запись на событие или занятие направления
@@ -197,6 +198,9 @@ export interface Order {
   totalAmount: number;
   status: 'PENDING' | 'CONFIRMED' | 'READY' | 'COMPLETED' | 'CANCELLED';
   paymentMethod: PaymentMethod;
+  paymentId?: string;
+  paymentUrl?: string;
+  paymentStatus?: string;
   createdAt: Date;
   updatedAt: Date;
   user?: {

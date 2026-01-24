@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { PaymentMethod } from '@mss/shared';
 import { useToast } from '../contexts/ToastContext';
 import { apiClient } from '../lib/api';
 import { useRouter } from 'next/navigation';
@@ -37,6 +38,7 @@ export default function Cart() {
           price: item.product.price,
         })),
         totalAmount: getTotalPrice(),
+        paymentMethod: PaymentMethod.ON_SITE,
       };
 
       const order = await apiClient.orders.create(orderData);

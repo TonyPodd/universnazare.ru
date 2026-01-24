@@ -229,6 +229,7 @@ enum BookingStatus {
 enum PaymentMethod {
   SUBSCRIPTION
   ON_SITE
+  ONLINE
 }
 
 // Товары
@@ -259,6 +260,9 @@ model Order {
   totalAmount   Float
   status        OrderStatus   @default(PENDING)
   paymentMethod PaymentMethod @default(ON_SITE)
+  paymentId     String?
+  paymentUrl    String?
+  paymentStatus String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -275,6 +279,7 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
 }
+
 
 // Позиции заказа
 model OrderItem {
