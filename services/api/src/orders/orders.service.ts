@@ -4,7 +4,6 @@ import { ProductsService } from '../products/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import * as QRCode from 'qrcode';
-import * as crypto from 'crypto';
 
 @Injectable()
 export class OrdersService {
@@ -25,6 +24,10 @@ export class OrdersService {
       if (product.stockQuantity < item.quantity) {
         throw new BadRequestException(`Insufficient stock for product ${product.name}`);
       }
+    }
+
+    if (paymentMethod === 'ONLINE') {
+      throw new BadRequestException('Онлайн-оплата доступна только для абонементов');
     }
 
     // Если оплата по абонементу, проверяем и списываем средства
@@ -93,34 +96,11 @@ export class OrdersService {
       await this.productsService.decreaseStock(item.productId, item.quantity);
     }
 
-    let paymentUrl: string | null = null;
-    let paymentId: string | null = null;
-    let paymentStatus: string | null = null;
-
-    if (paymentMethod === 'ONLINE') {
-      const payment = await this.initTinkoffPayment(order.id, totalAmount, order.user?.email);
-      paymentUrl = payment.paymentUrl;
-      paymentId = payment.paymentId;
-      paymentStatus = payment.paymentStatus;
-
-      await this.prisma.order.update({
-        where: { id: order.id },
-        data: {
-          paymentId,
-          paymentUrl,
-          paymentStatus,
-        },
-      });
-    }
-
     // Генерируем QR-код
     const qrCodeData = await this.generateQRCode(order.id);
 
     return {
       ...order,
-      paymentUrl,
-      paymentId,
-      paymentStatus,
       qrCode: qrCodeData,
     };
   }
@@ -250,142 +230,4 @@ export class OrdersService {
     }
   }
 
-  private buildTinkoffToken(payload: Record<string, string | number | boolean | null | undefined>) {
-    const secret = process.env.TINKOFF_PASSWORD;
-    if (!secret) {
-      throw new BadRequestException('Tinkoff password is not configured');
-    }
-
-    const entries = Object.entries(payload)
-      .filter(([key, value]) => {
-        if (['Token', 'Receipt', 'DATA', 'ReceiptData', 'EncryptedPaymentData'].includes(key)) {
-          return false;
-        }
-        if (value === undefined || value === null) {
-          return false;
-        }
-        if (typeof value === 'object') {
-          return false;
-        }
-        return true;
-      })
-      .map(([key, value]) => [key, String(value)] as [string, string]);
-
-    entries.push(['Password', secret]);
-    entries.sort(([a], [b]) => a.localeCompare(b));
-
-    const data = entries.map(([, value]) => value).join('');
-    return crypto.createHash('sha256').update(data).digest('hex');
-  }
-
-  private async initTinkoffPayment(orderId: string, totalAmount: number, email?: string) {
-    const terminalKey = process.env.TINKOFF_TERMINAL_KEY;
-    if (!terminalKey) {
-      throw new BadRequestException('Tinkoff terminal key is not configured');
-    }
-
-    const amount = Math.round(totalAmount * 100);
-    const successUrl = process.env.TINKOFF_SUCCESS_URL || `${process.env.FRONTEND_URL || 'https://universnazare.ru'}/profile?payment=success`;
-    const failUrl = process.env.TINKOFF_FAIL_URL || `${process.env.FRONTEND_URL || 'https://universnazare.ru'}/profile?payment=fail`;
-    const notificationUrl = process.env.TINKOFF_NOTIFICATION_URL;
-
-    if (!notificationUrl) {
-      throw new BadRequestException('Tinkoff notification URL is not configured');
-    }
-
-    const payload: Record<string, string | number | boolean> = {
-      TerminalKey: terminalKey,
-      Amount: amount,
-      OrderId: orderId,
-      Description: `Заказ ${orderId}`,
-      SuccessURL: successUrl,
-      FailURL: failUrl,
-      NotificationURL: notificationUrl,
-      CustomerKey: email || orderId,
-    };
-
-    if (process.env.TINKOFF_TEST_MODE === 'true') {
-      payload.TestMode = true;
-    }
-
-    const token = this.buildTinkoffToken(payload);
-    const response = await fetch('https://securepay.tinkoff.ru/v2/Init', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...payload,
-        Token: token,
-      }),
-    });
-
-    const data = await response.json();
-    if (!data?.Success) {
-      throw new BadRequestException(data?.Message || 'Не удалось создать платеж');
-    }
-
-    return {
-      paymentUrl: data.PaymentURL as string,
-      paymentId: String(data.PaymentId),
-      paymentStatus: data.Status as string,
-    };
-  }
-
-  async handleTinkoffNotification(payload: Record<string, any>) {
-    const token = payload?.Token;
-    if (!token) {
-      throw new BadRequestException('Missing token');
-    }
-
-    const calculated = this.buildTinkoffToken(payload);
-    if (token !== calculated) {
-      throw new BadRequestException('Invalid token');
-    }
-
-    const orderId = payload?.OrderId;
-    const status = payload?.Status;
-    const paymentId = payload?.PaymentId ? String(payload.PaymentId) : null;
-
-    if (!orderId) {
-      throw new BadRequestException('Missing order id');
-    }
-
-    const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
-      include: { items: true },
-    });
-
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-
-    const updateData: Record<string, any> = {
-      paymentStatus: status,
-    };
-
-    if (paymentId) {
-      updateData.paymentId = paymentId;
-    }
-
-    const successStatuses = new Set(['AUTHORIZED', 'CONFIRMED']);
-    const failureStatuses = new Set(['REJECTED', 'CANCELLED', 'DEADLINE_EXPIRED', 'REVERSED']);
-
-    if (successStatuses.has(status) && order.status === 'PENDING') {
-      updateData.status = 'CONFIRMED';
-    }
-
-    if (failureStatuses.has(status) && order.status !== 'CANCELLED') {
-      updateData.status = 'CANCELLED';
-
-      for (const item of order.items) {
-        await this.productsService.increaseStock(item.productId, item.quantity);
-      }
-    }
-
-    await this.prisma.order.update({
-      where: { id: orderId },
-      data: updateData,
-    });
-
-    return { ok: true };
-  }
 }

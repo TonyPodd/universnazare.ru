@@ -70,9 +70,12 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
       }
 
       // Покупаем первый абонемент
-      const newSubscription = await apiClient.users.purchaseSubscription(types[0].id);
-      setSubscription(newSubscription);
-      setError('');
+      const payment = await apiClient.payments.initSubscriptionPayment(types[0].id);
+      if (!payment?.paymentUrl) {
+        setError('Не удалось создать платеж');
+        return;
+      }
+      window.location.href = payment.paymentUrl;
     } catch (err: any) {
       setError(err.response?.data?.message || 'Ошибка при покупке абонемента');
     }

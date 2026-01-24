@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiClient } from '../../lib/api';
-import { Subscription, Booking, SubscriptionType, GroupEnrollment, Order, PaymentMethod } from '@mss/shared';
+import { Subscription, Booking, SubscriptionType, GroupEnrollment, Order } from '@mss/shared';
 import Header from '../../components/Header';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
@@ -15,6 +15,7 @@ export default function ProfilePage() {
   const { user, isAuthenticated, isLoading, refreshUser, activeSubscription, refreshSubscription } = useAuth();
   const { handleError } = useErrorHandler();
   const { addToast } = useToast();
+  const searchParams = useSearchParams();
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
@@ -51,6 +52,26 @@ export default function ProfilePage() {
       loadData();
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment');
+    if (!paymentStatus) {
+      return;
+    }
+
+    if (paymentStatus === 'success') {
+      addToast('Абонемент успешно оплачен!', 'success');
+      loadData();
+      refreshSubscription();
+      refreshUser();
+    }
+
+    if (paymentStatus === 'fail') {
+      addToast('Платеж не завершен. Попробуйте еще раз.', 'error', 8000);
+    }
+
+    router.replace('/profile');
+  }, [searchParams]);
 
   useEffect(() => {
     if (user) {
@@ -181,11 +202,12 @@ export default function ProfilePage() {
   const handlePurchase = async (typeId: string) => {
     try {
       setPurchasing(typeId);
-      await apiClient.users.purchaseSubscription(typeId);
-      addToast('Абонемент успешно приобретён!', 'success');
-      await loadData();
-      await refreshSubscription();
-      setShowPurchaseModal(false);
+      const payment = await apiClient.payments.initSubscriptionPayment(typeId);
+      if (!payment?.paymentUrl) {
+        throw new Error('Не удалось создать платеж');
+      }
+      addToast('Перенаправляем на оплату...', 'success');
+      window.location.href = payment.paymentUrl;
     } catch (error: any) {
       console.error('Ошибка покупки абонемента:', error);
       addToast(error.response?.data?.message || 'Не удалось приобрести абонемент', 'error', 8000);

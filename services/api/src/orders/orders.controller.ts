@@ -65,10 +65,4 @@ export class OrdersController {
     return this.ordersService.updateStatus(id, updateOrderStatusDto);
   }
 
-  @Post('tinkoff/notification')
-  @ApiOperation({ summary: 'Webhook уведомления Tinkoff' })
-  async handleTinkoffNotification(@Body() payload: Record<string, any>) {
-    await this.ordersService.handleTinkoffNotification(payload);
-    return 'OK';
-  }
 }

@@ -13,6 +13,7 @@ import {
   UsersService,
   SubscriptionTypesService,
   UploadService,
+  PaymentsService,
 } from './services';
 
 export * from './client';
@@ -32,6 +33,7 @@ export class MssApiClient {
   public users: UsersService;
   public subscriptionTypes: SubscriptionTypesService;
   public upload: UploadService;
+  public payments: PaymentsService;
 
   private client: ApiClient;
 
@@ -52,6 +54,7 @@ export class MssApiClient {
     this.users = new UsersService(this.client);
     this.subscriptionTypes = new SubscriptionTypesService(this.client);
     this.upload = new UploadService(this.client);
+    this.payments = new PaymentsService(this.client);
   }
 
   setToken(token: string) {

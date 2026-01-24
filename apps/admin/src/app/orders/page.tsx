@@ -145,11 +145,10 @@ export default function OrdersPage() {
     return <span className={`${styles.statusBadge} ${statusInfo.className}`}>{statusInfo.label}</span>;
   };
 
-  const getPaymentMethodLabel = (paymentMethod: 'ON_SITE' | 'SUBSCRIPTION' | 'ONLINE') => {
+  const getPaymentMethodLabel = (paymentMethod: 'ON_SITE' | 'SUBSCRIPTION') => {
     const paymentMap: Record<string, string> = {
       ON_SITE: '💵 Оплата при получении',
       SUBSCRIPTION: '🎫 Оплата по абонементу',
-      ONLINE: '💳 Онлайн-оплата',
     };
     return paymentMap[paymentMethod] || paymentMethod;
   };

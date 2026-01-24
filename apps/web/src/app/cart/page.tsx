@@ -47,11 +47,6 @@ export default function CartPage() {
 
       clearCart();
 
-      if (paymentMethod === PaymentMethod.ONLINE && (order as any).paymentUrl) {
-        window.location.href = (order as any).paymentUrl;
-        return;
-      }
-
       router.push('/profile');
 
       addToast('Заказ успешно создан! Вы можете забрать его в нашей мастерской.', 'success', 7000);
@@ -174,23 +169,6 @@ export default function CartPage() {
                 <div className={styles.paymentMethodSection}>
                   <h3>Способ оплаты</h3>
                   <div className={styles.paymentOptions}>
-                    <label className={`${styles.paymentOption} ${paymentMethod === PaymentMethod.ONLINE ? styles.paymentOptionActive : ''}`}>
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value={PaymentMethod.ONLINE}
-                        checked={paymentMethod === PaymentMethod.ONLINE}
-                        onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                      />
-                      <div className={styles.paymentOptionContent}>
-                        <span className={styles.paymentOptionIcon}>💳</span>
-                        <div>
-                          <div className={styles.paymentOptionTitle}>Онлайн картой</div>
-                          <div className={styles.paymentOptionDesc}>Безопасная оплата через Tinkoff</div>
-                        </div>
-                      </div>
-                    </label>
-
                     <label className={`${styles.paymentOption} ${paymentMethod === PaymentMethod.ON_SITE ? styles.paymentOptionActive : ''}`}>
                       <input
                         type="radio"

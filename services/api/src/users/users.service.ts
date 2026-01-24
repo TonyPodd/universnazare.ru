@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
@@ -210,7 +211,16 @@ export class UsersService {
     };
   }
 
-  async purchaseSubscription(userId: string, typeId: string) {
+  async purchaseSubscription(
+    userId: string,
+    typeId: string,
+    options?: { bypassPayment?: boolean },
+  ) {
+    const allowDirectPurchase = options?.bypassPayment || !process.env.TINKOFF_TERMINAL_KEY;
+    if (!allowDirectPurchase) {
+      throw new BadRequestException('Оплата абонемента доступна только онлайн');
+    }
+
     // Получить тип абонемента
     const subscriptionType = await this.prisma.subscriptionType.findUnique({
       where: { id: typeId },

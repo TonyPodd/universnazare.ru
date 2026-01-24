@@ -397,8 +397,8 @@ export class UsersService {
     return this.client.get('/users/me/bookings');
   }
 
-  async purchaseSubscription(typeId: string): Promise<Subscription> {
-    return this.client.post('/users/me/subscriptions/purchase', { typeId });
+  async purchaseSubscription(typeId: string): Promise<SubscriptionPaymentInitResponse> {
+    return this.client.post('/payments/subscriptions/init', { typeId });
   }
 
   // ADMIN METHODS
@@ -422,6 +422,18 @@ export class UsersService {
 
   async addBalance(userId: string, amount: number): Promise<Subscription> {
     return this.client.post(`/users/admin/${userId}/add-balance`, { amount });
+  }
+}
+
+export interface SubscriptionPaymentInitResponse {
+  paymentUrl: string;
+}
+
+export class PaymentsService {
+  constructor(private client: ApiClient) {}
+
+  async initSubscriptionPayment(typeId: string): Promise<SubscriptionPaymentInitResponse> {
+    return this.client.post('/payments/subscriptions/init', { typeId });
   }
 }
 
