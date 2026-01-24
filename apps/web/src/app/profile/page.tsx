@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiClient } from '../../lib/api';
 import { Subscription, Booking, SubscriptionType, GroupEnrollment, Order } from '@mss/shared';
@@ -15,7 +15,6 @@ export default function ProfilePage() {
   const { user, isAuthenticated, isLoading, refreshUser, activeSubscription, refreshSubscription } = useAuth();
   const { handleError } = useErrorHandler();
   const { addToast } = useToast();
-  const searchParams = useSearchParams();
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
@@ -54,7 +53,12 @@ export default function ProfilePage() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    const paymentStatus = searchParams.get('payment');
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get('payment');
     if (!paymentStatus) {
       return;
     }
@@ -71,7 +75,7 @@ export default function ProfilePage() {
     }
 
     router.replace('/profile');
-  }, [searchParams]);
+  }, [router]);
 
   useEffect(() => {
     if (user) {
