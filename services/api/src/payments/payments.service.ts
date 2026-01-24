@@ -23,6 +23,10 @@ export class PaymentsService {
       throw new BadRequestException('Этот тип абонемента недоступен для покупки');
     }
 
+    if (!Number.isFinite(subscriptionType.price) || subscriptionType.price <= 0) {
+      throw new BadRequestException('Цена абонемента должна быть больше 0');
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { email: true },
@@ -86,10 +90,6 @@ export class PaymentsService {
       payment = await this.prisma.subscriptionPayment.findUnique({
         where: { id: orderId },
       });
-    }
-
-    if (!payment) {
-      throw new BadRequestException('Missing payment id');
     }
 
     if (!payment) {
@@ -197,9 +197,20 @@ export class PaymentsService {
       }),
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as {
+      Success?: boolean;
+      Message?: string;
+      Details?: string;
+      ErrorCode?: string;
+      PaymentURL?: string;
+      PaymentId?: string | number;
+      Status?: string;
+    };
     if (!data?.Success) {
-      throw new BadRequestException(data?.Message || 'Не удалось создать платеж');
+      console.error('Tinkoff Init failed', data);
+      const details = data?.Details ? `: ${data.Details}` : '';
+      const code = data?.ErrorCode ? ` (${data.ErrorCode})` : '';
+      throw new BadRequestException(`${data?.Message || 'Не удалось создать платеж'}${details}${code}`);
     }
 
     return {
