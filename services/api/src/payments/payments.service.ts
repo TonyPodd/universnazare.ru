@@ -38,8 +38,9 @@ export class PaymentsService {
       },
     });
 
+    const orderId = paymentRecord.id.replace(/-/g, '').slice(0, 20);
     const payment = await this.initTinkoffPayment({
-      paymentId: paymentRecord.id,
+      orderId,
       amount: subscriptionType.price,
       description: `Абонемент: ${subscriptionType.name}`,
       customerKey: user?.email || userId,
@@ -73,14 +74,23 @@ export class PaymentsService {
     const paymentId = payload?.PaymentId ? String(payload.PaymentId) : null;
     const status = payload?.Status as string | undefined;
     const orderId = payload?.OrderId as string | undefined;
+    let payment = null;
 
-    if (!orderId) {
-      throw new BadRequestException('Missing payment id');
+    if (paymentId) {
+      payment = await this.prisma.subscriptionPayment.findFirst({
+        where: { paymentId },
+      });
     }
 
-    const payment = await this.prisma.subscriptionPayment.findUnique({
-      where: { id: orderId },
-    });
+    if (!payment && orderId) {
+      payment = await this.prisma.subscriptionPayment.findUnique({
+        where: { id: orderId },
+      });
+    }
+
+    if (!payment) {
+      throw new BadRequestException('Missing payment id');
+    }
 
     if (!payment) {
       throw new NotFoundException('Платеж не найден');
@@ -141,7 +151,7 @@ export class PaymentsService {
   }
 
   private async initTinkoffPayment(params: {
-    paymentId: string;
+    orderId: string;
     amount: number;
     description: string;
     customerKey: string;
@@ -165,7 +175,7 @@ export class PaymentsService {
     const payload: Record<string, string | number | boolean> = {
       TerminalKey: terminalKey,
       Amount: amount,
-      OrderId: params.paymentId,
+      OrderId: params.orderId,
       Description: params.description,
       SuccessURL: successUrl,
       FailURL: failUrl,
