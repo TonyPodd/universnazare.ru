@@ -183,10 +183,6 @@ export class PaymentsService {
       CustomerKey: params.customerKey,
     };
 
-    if (process.env.TINKOFF_TEST_MODE === 'true') {
-      payload.TestMode = true;
-    }
-
     const token = this.buildTinkoffToken(payload);
     const response = await fetch('https://securepay.tinkoff.ru/v2/Init', {
       method: 'POST',
