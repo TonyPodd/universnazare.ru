@@ -112,42 +112,41 @@
 
 .quickActions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.6rem;
   flex-shrink: 0;
   margin-left: auto;
 }
 
 .quickActionButton {
-  padding: 0.75rem 1.25rem;
-  background: linear-gradient(135deg, #feb297 0%, #f09674 100%);
+  padding: 0.7rem 1.15rem;
+  background: #8b7355;
   color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  font-weight: 600;
+  border: 1px solid rgba(139, 115, 85, 0.25);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(240, 150, 116, 0.2);
+  box-shadow: 0 12px 22px rgba(139, 115, 85, 0.22);
 }
 
 .quickActionButton:hover {
-  background: linear-gradient(135deg, #f09674 0%, #d97757 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(217, 119, 87, 0.3);
+  background: #7b654b;
+  box-shadow: 0 14px 26px rgba(139, 115, 85, 0.28);
 }
 
 .quickActionButton.secondary {
   background: white;
   color: #8b7355;
-  border: 1px solid rgba(139, 115, 85, 0.2);
+  border: 1px solid rgba(139, 115, 85, 0.28);
   box-shadow: none;
 }
 
 .quickActionButton.secondary:hover {
-  background: rgba(247, 235, 225, 0.3);
-  border-color: #8b7355;
+  background: rgba(139, 115, 85, 0.08);
+  border-color: rgba(139, 115, 85, 0.45);
 }
 
 /* Сетка */
@@ -168,6 +167,14 @@
   gap: 1.5rem;
   min-width: 0;
   max-width: 100%;
+}
+
+@media (min-width: 1025px) {
+  .leftColumn {
+    position: sticky;
+    top: 156px;
+    align-self: start;
+  }
 }
 
 /* Карточка */
@@ -514,11 +521,11 @@
 
 /* Операционные карточки записей */
 .listCard {
-  background: linear-gradient(to bottom, white 0%, #fefcfb 100%);
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid rgba(139, 115, 85, 0.12);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  border-radius: 16px;
+  padding: 1.35rem 1.4rem;
+  border: 1px solid rgba(139, 115, 85, 0.14);
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
   word-wrap: break-word;
@@ -526,7 +533,7 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  animation: fadeInUp 0.4s ease;
+  box-shadow: 0 10px 22px rgba(44, 30, 21, 0.06);
 }
 
 .listCard::before {
@@ -535,19 +542,15 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
-  background: linear-gradient(135deg, #feb297 0%, #f09674 100%);
-  opacity: 0;
-  transition: opacity 0.2s;
+  width: 3px;
+  background: #8b7355;
+  opacity: 0.9;
 }
 
 .listCard:hover {
-  border-color: rgba(139, 115, 85, 0.25);
-  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.12);
-}
-
-.listCard:hover::before {
-  opacity: 1;
+  border-color: rgba(139, 115, 85, 0.32);
+  box-shadow: 0 14px 28px rgba(44, 30, 21, 0.1);
+  transform: translateY(-1px);
 }
 
 .listCardHeader {

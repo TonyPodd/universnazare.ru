@@ -387,6 +387,22 @@ export default function ProfilePage() {
               )}
             </div>
           </div>
+          <div className={styles.quickActions}>
+            <button
+              type="button"
+              className={styles.quickActionButton}
+              onClick={() => setActiveTabWithUrl('upcoming')}
+            >
+              Предстоящие
+            </button>
+            <button
+              type="button"
+              className={`${styles.quickActionButton} ${styles.secondary}`}
+              onClick={() => setActiveTabWithUrl('subscriptions')}
+            >
+              Абонемент
+            </button>
+          </div>
         </div>
 
         <div className={styles.grid}>
