@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
@@ -11,18 +11,74 @@ export default function Header() {
   const { getTotalItems, clearCart } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleProfileMenu = () => setIsProfileMenuOpen(!isProfileMenuOpen);
+  const navLinks = [
+    { href: '/calendar', label: 'Календарь' },
+    { href: '/groups', label: 'Направления' },
+    { href: '/masters', label: 'Наши мастера' },
+    { href: '/shop', label: 'Магазин' },
+  ];
+
+  const profileLinks = [
+    { href: '/profile', label: 'Мой профиль' },
+    { href: '/profile?tab=upcoming', label: 'Предстоящие' },
+    { href: '/profile?tab=subscriptions', label: 'Абонемент' },
+    { href: '/profile?tab=enrollments', label: 'Направления' },
+    { href: '/profile?tab=bookings', label: 'История' },
+    { href: '/profile?tab=orders', label: 'Заказы' },
+  ];
+
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
+    setIsProfileMenuOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+    setIsProfileMenuOpen(false);
+  };
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen((prev) => !prev);
+  };
 
   const handleLogout = () => {
     clearCart();
     logout();
     setIsProfileMenuOpen(false);
+    setIsMenuOpen(false);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!headerRef.current) {
+        return;
+      }
+
+      const target = event.target as Node;
+      if (!headerRef.current.contains(target)) {
+        handleMenuClose();
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleMenuClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
   return (
-    <header className={styles.header}>
+    <header className={styles.header} ref={headerRef}>
       <div className={styles.container}>
         <Link href="/" className={styles.logoWrapper}>
           <img src="/logo-na-zare.png" alt="На заре" className={styles.logoImage} />
@@ -30,18 +86,11 @@ export default function Header() {
         </Link>
 
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
-          <Link href="/calendar" onClick={() => setIsMenuOpen(false)}>
-            Календарь
-          </Link>
-          <Link href="/groups" onClick={() => setIsMenuOpen(false)}>
-            Направления
-          </Link>
-          <Link href="/masters" onClick={() => setIsMenuOpen(false)}>
-            Наши мастера
-          </Link>
-          <Link href="/shop" onClick={() => setIsMenuOpen(false)}>
-            Магазин
-          </Link>
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} onClick={handleMenuClose}>
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <div className={styles.authSection}>
@@ -71,15 +120,18 @@ export default function Header() {
 
               {isProfileMenuOpen && (
                 <div className={styles.profileMenu}>
-                  <Link
-                    href="/profile"
-                    className={styles.profileMenuItem}
-                    onClick={() => setIsProfileMenuOpen(false)}
-                  >
-                    Мой профиль
-                  </Link>
+                  {profileLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={styles.profileMenuItem}
+                      onClick={() => setIsProfileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
                   <button
-                    className={styles.profileMenuItem}
+                    className={`${styles.profileMenuItem} ${styles.profileMenuLogout}`}
                     onClick={handleLogout}
                   >
                     Выйти
@@ -98,12 +150,72 @@ export default function Header() {
           className={`${styles.burger} ${isMenuOpen ? styles.burgerOpen : ''}`}
           onClick={toggleMenu}
           aria-label="Меню"
+          aria-expanded={isMenuOpen}
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
       </div>
+
+      {isMenuOpen && (
+        <div className={styles.mobileMenuOverlay} onClick={handleMenuClose}>
+          <div className={styles.mobileMenuPanel} onClick={(event) => event.stopPropagation()}>
+            <div className={styles.mobileMenuSection}>
+              <p className={styles.mobileMenuTitle}>Разделы</p>
+              <div className={styles.mobileMenuList}>
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={styles.mobileMenuItem}
+                    onClick={handleMenuClose}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {isAuthenticated ? (
+              <div className={styles.mobileMenuSection}>
+                <p className={styles.mobileMenuTitle}>Аккаунт</p>
+                <div className={styles.mobileMenuList}>
+                  {profileLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={styles.mobileMenuItem}
+                      onClick={handleMenuClose}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                  <button
+                    className={`${styles.mobileMenuItem} ${styles.mobileMenuLogout}`}
+                    onClick={handleLogout}
+                  >
+                    Выйти
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.mobileMenuSection}>
+                <p className={styles.mobileMenuTitle}>Аккаунт</p>
+                <div className={styles.mobileMenuList}>
+                  <Link
+                    href="/login"
+                    className={styles.mobileMenuItem}
+                    onClick={handleMenuClose}
+                  >
+                    Войти
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

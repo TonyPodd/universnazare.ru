@@ -1,7 +1,7 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #fef8f3 0%, #ffffff 100%);
-  padding: 2rem;
+  background: #f6f3ef;
+  padding: 1.75rem 1.5rem 2.25rem;
 }
 
 .pageHeader {
@@ -12,28 +12,25 @@
 
 .pageHeader h1 {
   margin: 0 0 0.5rem 0;
-  font-size: 2.5rem;
-  color: #1a202c;
-  background: linear-gradient(135deg, #d4773e 0%, #c85a2f 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 2.35rem;
+  color: #4a3d35;
 }
 
 .itemCount {
   margin: 0;
-  font-size: 1.125rem;
-  color: #718096;
+  font-size: 1.05rem;
+  color: #7a6a60;
 }
 
 .empty {
   max-width: 600px;
-  margin: 4rem auto;
+  margin: 3.25rem auto;
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 2rem;
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-radius: 22px;
+  border: 1px solid rgba(139, 115, 85, 0.14);
+  box-shadow: 0 18px 36px rgba(44, 30, 21, 0.08);
 }
 
 .emptyIcon {
@@ -55,28 +52,28 @@
 
 .shopButton {
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #d4773e 0%, #c85a2f 100%);
+  background: #8b7355;
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 1.125rem;
-  font-weight: 600;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(212, 119, 62, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 20px rgba(139, 115, 85, 0.22);
 }
 
 .shopButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(212, 119, 62, 0.4);
+  background: #7b654b;
+  box-shadow: 0 12px 24px rgba(139, 115, 85, 0.28);
 }
 
 .content {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2rem;
+  grid-template-columns: 1fr 360px;
+  gap: 1.5rem;
   align-items: flex-start;
 }
 
@@ -88,27 +85,30 @@
 
 .item {
   background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  padding: 1.4rem;
+  box-shadow: 0 12px 26px rgba(44, 30, 21, 0.06);
+  border: 1px solid rgba(139, 115, 85, 0.12);
   display: grid;
   grid-template-columns: 120px 1fr auto;
   gap: 1.5rem;
   align-items: flex-start;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .item:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: rgba(139, 115, 85, 0.28);
+  box-shadow: 0 16px 32px rgba(44, 30, 21, 0.09);
 }
 
 .itemImage {
   width: 120px;
   height: 120px;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  background: #f7fafc;
+  background: #f2ece6;
   flex-shrink: 0;
+  border: 1px solid rgba(139, 115, 85, 0.12);
 }
 
 .itemImage img {
@@ -134,35 +134,36 @@
 
 .itemDetails h3 {
   margin: 0 0 0.75rem 0;
-  font-size: 1.25rem;
-  color: #1a202c;
+  font-size: 1.2rem;
+  color: #3f342e;
   line-height: 1.4;
 }
 
 .itemPrice {
   margin: 0 0 1rem 0;
-  font-size: 1.375rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #d4773e;
+  color: #8b7355;
 }
 
 .quantityControl {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background: #f7fafc;
+  background: #f6f1eb;
   padding: 0.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(139, 115, 85, 0.16);
 }
 
 .quantityControl button {
   width: 32px;
   height: 32px;
-  border: 1px solid #cbd5e0;
+  border: 1px solid rgba(139, 115, 85, 0.28);
   background: white;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 1.125rem;
-  color: #4a5568;
+  color: #5a4a42;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -172,8 +173,8 @@
 }
 
 .quantityControl button:hover:not(:disabled) {
-  border-color: #d4773e;
-  color: #d4773e;
+  border-color: #8b7355;
+  color: #8b7355;
 }
 
 .quantityControl button:disabled {
@@ -184,7 +185,7 @@
 .quantityControl span {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2d3748;
+  color: #3f342e;
   min-width: 32px;
   text-align: center;
 }
@@ -207,7 +208,7 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a202c;
+  color: #3f342e;
 }
 
 .removeButton {
@@ -223,25 +224,26 @@
 
 .removeButton:hover {
   opacity: 1;
-  background: #fee2e2;
+  background: #fde8e3;
 }
 
 .sidebar {
   position: sticky;
-  top: 2rem;
+  top: 96px;
 }
 
 .summary {
   background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  padding: 1.75rem;
+  box-shadow: 0 16px 32px rgba(44, 30, 21, 0.08);
+  border: 1px solid rgba(139, 115, 85, 0.14);
 }
 
 .summary h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
-  color: #1a202c;
+  color: #3f342e;
 }
 
 .summaryRow {
@@ -250,45 +252,45 @@
   align-items: center;
   padding: 0.75rem 0;
   font-size: 1rem;
-  color: #4a5568;
+  color: #5f5047;
 }
 
 .summaryTotal {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 0;
-  margin-top: 1rem;
-  border-top: 2px solid #e2e8f0;
+  padding: 1.35rem 0 1.1rem;
+  margin-top: 0.85rem;
+  border-top: 1.5px solid rgba(139, 115, 85, 0.18);
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1a202c;
+  color: #3f342e;
 }
 
 .totalPrice {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #d4773e;
+  color: #8b7355;
 }
 
 .checkoutButton {
   width: 100%;
   padding: 1.125rem;
-  background: linear-gradient(135deg, #d4773e 0%, #c85a2f 100%);
+  background: #8b7355;
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 1.125rem;
-  font-weight: 600;
+  border-radius: 14px;
+  font-size: 1.08rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(212, 119, 62, 0.3);
-  margin-top: 1.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 14px 26px rgba(139, 115, 85, 0.24);
+  margin-top: 1.35rem;
 }
 
 .checkoutButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(212, 119, 62, 0.4);
+  background: #7b654b;
+  box-shadow: 0 16px 30px rgba(139, 115, 85, 0.3);
 }
 
 .checkoutButton:disabled {
@@ -300,31 +302,31 @@
 .loginHint {
   margin: 1rem 0 0 0;
   font-size: 0.875rem;
-  color: #718096;
+  color: #7a6a60;
   text-align: center;
 }
 
 .loginLink {
-  color: #d4773e;
+  color: #8b7355;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .loginLink:hover {
-  color: #c85a2f;
+  color: #6b5b52;
 }
 
 .info {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(139, 115, 85, 0.18);
 }
 
 .info p {
   margin: 0.5rem 0;
   font-size: 0.9375rem;
-  color: #4a5568;
+  color: #5f5047;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -333,14 +335,14 @@
 .paymentMethodSection {
   margin: 1.5rem 0;
   padding: 1.5rem 0;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(139, 115, 85, 0.18);
+  border-bottom: 1px solid rgba(139, 115, 85, 0.18);
 }
 
 .paymentMethodSection h3 {
   margin: 0 0 1rem 0;
   font-size: 1.125rem;
-  color: #1a202c;
+  color: #3f342e;
   font-weight: 600;
 }
 
@@ -354,15 +356,15 @@
   position: relative;
   display: block;
   cursor: pointer;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1.5px solid rgba(139, 115, 85, 0.2);
+  border-radius: 14px;
   padding: 1rem;
   transition: all 0.2s ease;
-  background: #f7fafc;
+  background: #f7f2ec;
 }
 
 .paymentOption:hover {
-  border-color: #cbd5e0;
+  border-color: rgba(139, 115, 85, 0.4);
   background: white;
 }
 
@@ -373,9 +375,9 @@
 }
 
 .paymentOptionActive {
-  border-color: #d4773e;
+  border-color: #8b7355;
   background: white;
-  box-shadow: 0 0 0 3px rgba(212, 119, 62, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.14);
 }
 
 .paymentOption input[type="radio"]:disabled ~ .paymentOptionContent {
@@ -385,11 +387,11 @@
 
 .paymentOption:has(input[type="radio"]:disabled) {
   cursor: not-allowed;
-  background: #f7fafc;
+  background: #f4ede5;
 }
 
 .paymentOption:has(input[type="radio"]:disabled):hover {
-  border-color: #e2e8f0;
+  border-color: rgba(139, 115, 85, 0.2);
 }
 
 .paymentOptionContent {
@@ -406,13 +408,13 @@
 .paymentOptionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: #1a202c;
+  color: #3f342e;
   margin-bottom: 0.25rem;
 }
 
 .paymentOptionDesc {
   font-size: 0.875rem;
-  color: #718096;
+  color: #7a6a60;
   line-height: 1.4;
 }
 

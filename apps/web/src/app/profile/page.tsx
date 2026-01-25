@@ -10,6 +10,14 @@ import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
 import styles from './profile.module.css';
 
+type TabKey = 'subscriptions' | 'bookings' | 'upcoming' | 'enrollments' | 'orders';
+
+const TAB_KEYS: TabKey[] = ['upcoming', 'subscriptions', 'enrollments', 'bookings', 'orders'];
+
+const isTabKey = (value: string | null): value is TabKey => {
+  return value !== null && TAB_KEYS.includes(value as TabKey);
+};
+
 export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, refreshUser, activeSubscription, refreshSubscription } = useAuth();
@@ -33,7 +41,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrderQR, setSelectedOrderQR] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'subscriptions' | 'bookings' | 'upcoming' | 'enrollments' | 'orders'>('upcoming');
+  const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [subscriptionTypes, setSubscriptionTypes] = useState<SubscriptionType[]>([]);
   const [purchasing, setPurchasing] = useState<string | null>(null);
@@ -58,7 +66,21 @@ export default function ProfilePage() {
     }
 
     const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (isTabKey(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
     const paymentStatus = params.get('payment');
+    const tabParam = params.get('tab');
+    const tabToKeep = isTabKey(tabParam) ? tabParam : null;
     if (!paymentStatus) {
       return;
     }
@@ -74,8 +96,13 @@ export default function ProfilePage() {
       addToast('Платеж не завершен. Попробуйте еще раз.', 'error', 8000);
     }
 
-    router.replace('/profile');
-  }, [router]);
+    const nextParams = new URLSearchParams();
+    if (tabToKeep) {
+      nextParams.set('tab', tabToKeep);
+    }
+    const nextQuery = nextParams.toString();
+    router.replace(nextQuery ? `/profile?${nextQuery}` : '/profile');
+  }, [router, addToast, refreshSubscription, refreshUser]);
 
   useEffect(() => {
     if (user) {
@@ -108,6 +135,20 @@ export default function ProfilePage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const setActiveTabWithUrl = (tab: TabKey) => {
+    setActiveTab(tab);
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    params.set('tab', tab);
+    params.delete('payment');
+    const query = params.toString();
+    window.history.replaceState(null, '', query ? `/profile?${query}` : '/profile');
   };
 
   // Проверка скролла табов
@@ -452,7 +493,7 @@ export default function ProfilePage() {
                 <button
                   key={tab.key}
                   className={`${styles.mobileNavButton} ${activeTab === tab.key ? styles.mobileNavButtonActive : ''}`}
-                  onClick={() => setActiveTab(tab.key)}
+                  onClick={() => setActiveTabWithUrl(tab.key)}
                 >
                   <span className={styles.mobileNavIcon}>{tab.icon}</span>
                   <span className={styles.mobileNavLabel}>{tab.label}</span>
@@ -465,35 +506,35 @@ export default function ProfilePage() {
               <div className={styles.tabs} ref={tabsRef}>
                 <button
                   className={`${styles.tab} ${activeTab === 'upcoming' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('upcoming')}
+                  onClick={() => setActiveTabWithUrl('upcoming')}
                 >
                   Предстоящие
                   <span className={styles.tabBadge}>{upcomingBookings.length}</span>
                 </button>
                 <button
                   className={`${styles.tab} ${activeTab === 'subscriptions' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('subscriptions')}
+                  onClick={() => setActiveTabWithUrl('subscriptions')}
                 >
                   Абонемент
                   <span className={styles.tabBadge}>{subscriptions.length}</span>
                 </button>
                 <button
                   className={`${styles.tab} ${activeTab === 'enrollments' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('enrollments')}
+                  onClick={() => setActiveTabWithUrl('enrollments')}
                 >
                   Направления
                   <span className={styles.tabBadge}>{enrollments.filter(e => e.status === 'ACTIVE').length}</span>
                 </button>
                 <button
                   className={`${styles.tab} ${activeTab === 'bookings' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('bookings')}
+                  onClick={() => setActiveTabWithUrl('bookings')}
                 >
                   История
                   <span className={styles.tabBadge}>{bookings.length}</span>
                 </button>
                 <button
                   className={`${styles.tab} ${activeTab === 'orders' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab('orders')}
+                  onClick={() => setActiveTabWithUrl('orders')}
                 >
                   Заказы
                   <span className={styles.tabBadge}>{orders.length}</span>

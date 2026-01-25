@@ -3,17 +3,17 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 200;
   border-bottom: 1px solid rgba(90, 74, 66, 0.12);
 }
 
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0.85rem 1.75rem;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .logoWrapper {
@@ -22,6 +22,7 @@
   gap: 0.75rem;
   text-decoration: none;
   transition: opacity 0.3s ease;
+  flex-shrink: 0;
 }
 
 .logoWrapper:hover {
@@ -35,10 +36,11 @@
 }
 
 .logoText {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #5a4a42;
   letter-spacing: 0.02em;
+  line-height: 1.1;
 }
 
 .burger {
@@ -74,15 +76,18 @@
 
 .nav {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   flex: 1;
+  justify-content: center;
 }
 
 .nav a {
-  color: #2d3748;
+  color: #3f342e;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 0.35rem 0.1rem;
+  transition: color 0.2s ease;
   position: relative;
 }
 
@@ -93,7 +98,7 @@
 .nav a::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -6px;
   left: 0;
   right: 0;
   height: 2px;
@@ -109,24 +114,28 @@
 .authSection {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .cartLink {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  color: #3f342e;
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(139, 115, 85, 0.12);
+  background: #fff;
 }
 
 .cartLink:hover {
   background: rgba(160, 128, 96, 0.08);
   color: #8b7355;
+  border-color: rgba(139, 115, 85, 0.3);
 }
 
 .cartLink svg {
@@ -156,18 +165,17 @@
   padding: 0.625rem 1.5rem;
   background: #8b7355;
   color: white;
-  border-radius: 10px;
+  border-radius: 12px;
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: inline-block;
   box-shadow: 0 2px 8px rgba(139, 115, 85, 0.2);
 }
 
 .loginButton:hover {
   background: #a08060;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.28);
 }
 
 .profileContainer {
@@ -178,21 +186,22 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: none;
-  border: none;
+  background: #f9f5f1;
+  border: 1px solid rgba(139, 115, 85, 0.1);
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: background 0.2s;
+  padding: 0.35rem 0.6rem 0.35rem 0.35rem;
+  border-radius: 999px;
+  transition: all 0.2s ease;
 }
 
 .profileButton:hover {
-  background: rgba(160, 128, 96, 0.08);
+  background: #f3ece5;
+  border-color: rgba(139, 115, 85, 0.25);
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: #8b7355;
   color: white;
@@ -207,7 +216,7 @@
 
 .userName {
   font-weight: 600;
-  color: #333;
+  color: #3f342e;
 }
 
 .profileMenu {
@@ -215,57 +224,188 @@
   top: calc(100% + 0.5rem);
   right: 0;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 180px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(39, 29, 24, 0.16);
+  min-width: 230px;
   overflow: hidden;
   z-index: 1000;
+  border: 1px solid rgba(139, 115, 85, 0.12);
+  padding: 0.4rem;
 }
 
 .profileMenuItem {
   display: block;
   width: 100%;
-  padding: 0.875rem 1.25rem;
+  padding: 0.7rem 0.85rem;
   text-align: left;
-  background: none;
+  background: white;
   border: none;
-  color: #333;
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: #3f342e;
+  font-size: 0.94rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
   text-decoration: none;
+  border-radius: 10px;
 }
 
 .profileMenuItem:hover {
-  background: rgba(160, 128, 96, 0.08);
+  background: rgba(160, 128, 96, 0.12);
   color: #8b7355;
+}
+
+.profileMenuLogout {
+  color: #c85a2f;
+}
+
+.profileMenuLogout:hover {
+  background: rgba(200, 90, 47, 0.1);
+  color: #a34824;
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(33, 24, 20, 0.42);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 300;
+}
+
+.mobileMenuPanel {
+  width: min(360px, 92vw);
+  height: 100%;
+  background: #fffdfb;
+  border-left: 1px solid rgba(139, 115, 85, 0.16);
+  box-shadow: -12px 0 32px rgba(33, 24, 20, 0.18);
+  padding: 1.25rem 1.15rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+}
+
+.mobileMenuSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.mobileMenuTitle {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8b7b70;
+}
+
+.mobileMenuList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mobileMenuItem {
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  border: 1px solid rgba(139, 115, 85, 0.12);
+  background: white;
+  color: #3f342e;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobileMenuItem:hover {
+  border-color: rgba(139, 115, 85, 0.28);
+  background: #f8f2ec;
+  color: #5a4a42;
+}
+
+.mobileMenuLogout {
+  color: #c85a2f;
+}
+
+.mobileMenuLogout:hover {
+  background: rgba(200, 90, 47, 0.1);
+  border-color: rgba(200, 90, 47, 0.25);
+  color: #a34824;
+}
+
+@media (max-width: 1100px) {
+  .container {
+    padding: 0.8rem 1.25rem;
+  }
+
+  .nav {
+    gap: 1.1rem;
+  }
+
+  .userName {
+    display: none;
+  }
 }
 
 /* Mobile */
 @media (max-width: 768px) {
   .burger {
     display: flex;
+    z-index: 320;
+  }
+
+  .burger span {
+    width: 26px;
+    height: 3px;
+    background: #4a3d35;
   }
 
   .nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    flex-direction: column;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: none;
   }
 
   .navOpen {
-    display: flex;
+    display: none;
+  }
+
+  .container {
+    padding: 0.7rem 0.95rem;
+    gap: 0.65rem;
+  }
+
+  .logoImage {
+    height: 36px;
+  }
+
+  .logoText {
+    font-size: 1.2rem;
   }
 
   .authSection {
-    margin-left: 0;
+    margin-left: auto;
+    gap: 0.45rem;
+  }
+
+  .cartLink {
+    width: 44px;
+    height: 44px;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+
+  .profileButton {
+    padding: 0.15rem;
+    border: none;
+    background: none;
   }
 
   .userName {
@@ -275,5 +415,6 @@
   .profileMenu {
     left: auto;
     right: 0;
+    min-width: 210px;
   }
 }
