@@ -316,6 +316,52 @@ export class UsersService {
     return subscription;
   }
 
+  async rollbackSubscriptionPurchase(
+    userId: string,
+    subscriptionId: string | null | undefined,
+    amount: number,
+  ) {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      throw new BadRequestException('Сумма отката должна быть больше 0');
+    }
+
+    const subscription = subscriptionId
+      ? await this.prisma.subscription.findFirst({
+          where: { id: subscriptionId, userId },
+        })
+      : await this.prisma.subscription.findFirst({
+          where: {
+            userId,
+            status: {
+              in: ['ACTIVE', 'DEPLETED'],
+            },
+          },
+          orderBy: {
+            updatedAt: 'desc',
+          },
+        });
+
+    if (!subscription) {
+      throw new NotFoundException('Абонемент для отката не найден');
+    }
+
+    const nextTotalBalance = Math.max(0, subscription.totalBalance - amount);
+    const nextRemainingBalance = Math.max(0, subscription.remainingBalance - amount);
+    const nextStatus = nextRemainingBalance <= 0 ? 'DEPLETED' : 'ACTIVE';
+
+    return this.prisma.subscription.update({
+      where: { id: subscription.id },
+      data: {
+        totalBalance: nextTotalBalance,
+        remainingBalance: nextRemainingBalance,
+        status: nextStatus,
+      },
+      include: {
+        subscriptionType: true,
+      },
+    });
+  }
+
   // ADMIN METHODS
   async getAllUsers(page: number = 1, limit: number = 20, search?: string) {
     const skip = (page - 1) * limit;

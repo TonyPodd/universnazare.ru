@@ -11,20 +11,20 @@ datasource db {
 
 // Пользователи
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String  @id @default(uuid())
+  email     String  @unique
   phone     String?
   firstName String
   lastName  String
   age       Int?
   avatarUrl String?
-  role      Role     @default(USER)
+  role      Role    @default(USER)
 
   // Поля для аутентификации
-  password           String? // Nullable для OAuth пользователей
-  emailVerified      Boolean  @default(false)
-  verificationToken  String?  @unique
-  resetPasswordToken String?  @unique
+  password             String? // Nullable для OAuth пользователей
+  emailVerified        Boolean   @default(false)
+  verificationToken    String?   @unique
+  resetPasswordToken   String?   @unique
   resetPasswordExpires DateTime?
 
   // OAuth провайдеры
@@ -34,10 +34,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  bookings         Booking[]
-  orders           Order[]
-  subscriptions    Subscription[]
-  groupEnrollments GroupEnrollment[]
+  bookings             Booking[]
+  orders               Order[]
+  subscriptions        Subscription[]
+  subscriptionPayments SubscriptionPayment[]
+  groupEnrollments     GroupEnrollment[]
 
   @@map("users")
 }
@@ -50,17 +51,17 @@ enum Role {
 
 // Мастера
 model Master {
-  id             String   @id @default(uuid())
-  name           String
-  bio            String?
-  avatarUrl      String?
-  vkLink         String?
-  instagramLink  String?
-  telegramLink   String?
+  id              String   @id @default(uuid())
+  name            String
+  bio             String?
+  avatarUrl       String?
+  vkLink          String?
+  instagramLink   String?
+  telegramLink    String?
   specializations String[]
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   events        Event[]
   regularGroups RegularGroup[]
@@ -116,18 +117,18 @@ enum Difficulty {
 
 // Постоянные группы (направления)
 model RegularGroup {
-  id                  String   @id @default(uuid())
-  name                String
-  description         String
-  shortDescription    String
-  imageUrl            String?
-  schedule            Json     // {daysOfWeek: [1,3,5], time: "18:00", duration: 90}
-  price               Float
-  maxParticipants     Int
-  masterId            String
-  isActive            Boolean  @default(true)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id               String   @id @default(uuid())
+  name             String
+  description      String
+  shortDescription String
+  imageUrl         String?
+  schedule         Json // {daysOfWeek: [1,3,5], time: "18:00", duration: 90}
+  price            Float
+  maxParticipants  Int
+  masterId         String
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   master      Master            @relation(fields: [masterId], references: [id])
   sessions    GroupSession[]
@@ -140,11 +141,11 @@ model RegularGroup {
 model GroupSession {
   id                  String        @id @default(uuid())
   groupId             String
-  date                DateTime      // Конкретная дата и время занятия
-  duration            Int           // Продолжительность в минутах
+  date                DateTime // Конкретная дата и время занятия
+  duration            Int // Продолжительность в минутах
   status              SessionStatus @default(SCHEDULED)
   currentParticipants Int           @default(0)
-  notes               String?       // Причина отмены и т.д.
+  notes               String? // Причина отмены и т.д.
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
@@ -155,60 +156,60 @@ model GroupSession {
 }
 
 enum SessionStatus {
-  SCHEDULED  // Запланировано
-  CANCELLED  // Отменено
-  COMPLETED  // Завершено
+  SCHEDULED // Запланировано
+  CANCELLED // Отменено
+  COMPLETED // Завершено
 }
 
 // Записи пользователей на постоянные направления (зачисление в группу)
 model GroupEnrollment {
-  id             String               @id @default(uuid())
+  id             String           @id @default(uuid())
   userId         String
   groupId        String
-  subscriptionId String?              // ID абонемента для оплаты занятий
-  status         EnrollmentStatus     @default(ACTIVE)
-  enrolledAt     DateTime             @default(now())
-  expiresAt      DateTime?            // Срок окончания записи (опционально)
+  subscriptionId String? // ID абонемента для оплаты занятий
+  status         EnrollmentStatus @default(ACTIVE)
+  enrolledAt     DateTime         @default(now())
+  expiresAt      DateTime? // Срок окончания записи (опционально)
   notes          String?
-  participants   Json                 // Данные участников
+  participants   Json // Данные участников
   contactEmail   String
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   group        RegularGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
-  bookings     Booking[]     // Связанные записи на конкретные занятия
+  bookings     Booking[] // Связанные записи на конкретные занятия
 
   @@map("group_enrollments")
 }
 
 enum EnrollmentStatus {
-  ACTIVE     // Активная запись
-  PAUSED     // Приостановлена
-  CANCELLED  // Отменена
-  COMPLETED  // Завершена
+  ACTIVE // Активная запись
+  PAUSED // Приостановлена
+  CANCELLED // Отменена
+  COMPLETED // Завершена
 }
 
 // Записи на события
 model Booking {
-  id                String         @id @default(uuid())
+  id                String        @id @default(uuid())
   userId            String?
-  eventId           String?        // Для мастер-классов
-  groupSessionId    String?        // Для занятий направлений
-  groupEnrollmentId String?        // Ссылка на зачисление в группу
-  subscriptionId    String?        // ID абонемента, если оплата через абонемент
-  status            BookingStatus  @default(PENDING)
-  participantsCount Int            @default(1)
+  eventId           String? // Для мастер-классов
+  groupSessionId    String? // Для занятий направлений
+  groupEnrollmentId String? // Ссылка на зачисление в группу
+  subscriptionId    String? // ID абонемента, если оплата через абонемент
+  status            BookingStatus @default(PENDING)
+  participantsCount Int           @default(1)
   totalPrice        Float
-  paymentMethod     PaymentMethod  @default(ON_SITE)
+  paymentMethod     PaymentMethod @default(ON_SITE)
   notes             String?
   // Данные участников (массив объектов с fullName, phone, age)
   participants      Json
   // Контактный email для связи
   contactEmail      String
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   user            User?            @relation(fields: [userId], references: [id])
   event           Event?           @relation(fields: [eventId], references: [id])
@@ -280,7 +281,6 @@ enum OrderStatus {
   CANCELLED
 }
 
-
 // Позиции заказа
 model OrderItem {
   id        String @id @default(uuid())
@@ -326,16 +326,17 @@ model Upload {
 // Типы абонементов (шаблоны для пополнения)
 model SubscriptionType {
   id           String   @id @default(uuid())
-  name         String   // Название (например, "Пополнить на 5000₽")
-  description  String   // Описание абонемента
-  amount       Float    // Сумма пополнения (баланс в рублях)
-  price        Float    // Стоимость (сколько нужно заплатить за пополнение)
-  durationDays Int?     // Срок действия в днях (null = бессрочный)
+  name         String // Название (например, "Пополнить на 5000₽")
+  description  String // Описание абонемента
+  amount       Float // Сумма пополнения (баланс в рублях)
+  price        Float // Стоимость (сколько нужно заплатить за пополнение)
+  durationDays Int? // Срок действия в днях (null = бессрочный)
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  subscriptions Subscription[]
+  subscriptions        Subscription[]
+  subscriptionPayments SubscriptionPayment[]
 
   @@map("subscription_types")
 }
@@ -344,48 +345,52 @@ model SubscriptionType {
 model Subscription {
   id               String             @id @default(uuid())
   userId           String
-  typeId           String             // Ссылка на тип абонемента
-  name             String             // Название абонемента (например, "Пополнение на 5000₽")
-  totalBalance     Float              // Общий баланс в рублях
-  remainingBalance Float              // Оставшийся баланс в рублях
-  price            Float              // Стоимость абонемента (сколько заплатили)
+  typeId           String // Ссылка на тип абонемента
+  name             String // Название абонемента (например, "Пополнение на 5000₽")
+  totalBalance     Float // Общий баланс в рублях
+  remainingBalance Float // Оставшийся баланс в рублях
+  price            Float // Стоимость абонемента (сколько заплатили)
   status           SubscriptionStatus @default(ACTIVE)
   purchasedAt      DateTime           @default(now())
-  expiresAt        DateTime?          // Срок действия (опционально)
+  expiresAt        DateTime? // Срок действия (опционально)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 
-  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subscriptionType SubscriptionType   @relation(fields: [typeId], references: [id])
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionType SubscriptionType      @relation(fields: [typeId], references: [id])
   bookings         Booking[]
   groupEnrollments GroupEnrollment[]
+  payments         SubscriptionPayment[]
 
   @@map("subscriptions")
 }
 
 // Платежи за абонементы
 model SubscriptionPayment {
-  id          String   @id @default(uuid())
-  userId      String
-  typeId      String
-  amount      Float
-  price       Float
-  status      String
-  paymentId   String?
-  paymentUrl  String?
-  processedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(uuid())
+  userId         String
+  typeId         String
+  subscriptionId String?
+  amount         Float
+  price          Float
+  status         String
+  paymentId      String?
+  paymentUrl     String?
+  processedAt    DateTime?
+  rolledBackAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscriptionType SubscriptionType @relation(fields: [typeId], references: [id])
+  subscription     Subscription?    @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 
   @@map("subscription_payments")
 }
 
 enum SubscriptionStatus {
-  ACTIVE    // Активный
-  EXPIRED   // Истёк срок действия
-  DEPLETED  // Баланс исчерпан
+  ACTIVE // Активный
+  EXPIRED // Истёк срок действия
+  DEPLETED // Баланс исчерпан
   CANCELLED // Отменён
 }

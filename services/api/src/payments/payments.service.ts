@@ -105,13 +105,24 @@ export class PaymentsService {
     }
 
     const successStatuses = new Set(['AUTHORIZED', 'CONFIRMED']);
+    const failureStatuses = new Set(['REJECTED', 'CANCELLED', 'DEADLINE_EXPIRED', 'REVERSED']);
 
     if (status && successStatuses.has(status) && !payment.processedAt) {
-      await this.usersService.purchaseSubscription(payment.userId, payment.typeId, {
+      const subscription = await this.usersService.purchaseSubscription(payment.userId, payment.typeId, {
         bypassPayment: true,
       });
 
       updateData.processedAt = new Date();
+      updateData.subscriptionId = subscription.id;
+    }
+
+    if (status && failureStatuses.has(status) && payment.processedAt && !payment.rolledBackAt) {
+      await this.usersService.rollbackSubscriptionPurchase(
+        payment.userId,
+        payment.subscriptionId,
+        payment.amount,
+      );
+      updateData.rolledBackAt = new Date();
     }
 
     await this.prisma.subscriptionPayment.update({

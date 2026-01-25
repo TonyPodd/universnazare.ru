@@ -26,10 +26,6 @@ export class OrdersService {
       }
     }
 
-    if (paymentMethod === 'ONLINE') {
-      throw new BadRequestException('Онлайн-оплата доступна только для абонементов');
-    }
-
     // Если оплата по абонементу, проверяем и списываем средства
     if (paymentMethod === 'SUBSCRIPTION') {
       const activeSubscription = await this.prisma.subscription.findFirst({
