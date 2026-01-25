@@ -45,9 +45,13 @@ export default async function HomePage() {
             </div>
           </section>
 
-          <NewsSlider news={news} />
-          <div id="events">
-            <UpcomingEvents events={events} />
+          <div className={styles.sections}>
+            <section className={styles.sectionBlock}>
+              <NewsSlider news={news} />
+            </section>
+            <section id="events" className={styles.sectionBlock}>
+              <UpcomingEvents events={events} />
+            </section>
           </div>
         </div>
       </main>

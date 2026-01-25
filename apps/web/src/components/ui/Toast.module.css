@@ -1,25 +1,17 @@
 .toast {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  min-width: 300px;
-  max-width: 500px;
-  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-sm);
+  min-width: 280px;
+  max-width: 480px;
+  padding: 0.85rem 1rem;
   background: var(--color-bg-card);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 16px 32px rgba(71, 64, 58, 0.14);
   animation: toastSlideIn 0.3s ease-out;
   position: relative;
   overflow: hidden;
-}
-
-.toast::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
 }
 
 .toast.exiting {
@@ -33,12 +25,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  font-weight: bold;
-  font-size: var(--font-size-md);
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.98rem;
   flex-shrink: 0;
+  border: 1px solid transparent;
 }
 
 /* ===================================
@@ -46,24 +39,26 @@
    =================================== */
 .message {
   flex: 1;
-  font-size: var(--font-size-md);
+  font-size: 0.97rem;
+  font-weight: 700;
   color: var(--color-text-primary);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 /* ===================================
    Close Button
    =================================== */
 .closeButton {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
+  background: rgba(71, 64, 58, 0.06);
+  border: 1px solid rgba(71, 64, 58, 0.08);
+  border-radius: 999px;
   color: var(--color-text-secondary);
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1;
   cursor: pointer;
   transition: color var(--transition-fast);
@@ -73,6 +68,8 @@
 
 .closeButton:hover {
   color: var(--color-text-primary);
+  background: rgba(71, 64, 58, 0.12);
+  border-color: rgba(71, 64, 58, 0.2);
 }
 
 /* ===================================
@@ -80,42 +77,50 @@
    =================================== */
 
 /* Success */
-.success::before {
-  background: var(--color-success);
+.success {
+  background: var(--color-success-bg);
+  border-color: rgba(168, 192, 144, 0.55);
 }
 
 .success .icon {
-  background: var(--color-success-bg);
+  background: white;
+  border-color: rgba(168, 192, 144, 0.6);
   color: var(--color-success);
 }
 
 /* Error */
-.error::before {
-  background: var(--color-error);
+.error {
+  background: var(--color-error-bg);
+  border-color: rgba(214, 123, 123, 0.55);
 }
 
 .error .icon {
-  background: var(--color-error-bg);
+  background: white;
+  border-color: rgba(214, 123, 123, 0.6);
   color: var(--color-error);
 }
 
 /* Warning */
-.warning::before {
-  background: var(--color-warning);
+.warning {
+  background: var(--color-warning-bg);
+  border-color: rgba(240, 196, 140, 0.65);
 }
 
 .warning .icon {
-  background: var(--color-warning-bg);
-  color: #C6941A;
+  background: white;
+  border-color: rgba(240, 196, 140, 0.7);
+  color: #c28b1b;
 }
 
 /* Info */
-.info::before {
-  background: var(--color-info);
+.info {
+  background: var(--color-info-bg);
+  border-color: rgba(157, 180, 192, 0.6);
 }
 
 .info .icon {
-  background: var(--color-info-bg);
+  background: white;
+  border-color: rgba(157, 180, 192, 0.7);
   color: var(--color-info);
 }
 
@@ -124,22 +129,22 @@
    =================================== */
 @keyframes toastSlideIn {
   from {
-    transform: translateY(-100%);
+    transform: translateY(-10px) scale(0.98);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
 @keyframes toastSlideOut {
   from {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
   to {
-    transform: translateY(-100%);
+    transform: translateY(-6px) scale(0.98);
     opacity: 0;
   }
 }
@@ -152,5 +157,6 @@
     min-width: unset;
     max-width: calc(100vw - 2rem);
     width: 100%;
+    padding: 0.82rem 0.9rem;
   }
 }

@@ -99,6 +99,22 @@ export default function GroupsPage() {
           </section>
 
           <section className={styles.groupsSection}>
+            <div className={styles.groupsHeader}>
+              <div>
+                <h2 className={styles.groupsTitle}>Выберите направление</h2>
+                <p className={styles.groupsSubtitle}>
+                  Это регулярные занятия по расписанию. Запись и оплата происходят через абонемент.
+                </p>
+              </div>
+              <div className={styles.groupsMeta}>
+                <div className={styles.groupsCount}>{groups.length}</div>
+                <div className={styles.groupsCountLabel}>активных направлений</div>
+                <a href="/calendar" className={styles.groupsLink}>
+                  Мастер-классы →
+                </a>
+              </div>
+            </div>
+
             {groups.length === 0 ? (
               <div className={styles.empty}>
                 <h2>Направлений пока нет</h2>

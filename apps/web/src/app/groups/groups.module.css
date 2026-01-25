@@ -74,6 +74,77 @@
   padding: 0.75rem 0 1rem;
 }
 
+.groupsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.4rem;
+  padding: 1.15rem 1.25rem;
+  background: white;
+  border: 1px solid rgba(139, 115, 85, 0.14);
+  border-radius: 18px;
+  box-shadow: 0 12px 26px rgba(44, 30, 21, 0.06);
+}
+
+.groupsTitle {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #4a3d35;
+}
+
+.groupsSubtitle {
+  margin: 0;
+  font-size: 0.98rem;
+  color: #6b5b52;
+  line-height: 1.65;
+  max-width: 720px;
+}
+
+.groupsMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 1px dashed rgba(139, 115, 85, 0.28);
+  min-width: 170px;
+}
+
+.groupsCount {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #8b7355;
+  line-height: 1;
+}
+
+.groupsCountLabel {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8b7b70;
+}
+
+.groupsLink {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #8b7355;
+  text-decoration: none;
+  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 115, 85, 0.22);
+  transition: all 0.2s ease;
+}
+
+.groupsLink:hover {
+  background: rgba(139, 115, 85, 0.08);
+  border-color: rgba(139, 115, 85, 0.38);
+  color: #6b5b52;
+}
+
 .groupsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -374,6 +445,35 @@
 @media (max-width: 768px) {
   .container {
     padding: 0 0.95rem 2.25rem;
+  }
+
+  .groupsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.05rem;
+    border-radius: 16px;
+  }
+
+  .groupsTitle {
+    font-size: 1.35rem;
+  }
+
+  .groupsSubtitle {
+    font-size: 0.94rem;
+  }
+
+  .groupsMeta {
+    width: 100%;
+    align-items: flex-start;
+    border-left: none;
+    border-top: 1px dashed rgba(139, 115, 85, 0.28);
+    padding: 0.65rem 0 0;
+    min-width: 0;
+  }
+
+  .groupsCount {
+    font-size: 1.8rem;
   }
 
   .hero {

@@ -1,5 +1,7 @@
 .main {
   min-height: calc(100vh - 200px);
+  background: #f6f3ef;
+  padding-bottom: 2.25rem;
 }
 
 .container {
@@ -80,6 +82,16 @@
   color: #8b7355;
 }
 
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sectionBlock {
+  position: relative;
+}
+
 @media (max-width: 640px) {
   .container {
     padding: 0 1rem;
@@ -110,5 +122,9 @@
     text-align: center;
     padding: 0.85rem 1.25rem;
     font-size: 0.98rem;
+  }
+
+  .sections {
+    gap: 0.2rem;
   }
 }
