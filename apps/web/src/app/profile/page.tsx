@@ -591,13 +591,14 @@ export default function ProfilePage() {
                               <h3 className={styles.listCardTitle}>
                                 {eventTitle}
                               </h3>
-                              <p className={styles.listCardSubtitle}>
-                                {formatDateTime(eventDate)}
-                                {isGroupSession && ' • Занятие направления'}
-                              </p>
-                              <p className={styles.listCardSubtitle}>
-                                Участников: {booking.participantsCount} • {booking.totalPrice.toFixed(2)} ₽
-                              </p>
+                              <div className={styles.listCardMeta}>
+                                <span className={styles.metaChip}>{formatDateTime(eventDate)}</span>
+                                {isGroupSession && (
+                                  <span className={`${styles.metaChip} ${styles.metaChipMuted}`}>Направление</span>
+                                )}
+                                <span className={styles.metaChip}>Участников: {booking.participantsCount}</span>
+                                <span className={styles.metaChip}>{booking.totalPrice.toFixed(2)} ₽</span>
+                              </div>
                             </div>
                             {getBookingStatusBadge(booking.status)}
                           </div>
@@ -641,24 +642,42 @@ export default function ProfilePage() {
                         <p>У вас пока нет абонементов</p>
                       </div>
                   ) : (
-                    subscriptions.map((subscription) => (
-                      <div key={subscription.id} className={styles.listCard}>
-                        <div className={styles.listCardHeader}>
-                          <div>
-                            <h3 className={styles.listCardTitle}>
-                              {subscription.name}
-                            </h3>
-                            <p className={styles.listCardSubtitle}>
-                              Доступно: {subscription.remainingBalance.toFixed(2)} ₽ • Всего пополнено: {subscription.totalBalance.toFixed(2)} ₽
-                            </p>
+                    subscriptions.map((subscription) => {
+                      const totalBalance = subscription.totalBalance || 0;
+                      const remainingBalance = subscription.remainingBalance || 0;
+                      const balancePercent = totalBalance > 0
+                        ? Math.min(100, Math.round((remainingBalance / totalBalance) * 100))
+                        : 0;
+
+                      return (
+                        <div key={subscription.id} className={styles.listCard}>
+                          <div className={styles.listCardHeader}>
+                            <div>
+                              <h3 className={styles.listCardTitle}>
+                                {subscription.name}
+                              </h3>
+                              <div className={styles.balanceRow}>
+                                <div className={styles.balanceBlock}>
+                                  <span className={styles.balanceLabel}>Доступно</span>
+                                  <span className={styles.balanceValue}>{remainingBalance.toFixed(2)} ₽</span>
+                                </div>
+                                <div className={styles.balanceBlock}>
+                                  <span className={styles.balanceLabel}>Всего пополнено</span>
+                                  <span className={styles.balanceValue}>{totalBalance.toFixed(2)} ₽</span>
+                                </div>
+                              </div>
+                              <div className={styles.balanceBar}>
+                                <div className={styles.balanceFill} style={{ width: `${balancePercent}%` }} />
+                              </div>
+                            </div>
+                            {getStatusBadge(subscription.status)}
                           </div>
-                          {getStatusBadge(subscription.status)}
+                          <div className={styles.listCardFooter}>
+                            <span>Действителен до: {subscription.expiresAt ? formatDate(subscription.expiresAt) : 'Бессрочный'}</span>
+                          </div>
                         </div>
-                        <div className={styles.listCardFooter}>
-                          <span>Действителен до: {subscription.expiresAt ? formatDate(subscription.expiresAt) : 'Бессрочный'}</span>
-                        </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                   </div>
                 </div>
@@ -687,11 +706,17 @@ export default function ProfilePage() {
                           <div className={styles.listCardHeader}>
                             <div>
                               <h3 className={styles.listCardTitle}>{eventTitle}</h3>
-                              <p className={styles.listCardSubtitle}>
-                                {eventDate ? formatDateTime(eventDate) : formatDate(booking.createdAt)} •
-                                {booking.participantsCount} участник(ов) •
-                                {booking.paymentMethod === 'SUBSCRIPTION' ? ' Абонемент' : ' Оплата на месте'}
-                              </p>
+                              <div className={styles.listCardMeta}>
+                                <span className={styles.metaChip}>
+                                  {eventDate ? formatDateTime(eventDate) : formatDate(booking.createdAt)}
+                                </span>
+                                <span className={styles.metaChip}>
+                                  {booking.participantsCount} участник(ов)
+                                </span>
+                                <span className={styles.metaChip}>
+                                  {booking.paymentMethod === 'SUBSCRIPTION' ? 'Абонемент' : 'Оплата на месте'}
+                                </span>
+                              </div>
                             </div>
                             {getBookingStatusBadge(booking.status)}
                           </div>
@@ -730,10 +755,14 @@ export default function ProfilePage() {
                                 <h3 className={styles.listCardTitle}>
                                   {enrollment.group?.name || 'Направление'}
                                 </h3>
-                                <p className={styles.listCardSubtitle}>
-                                  {enrollment.participants.length} участник(ов)
-                                  {enrollment.group?.schedule && ` • ${enrollment.group.schedule.time}`}
-                                </p>
+                                <div className={styles.listCardMeta}>
+                                  <span className={styles.metaChip}>
+                                    {enrollment.participants.length} участник(ов)
+                                  </span>
+                                  {enrollment.group?.schedule?.time && (
+                                    <span className={styles.metaChip}>{enrollment.group.schedule.time}</span>
+                                  )}
+                                </div>
                               </div>
                               <div className={styles.enrollmentActions}>
                                 <button
@@ -837,9 +866,10 @@ export default function ProfilePage() {
                               <h3 className={styles.listCardTitle}>
                                 Заказ от {formatDate(order.createdAt)}
                               </h3>
-                              <p className={styles.listCardSubtitle}>
-                                Товаров: {order.items?.length || 0} • Сумма: {order.totalAmount} ₽
-                              </p>
+                              <div className={styles.listCardMeta}>
+                                <span className={styles.metaChip}>Товаров: {order.items?.length || 0}</span>
+                                <span className={styles.metaChip}>Сумма: {order.totalAmount} ₽</span>
+                              </div>
                               <div className={styles.orderItems}>
                                 {order.items?.map((item: any) => (
                                   <div key={item.id} className={styles.orderItem}>

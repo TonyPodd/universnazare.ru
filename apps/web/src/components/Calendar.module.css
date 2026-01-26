@@ -345,12 +345,12 @@
   display: flex;
   gap: 1.25rem;
   padding: 1.35rem;
-  background: white;
+  background: #fbf8f4;
   border: 1px solid rgba(139, 115, 85, 0.14);
   border-radius: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 16px 30px rgba(44, 30, 21, 0.08);
+  box-shadow: 0 14px 26px rgba(44, 30, 21, 0.08);
 }
 
 .eventCard:hover {
@@ -375,14 +375,33 @@
   font-size: 1.1rem;
   font-weight: 800;
   color: #3f342e;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.4rem;
+}
+
+.eventCardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.eventCardChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #5a4a42;
+  background: rgba(139, 115, 85, 0.1);
+  border: 1px solid rgba(139, 115, 85, 0.18);
 }
 
 .eventCardDescription {
   color: #7a6a60;
   font-size: 0.95rem;
   line-height: 1.6;
-  margin-bottom: 0.875rem;
+  margin-bottom: 0.8rem;
 }
 
 .eventCardFooter {
@@ -398,10 +417,12 @@
   color: #8b7355;
 }
 
-.eventCardSeats {
-  font-size: 0.875rem;
-  color: #8b7b70;
-  font-weight: 500;
+.eventCardAction {
+  font-size: 0.85rem;
+  color: #7b654b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 /* Mobile */
@@ -486,12 +507,25 @@
     font-size: 1.0625rem;
   }
 
+  .eventCardMeta {
+    gap: 0.4rem;
+  }
+
+  .eventCardChip {
+    font-size: 0.7rem;
+    padding: 0.18rem 0.5rem;
+  }
+
   .eventCardDescription {
     font-size: 0.875rem;
   }
 
   .eventCardPrice {
     font-size: 1.0625rem;
+  }
+
+  .eventCardAction {
+    font-size: 0.78rem;
   }
 }
 

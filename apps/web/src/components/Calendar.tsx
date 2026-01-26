@@ -228,32 +228,42 @@ export default function Calendar({ events, onEventClick }: CalendarProps) {
             События на {selectedDay} {monthNames[month].toLowerCase()}
           </h3>
           <div className={styles.eventsList}>
-            {selectedDayEvents.map(event => (
-              <div
-                key={event.id}
-                className={styles.eventCard}
-                onClick={() => onEventClick(event)}
-              >
+            {selectedDayEvents.map(event => {
+              const eventTime = new Date(event.startDate).toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit'
+              });
+              const seatsLeft = event.maxParticipants - event.currentParticipants;
+
+              return (
                 <div
-                  className={styles.eventCardBadge}
-                  style={{ backgroundColor: EVENT_COLORS[event.type] }}
-                />
-                <div className={styles.eventCardContent}>
-                  <h4 className={styles.eventCardTitle}>{event.title}</h4>
-                  <p className={styles.eventCardDescription}>
-                    {event.description.length > 80
-                      ? event.description.substring(0, 80) + '...'
-                      : event.description}
-                  </p>
-                  <div className={styles.eventCardFooter}>
-                    <span className={styles.eventCardPrice}>{event.price} ₽</span>
-                    <span className={styles.eventCardSeats}>
-                      Мест: {event.maxParticipants - event.currentParticipants}
-                    </span>
+                  key={event.id}
+                  className={styles.eventCard}
+                  onClick={() => onEventClick(event)}
+                >
+                  <div
+                    className={styles.eventCardBadge}
+                    style={{ backgroundColor: EVENT_COLORS[event.type] }}
+                  />
+                  <div className={styles.eventCardContent}>
+                    <h4 className={styles.eventCardTitle}>{event.title}</h4>
+                    <div className={styles.eventCardMeta}>
+                      <span className={styles.eventCardChip}>{eventTime}</span>
+                      <span className={styles.eventCardChip}>Мест: {seatsLeft}</span>
+                    </div>
+                    <p className={styles.eventCardDescription}>
+                      {event.description.length > 80
+                        ? event.description.substring(0, 80) + '...'
+                        : event.description}
+                    </p>
+                    <div className={styles.eventCardFooter}>
+                      <span className={styles.eventCardPrice}>{event.price} ₽</span>
+                      <span className={styles.eventCardAction}>Подробнее</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
