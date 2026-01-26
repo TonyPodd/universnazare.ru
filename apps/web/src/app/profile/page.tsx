@@ -47,6 +47,7 @@ export default function ProfilePage() {
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [tabsHasScroll, setTabsHasScroll] = useState(false);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const handledPaymentRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -82,8 +83,13 @@ export default function ProfilePage() {
     const tabParam = params.get('tab');
     const tabToKeep = isTabKey(tabParam) ? tabParam : null;
     if (!paymentStatus) {
+      handledPaymentRef.current = null;
       return;
     }
+    if (handledPaymentRef.current === paymentStatus) {
+      return;
+    }
+    handledPaymentRef.current = paymentStatus;
 
     if (paymentStatus === 'success') {
       addToast('Абонемент успешно оплачен!', 'success');
@@ -626,11 +632,14 @@ export default function ProfilePage() {
                       Купить абонемент
                     </button>
                   </div>
+                  <button onClick={handlePurchaseClick} className={styles.mobilePurchaseButton}>
+                    Купить абонемент
+                  </button>
                   <div className={styles.subscriptionsList}>
-                  {subscriptions.length === 0 ? (
-                    <div className={styles.emptyState}>
-                      <p>У вас пока нет абонементов</p>
-                    </div>
+                    {subscriptions.length === 0 ? (
+                      <div className={styles.emptyState}>
+                        <p>У вас пока нет абонементов</p>
+                      </div>
                   ) : (
                     subscriptions.map((subscription) => (
                       <div key={subscription.id} className={styles.listCard}>
