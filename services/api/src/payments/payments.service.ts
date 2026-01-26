@@ -132,12 +132,13 @@ export class PaymentsService {
     // Откатываем, если платёж перешёл в неуспешный статус и у него уже
     // есть привязанный абонемент, даже если processedAt по какой-то
     // причине не был выставлен.
-    if (
+    const shouldRollback =
       status &&
       failureStatuses.has(status) &&
-      payment.subscriptionId &&
-      !payment.rolledBackAt
-    ) {
+      !payment.rolledBackAt &&
+      (payment.subscriptionId || payment.processedAt);
+
+    if (shouldRollback) {
       await this.usersService.rollbackSubscriptionPurchase(
         payment.userId,
         payment.subscriptionId,
