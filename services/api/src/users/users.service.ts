@@ -347,6 +347,35 @@ export class UsersService {
 
     const nextTotalBalance = Math.max(0, subscription.totalBalance - amount);
     const nextRemainingBalance = Math.max(0, subscription.remainingBalance - amount);
+    const shouldRemove = nextTotalBalance <= 0 && nextRemainingBalance <= 0;
+
+    if (shouldRemove) {
+      const [bookingsCount, enrollmentsCount] = await Promise.all([
+        this.prisma.booking.count({ where: { subscriptionId: subscription.id } }),
+        this.prisma.groupEnrollment.count({ where: { subscriptionId: subscription.id } }),
+      ]);
+
+      if (bookingsCount === 0 && enrollmentsCount === 0) {
+        await this.prisma.subscription.delete({
+          where: { id: subscription.id },
+        });
+        return { deleted: true };
+      }
+
+      return this.prisma.subscription.update({
+        where: { id: subscription.id },
+        data: {
+          totalBalance: 0,
+          remainingBalance: 0,
+          status: 'CANCELLED',
+          expiresAt: new Date(),
+        },
+        include: {
+          subscriptionType: true,
+        },
+      });
+    }
+
     const nextStatus = nextRemainingBalance <= 0 ? 'DEPLETED' : 'ACTIVE';
 
     return this.prisma.subscription.update({
