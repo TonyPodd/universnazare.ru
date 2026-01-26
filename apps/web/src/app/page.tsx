@@ -34,6 +34,10 @@ export default async function HomePage() {
             <div className={styles.heroContent}>
               <h1>Творческая студия мастер-классов</h1>
               <p>Рисование • Лепка • Декор • Рукоделие</p>
+              <div className={styles.heroMeta}>
+                <div className={styles.heroMetaChip}>{events.length} ближайших событий</div>
+                <div className={styles.heroMetaChip}>{news.length} новостей</div>
+              </div>
               <div className={styles.heroButtons}>
                 <a href="/calendar" className={styles.heroPrimary}>
                   Записаться на занятие

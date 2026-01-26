@@ -134,7 +134,7 @@ export default function Cart() {
                           onClick={() => removeFromCart(item.product.id)}
                           aria-label="Удалить"
                         >
-                          🗑️
+                          Удалить
                         </button>
                       </div>
                     ))}

@@ -1,50 +1,52 @@
 .main {
   min-height: calc(100vh - 200px);
-  padding: 3rem 0;
-  background: linear-gradient(to bottom, #faf8f6 0%, #fff 50%);
+  padding: 1.9rem 0 3rem;
+  background: #f6f3ef;
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1.6rem;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: 2.1rem;
+  padding: 2.4rem 2.1rem 2.2rem;
+  background: white;
+  border-radius: 22px;
+  border: 1px solid rgba(139, 115, 85, 0.14);
+  box-shadow: 0 28px 58px rgba(33, 24, 20, 0.12);
 }
 
 .header h1 {
-  font-size: 2.75rem;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #d97757 0%, #f09674 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: clamp(2.1rem, 4.4vw, 2.75rem);
+  font-weight: 800;
+  color: #3f342e;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.01em;
 }
 
 .header p {
-  font-size: 1.125rem;
-  color: #8b7b70;
-  max-width: 650px;
+  font-size: 1.02rem;
+  color: #7a6a60;
+  max-width: 680px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .loading {
   text-align: center;
-  padding: 5rem 2rem;
-  font-size: 1.25rem;
-  color: #8b7b70;
-  font-weight: 500;
+  padding: 4rem 1.6rem;
+  font-size: 1.05rem;
+  color: #7a6a60;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {
   .main {
-    padding: 1.5rem 0;
+    padding: 1.35rem 0 2.2rem;
   }
 
   .container {
@@ -52,20 +54,22 @@
   }
 
   .header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.6rem;
+    padding: 1.9rem 1.2rem 1.8rem;
+    border-radius: 18px;
   }
 
   .header h1 {
-    font-size: 1.75rem;
+    font-size: 1.85rem;
   }
 
   .header p {
-    font-size: 0.9375rem;
+    font-size: 0.96rem;
   }
 
   .loading {
-    padding: 3rem 1rem;
-    font-size: 1rem;
+    padding: 2.7rem 1rem;
+    font-size: 0.98rem;
   }
 }
 
@@ -79,19 +83,20 @@
   }
 
   .header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.35rem;
+    padding: 1.7rem 1rem 1.6rem;
   }
 
   .header h1 {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
   }
 
   .header p {
-    font-size: 0.875rem;
+    font-size: 0.92rem;
   }
 
   .loading {
-    padding: 2.5rem 0.75rem;
-    font-size: 0.9375rem;
+    padding: 2.3rem 0.8rem;
+    font-size: 0.95rem;
   }
 }

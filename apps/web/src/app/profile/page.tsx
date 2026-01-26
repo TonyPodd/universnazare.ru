@@ -371,13 +371,13 @@ export default function ProfilePage() {
               {activeSubscription ? (
                 <>
                   <span className={`${styles.statChip} ${styles.active}`}>
-                    ✓ Абонемент активен
+                    Абонемент активен
                   </span>
                   <span className={styles.statChip}>
-                    💳 {activeSubscription.remainingBalance.toFixed(0)} ₽
+                    Баланс: {activeSubscription.remainingBalance.toFixed(0)} ₽
                   </span>
                   <span className={styles.statChip}>
-                    🎁 Скидка 10%
+                    Скидка 10%
                   </span>
                 </>
               ) : (
@@ -500,18 +500,17 @@ export default function ProfilePage() {
           <div className={styles.rightColumn}>
             <div className={styles.mobileNav}>
               {([
-                { key: 'upcoming', label: 'Предстоящие', icon: '📅', count: upcomingBookings.length },
-                { key: 'subscriptions', label: 'Абонемент', icon: '🎫', count: subscriptions.length },
-                { key: 'enrollments', label: 'Направления', icon: '🧭', count: enrollments.filter(e => e.status === 'ACTIVE').length },
-                { key: 'bookings', label: 'История', icon: '🗂️', count: bookings.length },
-                { key: 'orders', label: 'Заказы', icon: '🛍️', count: orders.length },
+                { key: 'upcoming', label: 'Предстоящие', count: upcomingBookings.length },
+                { key: 'subscriptions', label: 'Абонемент', count: subscriptions.length },
+                { key: 'enrollments', label: 'Направления', count: enrollments.filter(e => e.status === 'ACTIVE').length },
+                { key: 'bookings', label: 'История', count: bookings.length },
+                { key: 'orders', label: 'Заказы', count: orders.length },
               ] as const).map((tab) => (
                 <button
                   key={tab.key}
                   className={`${styles.mobileNavButton} ${activeTab === tab.key ? styles.mobileNavButtonActive : ''}`}
                   onClick={() => setActiveTabWithUrl(tab.key)}
                 >
-                  <span className={styles.mobileNavIcon}>{tab.icon}</span>
                   <span className={styles.mobileNavLabel}>{tab.label}</span>
                   <span className={styles.mobileNavCount}>{tab.count}</span>
                 </button>
@@ -560,28 +559,17 @@ export default function ProfilePage() {
             </div>
 
             <div className={styles.tabContent}>
-              <div className={styles.mobileSectionHeader}>
-                <span className={styles.mobileSectionTitle}>
-                  {activeTab === 'upcoming' && 'Предстоящие'}
-                  {activeTab === 'subscriptions' && 'Абонемент'}
-                  {activeTab === 'enrollments' && 'Направления'}
-                  {activeTab === 'bookings' && 'История'}
-                  {activeTab === 'orders' && 'Заказы'}
-                </span>
-                <span className={styles.mobileSectionCount}>
-                  {activeTab === 'upcoming' && upcomingBookings.length}
-                  {activeTab === 'subscriptions' && subscriptions.length}
-                  {activeTab === 'enrollments' && enrollments.filter(e => e.status === 'ACTIVE').length}
-                  {activeTab === 'bookings' && bookings.length}
-                  {activeTab === 'orders' && orders.length}
-                </span>
-              </div>
-
               {activeTab === 'upcoming' && (
-                <div className={styles.upcomingList}>
+                <div className={styles.tabSection}>
+                  <div className={styles.tabSectionHeader}>
+                    <div>
+                      <h3 className={styles.tabSectionTitle}>Предстоящие занятия</h3>
+                      <p className={styles.tabSectionSubtitle}>Ближайшие записи и текущие статусы</p>
+                    </div>
+                  </div>
+                  <div className={styles.upcomingList}>
                   {upcomingBookings.length === 0 ? (
                     <div className={styles.emptyState}>
-                      <div className={styles.emptyIcon}>📅</div>
                       <p>У вас нет предстоящих занятий</p>
                     </div>
                   ) : (
@@ -623,18 +611,24 @@ export default function ProfilePage() {
                       );
                     })
                   )}
+                  </div>
                 </div>
               )}
 
               {activeTab === 'subscriptions' && (
-                <div className={styles.subscriptionsList}>
-                  <button onClick={handlePurchaseClick} className={styles.purchaseButton}>
-                    Купить новый абонемент
-                  </button>
-
+                <div className={styles.tabSection}>
+                  <div className={styles.tabSectionHeader}>
+                    <div>
+                      <h3 className={styles.tabSectionTitle}>Абонементы</h3>
+                      <p className={styles.tabSectionSubtitle}>Баланс, срок действия и история пополнений</p>
+                    </div>
+                    <button onClick={handlePurchaseClick} className={styles.purchaseButton}>
+                      Купить абонемент
+                    </button>
+                  </div>
+                  <div className={styles.subscriptionsList}>
                   {subscriptions.length === 0 ? (
                     <div className={styles.emptyState}>
-                      <div className={styles.emptyIcon}>📋</div>
                       <p>У вас пока нет абонементов</p>
                     </div>
                   ) : (
@@ -657,14 +651,21 @@ export default function ProfilePage() {
                       </div>
                     ))
                   )}
+                  </div>
                 </div>
               )}
 
               {activeTab === 'bookings' && (
-                <div className={styles.bookingsList}>
+                <div className={styles.tabSection}>
+                  <div className={styles.tabSectionHeader}>
+                    <div>
+                      <h3 className={styles.tabSectionTitle}>История мастер-классов</h3>
+                      <p className={styles.tabSectionSubtitle}>Завершенные и отмененные записи</p>
+                    </div>
+                  </div>
+                  <div className={styles.bookingsList}>
                   {bookings.length === 0 ? (
                     <div className={styles.emptyState}>
-                      <div className={styles.emptyIcon}>📅</div>
                       <p>У вас пока нет записей на мастер-классы</p>
                     </div>
                   ) : (
@@ -692,14 +693,21 @@ export default function ProfilePage() {
                       );
                     })
                   )}
+                  </div>
                 </div>
               )}
 
               {activeTab === 'enrollments' && (
-                <div className={styles.enrollmentsList}>
+                <div className={styles.tabSection}>
+                  <div className={styles.tabSectionHeader}>
+                    <div>
+                      <h3 className={styles.tabSectionTitle}>Направления</h3>
+                      <p className={styles.tabSectionSubtitle}>Активные группы и ближайшие занятия</p>
+                    </div>
+                  </div>
+                  <div className={styles.enrollmentsList}>
                   {enrollments.filter(e => e.status === 'ACTIVE').length === 0 ? (
                     <div className={styles.emptyState}>
-                      <div className={styles.emptyIcon}>🎯</div>
                       <p>Вы пока не записаны ни на одно направление</p>
                     </div>
                   ) : (
@@ -760,10 +768,10 @@ export default function ProfilePage() {
                                     <div className={styles.sessionStatus}>
                                       <span className={styles.bookingStatus}>
                                         {session.booking?.status === 'CANCELLED'
-                                          ? '✗ Отменено'
+                                          ? 'Отменено'
                                           : session.booking?.status === 'PENDING'
-                                          ? '⏳ Ожидает'
-                                          : '✓ Записаны'}
+                                          ? 'Ожидает'
+                                          : 'Записаны'}
                                       </span>
                                       {session.booking && session.booking.status !== 'CANCELLED' && session.booking.status !== 'COMPLETED' && (
                                         <button
@@ -782,14 +790,21 @@ export default function ProfilePage() {
                         </div>
                       ))
                   )}
+                  </div>
                 </div>
               )}
 
               {activeTab === 'orders' && (
-                <div className={styles.ordersList}>
+                <div className={styles.tabSection}>
+                  <div className={styles.tabSectionHeader}>
+                    <div>
+                      <h3 className={styles.tabSectionTitle}>Заказы</h3>
+                      <p className={styles.tabSectionSubtitle}>История покупок и статус выдачи</p>
+                    </div>
+                  </div>
+                  <div className={styles.ordersList}>
                   {orders.length === 0 ? (
                     <div className={styles.emptyState}>
-                      <div className={styles.emptyIcon}>🛍️</div>
                       <p>У вас пока нет заказов</p>
                     </div>
                   ) : (
@@ -854,6 +869,7 @@ export default function ProfilePage() {
                       );
                     })
                   )}
+                  </div>
                 </div>
               )}
             </div>
@@ -896,7 +912,6 @@ export default function ProfilePage() {
             <div className={styles.modalBody}>
               {subscriptionTypes.length === 0 ? (
                 <div className={styles.emptyState}>
-                  <div className={styles.emptyIcon}>💳</div>
                   <p>В данный момент нет доступных абонементов</p>
                 </div>
               ) : (
@@ -919,16 +934,16 @@ export default function ProfilePage() {
                           )}
                           <div className={styles.typeFeatures}>
                             <div className={styles.typeFeature}>
-                              💳 Баланс на счете: {type.amount.toFixed(0)} ₽
+                              Баланс на счете: {type.amount.toFixed(0)} ₽
                             </div>
                             <div className={styles.typeFeature}>
-                              🎁 Экономия: {discount.toFixed(0)} ₽ ({discountPercent}%)
+                              Экономия: {discount.toFixed(0)} ₽ ({discountPercent}%)
                             </div>
                             <div className={styles.typeFeature}>
-                              ⏰ Срок действия: {formatDuration(type.durationDays)}
+                              Срок действия: {formatDuration(type.durationDays)}
                             </div>
                             <div className={styles.typeFeature}>
-                              ✓ Скидка 10% на все занятия
+                              Скидка 10% на все занятия
                             </div>
                           </div>
                           <button

@@ -126,7 +126,7 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
       <div className={styles.overlay} onClick={onClose}>
         <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
           <div className={styles.successMessage}>
-            <h2>✅ Вы записаны!</h2>
+            <h2>Вы записаны!</h2>
             <p>Вы успешно записались на направление "{group.name}"</p>
             <p>Теперь вам доступны все занятия по расписанию.</p>
           </div>
@@ -149,14 +149,12 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
           <div className={styles.formContent}>
             <div className={styles.enrollmentInfo}>
               <div className={styles.infoItem}>
-                <span className={styles.icon}>📅</span>
                 <div>
                   <strong>Расписание:</strong>
                   <p>{formatSchedule(group.schedule)}</p>
                 </div>
               </div>
               <div className={styles.infoItem}>
-                <span className={styles.icon}>💰</span>
                 <div>
                   <strong>Стоимость:</strong>
                   <p>{group.price} ₽ за занятие</p>
@@ -168,22 +166,22 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
             </div>
           {!isAuthenticated ? (
             <div className={styles.warningBox}>
-              <p>⚠️ Необходимо войти в аккаунт</p>
+              <p>Необходимо войти в аккаунт</p>
               <p>Для записи на направление нужна авторизация</p>
               <a href="/login" className={styles.link}>Войти в аккаунт</a>
             </div>
           ) : subscription ? (
             <div className={styles.subscriptionInfo}>
-              <h4>✓ У вас есть активный абонемент</h4>
+              <h4>У вас есть активный абонемент</h4>
               <p>{subscription.name} - осталось {subscription.remainingBalance.toFixed(2)}₽</p>
               <p className={styles.note}>При оплате с абонемента действует скидка 10%</p>
             </div>
           ) : (
             <div className={styles.warningBox}>
-              <p>⚠️ У вас нет активного абонемента</p>
+              <p>У вас нет активного абонемента</p>
               <p>Для записи на направление необходим абонемент</p>
               <button type="button" onClick={handlePurchaseSubscription} className={styles.purchaseButton}>
-                Купить фиктивный абонемент
+                Купить абонемент
               </button>
             </div>
           )}

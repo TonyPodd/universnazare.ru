@@ -30,17 +30,8 @@ export const Toast: React.FC<ToastProps> = ({ id, message, type, duration = 5000
 
   const classNames = [styles.toast, styles[type], isExiting && styles.exiting].filter(Boolean).join(' ');
 
-  // Icons for different types (using Unicode symbols)
-  const icons = {
-    success: '✓',
-    error: '✕',
-    warning: '⚠',
-    info: 'ℹ',
-  };
-
   return (
     <div className={classNames}>
-      <div className={styles.icon}>{icons[type]}</div>
       <div className={styles.message}>{message}</div>
       <button className={styles.closeButton} onClick={handleClose} aria-label="Close">
         ×

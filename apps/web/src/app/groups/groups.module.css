@@ -11,26 +11,19 @@
 
 .hero {
   text-align: center;
-  padding: 2.4rem 1.75rem 2.2rem;
-  background: linear-gradient(135deg, #fdf7f1 0%, #f4e6da 100%);
-  margin: 1.1rem 0 2rem;
+  padding: 2.35rem 1.9rem 2.2rem;
+  background: white;
+  margin: 1.15rem 0 2.05rem;
   color: #5a4a42;
   border-radius: 22px;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(139, 115, 85, 0.14);
+  box-shadow: 0 28px 58px rgba(33, 24, 20, 0.12);
 }
 
 .hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(ellipse at top, rgba(254, 178, 151, 0.15) 0%, transparent 60%),
-              radial-gradient(ellipse at bottom right, rgba(240, 150, 116, 0.1) 0%, transparent 50%);
-  opacity: 1;
+  display: none;
 }
 
 .heroContent {
@@ -41,20 +34,18 @@
 }
 
 .hero h1 {
-  font-size: 2.4rem;
-  margin-bottom: 0.6rem;
-  font-weight: 700;
+  font-size: clamp(2.05rem, 4.6vw, 2.45rem);
+  margin-bottom: 0.65rem;
+  font-weight: 800;
   line-height: 1.2;
-  background: linear-gradient(135deg, #5a4a42 0%, #8b7355 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #3f342e;
+  letter-spacing: -0.01em;
 }
 
 .hero p {
   font-size: 1.02rem;
-  color: #6b5b52;
-  margin-bottom: 0.95rem;
+  color: #7a6a60;
+  margin-bottom: 1.05rem;
   line-height: 1.65;
   max-width: 680px;
   margin-left: auto;
@@ -64,10 +55,13 @@
 .heroNote {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #6b5b52;
+  padding: 0.52rem 0.85rem;
+  border-radius: 999px;
+  background: #f7f1eb;
+  border: 1px solid rgba(139, 115, 85, 0.18);
 }
 
 .groupsSection {
@@ -163,9 +157,9 @@
 }
 
 .groupCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(44, 30, 21, 0.12);
-  border-color: rgba(139, 115, 85, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(44, 30, 21, 0.14);
+  border-color: rgba(139, 115, 85, 0.28);
 }
 
 .groupHeader {
@@ -194,22 +188,16 @@
   width: 100%;
   height: 240px;
   overflow: hidden;
-  background: linear-gradient(135deg, #f8efe6 0%, #f2e3d6 100%);
+  background: #f2ece6;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  border-bottom: 1px solid rgba(139, 115, 85, 0.14);
 }
 
 .groupImage::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  background: linear-gradient(to top, rgba(90, 74, 66, 0.1) 0%, transparent 100%);
-  pointer-events: none;
+  display: none;
 }
 
 .groupImage img {
@@ -220,7 +208,7 @@
 }
 
 .groupCard:hover .groupImage img {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .groupContent {

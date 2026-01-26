@@ -144,16 +144,48 @@
   }
 
   .container {
-    padding: 1.25rem 1.5rem;
-    gap: 1rem;
+    padding: 1.35rem 1.2rem 1.5rem;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .brand {
+    width: 100%;
   }
 
   .contacts {
-    flex-wrap: wrap;
-    font-size: 0.8125rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .contactLink {
+    font-size: 0.85rem;
+    width: 100%;
+    word-break: break-word;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .meta {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .social {
+    gap: 0.9rem;
   }
 
   .legal {
-    font-size: 0.6875rem;
+    font-size: 0.72rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 0.4rem;
+    column-gap: 0.6rem;
   }
 }

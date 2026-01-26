@@ -93,7 +93,7 @@ export default function GroupsPage() {
                 Присоединяйтесь к нашим группам и развивайте свои творческие навыки!
               </p>
               <div className={styles.heroNote}>
-                ℹ️ Это постоянные занятия, а не разовые мастер-классы
+                Это постоянные занятия, а не разовые мастер-классы
               </div>
             </div>
           </section>
@@ -145,7 +145,7 @@ export default function GroupsPage() {
 
                         <div className={styles.scheduleHighlight}>
                           <div className={styles.scheduleRow}>
-                            <strong>📅 Расписание:</strong>
+                            <strong>Расписание:</strong>
                             <span>{formatSchedule(group.schedule)}</span>
                           </div>
                         </div>

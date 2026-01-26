@@ -216,10 +216,10 @@
 .materials {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: white;
-  border-radius: 16px;
-  border: 1px solid rgba(139, 115, 85, 0.14);
-  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.06);
+  background: #fbf7f2;
+  border-radius: 18px;
+  border: 1px solid rgba(139, 115, 85, 0.16);
+  box-shadow: 0 16px 28px rgba(44, 30, 21, 0.08);
 }
 
 .materialsTitle {
@@ -250,17 +250,17 @@
   content: '•';
   position: absolute;
   left: 0;
-  color: #d97757;
+  color: #8b7355;
   font-weight: 600;
 }
 
 .results {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: white;
-  border-radius: 16px;
-  border: 1px solid rgba(139, 115, 85, 0.14);
-  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.06);
+  background: #fbf7f2;
+  border-radius: 18px;
+  border: 1px solid rgba(139, 115, 85, 0.16);
+  box-shadow: 0 16px 28px rgba(44, 30, 21, 0.08);
 }
 
 .resultsTitle {
@@ -281,9 +281,9 @@
   height: 140px;
   background-size: cover;
   background-position: center;
-  background-color: #f7ebe1;
-  border-radius: 12px;
-  border: 1px solid rgba(139, 115, 85, 0.14);
+  background-color: #f2ece6;
+  border-radius: 14px;
+  border: 1px solid rgba(139, 115, 85, 0.16);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

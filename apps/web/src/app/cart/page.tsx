@@ -84,7 +84,6 @@ export default function CartPage() {
 
         {items.length === 0 ? (
           <div className={styles.empty}>
-            <div className={styles.emptyIcon}>🛒</div>
             <h2>Ваша корзина пуста</h2>
             <p className={styles.emptyHint}>Добавьте товары из нашего магазина</p>
             <button onClick={() => router.push('/shop')} className={styles.shopButton}>
@@ -145,7 +144,7 @@ export default function CartPage() {
                       onClick={() => removeFromCart(item.product.id)}
                       aria-label="Удалить из корзины"
                     >
-                      🗑️
+                      Удалить
                     </button>
                   </div>
                 </div>
@@ -178,7 +177,6 @@ export default function CartPage() {
                         onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
                       />
                       <div className={styles.paymentOptionContent}>
-                        <span className={styles.paymentOptionIcon}>💵</span>
                         <div>
                           <div className={styles.paymentOptionTitle}>Оплата при получении</div>
                           <div className={styles.paymentOptionDesc}>Оплатите наличными или картой в мастерской</div>
@@ -196,7 +194,6 @@ export default function CartPage() {
                         disabled={!activeSubscription}
                       />
                       <div className={styles.paymentOptionContent}>
-                        <span className={styles.paymentOptionIcon}>🎫</span>
                         <div>
                           <div className={styles.paymentOptionTitle}>Оплата по абонементу</div>
                           <div className={styles.paymentOptionDesc}>
@@ -206,7 +203,7 @@ export default function CartPage() {
                           </div>
                           {activeSubscription && activeSubscription.remainingBalance < getTotalPrice() && (
                             <div className={styles.paymentWarning}>
-                              ⚠️ Недостаточно средств (требуется {getTotalPrice()} ₽)
+                              Недостаточно средств (требуется {getTotalPrice()} ₽)
                             </div>
                           )}
                         </div>
@@ -231,8 +228,8 @@ export default function CartPage() {
                 )}
 
                 <div className={styles.info}>
-                  <p>💳 Оплата при получении</p>
-                  <p>🏪 Самовывоз из мастерской</p>
+                  <p>Оплата при получении</p>
+                  <p>Самовывоз из мастерской</p>
                 </div>
               </div>
             </div>

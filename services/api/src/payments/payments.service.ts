@@ -104,8 +104,21 @@ export class PaymentsService {
       updateData.paymentId = paymentId;
     }
 
-    const successStatuses = new Set(['AUTHORIZED', 'CONFIRMED']);
-    const failureStatuses = new Set(['REJECTED', 'CANCELLED', 'DEADLINE_EXPIRED', 'REVERSED']);
+    // Не считаем AUTHORIZED финальным успехом: платеж может быть
+    // авторизован, а затем отменён/реверсирован.
+    const successStatuses = new Set(['CONFIRMED']);
+    const failureStatuses = new Set([
+      'REJECTED',
+      'CANCELLED',
+      'CANCELED',
+      'DEADLINE_EXPIRED',
+      'REVERSING',
+      'REVERSED',
+      'REFUNDING',
+      'REFUNDED',
+      'PARTIAL_REVERSED',
+      'PARTIAL_REFUNDED',
+    ]);
 
     if (status && successStatuses.has(status) && !payment.processedAt) {
       const subscription = await this.usersService.purchaseSubscription(payment.userId, payment.typeId, {
@@ -116,7 +129,15 @@ export class PaymentsService {
       updateData.subscriptionId = subscription.id;
     }
 
-    if (status && failureStatuses.has(status) && payment.processedAt && !payment.rolledBackAt) {
+    // Откатываем, если платёж перешёл в неуспешный статус и у него уже
+    // есть привязанный абонемент, даже если processedAt по какой-то
+    // причине не был выставлен.
+    if (
+      status &&
+      failureStatuses.has(status) &&
+      payment.subscriptionId &&
+      !payment.rolledBackAt
+    ) {
       await this.usersService.rollbackSubscriptionPurchase(
         payment.userId,
         payment.subscriptionId,

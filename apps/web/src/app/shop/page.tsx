@@ -30,15 +30,28 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [categories, setCategories] = useState<string[]>([]);
+  const [categoriesCount, setCategoriesCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState<Record<string, number>>({});
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
+  const pointerStartXRef = useRef<number | null>(null);
+  const pointerStartYRef = useRef<number | null>(null);
+  const hoverIntervalsRef = useRef<Record<string, ReturnType<typeof setInterval>>>({});
 
   useEffect(() => {
     loadProducts();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      Object.values(hoverIntervalsRef.current).forEach((intervalId) => {
+        clearInterval(intervalId);
+      });
+      hoverIntervalsRef.current = {};
+    };
   }, []);
 
   const loadProducts = async () => {
@@ -64,6 +77,7 @@ export default function ShopPage() {
         .map(([category]) => category);
 
       setCategories(popularCategories);
+      setCategoriesCount(categoryCounts.size);
     } catch (error) {
       console.error('Ошибка загрузки товаров:', error);
     } finally {
@@ -100,6 +114,7 @@ export default function ShopPage() {
   });
 
   const handleOpenProduct = (product: Product, initialIndex: number = 0) => {
+    stopCardAutoScroll(product.id);
     setSelectedProduct(product);
     setModalImageIndex(initialIndex);
   };
@@ -107,6 +122,28 @@ export default function ShopPage() {
   const handleCloseProduct = () => {
     setSelectedProduct(null);
     setModalImageIndex(0);
+  };
+
+  const stopCardAutoScroll = (productId: string) => {
+    const intervalId = hoverIntervalsRef.current[productId];
+    if (intervalId) {
+      clearInterval(intervalId);
+      delete hoverIntervalsRef.current[productId];
+    }
+  };
+
+  const startCardAutoScroll = (productId: string, imagesCount: number) => {
+    if (imagesCount <= 1) return;
+    stopCardAutoScroll(productId);
+    hoverIntervalsRef.current[productId] = setInterval(() => {
+      setCurrentImageIndex((prev) => {
+        const current = prev[productId] || 0;
+        return {
+          ...prev,
+          [productId]: (current + 1) % imagesCount,
+        };
+      });
+    }, 1800);
   };
 
   const handleAddToCart = (product: Product, e?: React.MouseEvent) => {
@@ -149,6 +186,33 @@ export default function ShopPage() {
     }
   };
 
+  const handleGalleryPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse') return;
+    pointerStartXRef.current = e.clientX;
+    pointerStartYRef.current = e.clientY;
+  };
+
+  const handleGalleryPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse') return;
+    if (pointerStartXRef.current === null || pointerStartYRef.current === null) return;
+
+    const deltaX = e.clientX - pointerStartXRef.current;
+    const deltaY = e.clientY - pointerStartYRef.current;
+
+    pointerStartXRef.current = null;
+    pointerStartYRef.current = null;
+
+    if (Math.abs(deltaX) < 60 || Math.abs(deltaX) < Math.abs(deltaY)) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      advanceModalImage('next');
+    } else {
+      advanceModalImage('prev');
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -175,6 +239,10 @@ export default function ShopPage() {
                 Уникальные изделия ручной работы от наших талантливых мастеров.
                 Каждая вещь создана с любовью и вниманием к деталям.
               </p>
+              <div className={styles.heroMeta}>
+                <span className={styles.heroMetaChip}>{products.length} товаров</span>
+                <span className={styles.heroMetaChip}>{categoriesCount} категорий</span>
+              </div>
             </div>
           </section>
 
@@ -226,6 +294,10 @@ export default function ShopPage() {
                     role="button"
                     tabIndex={0}
                     onClick={() => handleOpenProduct(product, currentIndex)}
+                    onMouseEnter={() =>
+                      startCardAutoScroll(product.id, product.images?.length || 0)
+                    }
+                    onMouseLeave={() => stopCardAutoScroll(product.id)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -299,7 +371,7 @@ export default function ShopPage() {
                         className={styles.addToCartButton}
                         onClick={(e) => handleAddToCart(product, e)}
                       >
-                        {isInCart(product.id) ? 'Добавлено в корзину ✓' : 'Добавить в корзину'}
+                        {isInCart(product.id) ? 'В корзине' : 'Добавить в корзину'}
                       </button>
                     )}
                   </div>
@@ -322,11 +394,13 @@ export default function ShopPage() {
               <div className={styles.modalGallery}>
                 {selectedProduct.images?.length ? (
                   <>
-                    <div
-                      className={styles.modalImageWrapper}
-                      onTouchStart={handleGalleryTouchStart}
-                      onTouchEnd={handleGalleryTouchEnd}
-                    >
+                  <div
+                    className={styles.modalImageWrapper}
+                    onTouchStart={handleGalleryTouchStart}
+                    onTouchEnd={handleGalleryTouchEnd}
+                    onPointerDown={handleGalleryPointerDown}
+                    onPointerUp={handleGalleryPointerUp}
+                  >
                       <img
                         src={getImageUrl(selectedProduct.images[modalImageIndex])}
                         alt={`${selectedProduct.name} - фото ${modalImageIndex + 1}`}
@@ -381,7 +455,7 @@ export default function ShopPage() {
                     className={styles.modalAddButton}
                     onClick={(e) => handleAddToCart(selectedProduct, e)}
                   >
-                    {isInCart(selectedProduct.id) ? 'В корзине ✓' : 'Добавить в корзину'}
+                    {isInCart(selectedProduct.id) ? 'В корзине' : 'Добавить в корзину'}
                   </button>
                 )}
               </div>

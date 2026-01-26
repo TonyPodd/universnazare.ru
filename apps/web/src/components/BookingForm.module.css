@@ -9,13 +9,13 @@
 /* Header */
 .header {
   padding: 2rem 2.5rem 1.5rem;
-  border-bottom: 1px solid rgba(139, 115, 85, 0.08);
+  border-bottom: 1px solid rgba(139, 115, 85, 0.14);
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #3f342e;
   margin: 0 0 0.5rem 0;
 }
 
@@ -35,11 +35,12 @@
 
 /* Event Info Block */
 .eventInfo {
-  background: rgba(247, 235, 225, 0.3);
-  border-radius: 10px;
-  padding: 1.25rem;
+  background: white;
+  border-radius: 16px;
+  padding: 1.35rem;
   margin-bottom: 1.75rem;
-  border: 1px solid rgba(139, 115, 85, 0.1);
+  border: 1px solid rgba(139, 115, 85, 0.14);
+  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.06);
 }
 
 .infoRow {
@@ -50,7 +51,7 @@
 }
 
 .infoRow:not(:last-child) {
-  border-bottom: 1px solid rgba(139, 115, 85, 0.06);
+  border-bottom: 1px solid rgba(139, 115, 85, 0.12);
 }
 
 .infoLabel {
@@ -165,22 +166,31 @@
 }
 
 .paymentOption {
-  padding: 1rem;
-  background: rgba(139, 115, 85, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(139, 115, 85, 0.15);
+  position: relative;
+  padding: 1.1rem 1.2rem 1.15rem 1.3rem;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(139, 115, 85, 0.2);
+  box-shadow: 0 14px 26px rgba(44, 30, 21, 0.08);
+  overflow: hidden;
+}
+
+.paymentOption::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #8b7355;
+  opacity: 0.9;
 }
 
 .paymentHeader {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 0.5rem;
-}
-
-.checkmark {
-  font-size: 1.125rem;
-  color: #8b7355;
+  gap: 0.25rem;
+  margin-bottom: 0.45rem;
 }
 
 .paymentTitle {
@@ -195,18 +205,11 @@
 }
 
 .paymentWarning {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(217, 119, 87, 0.08);
-  border-radius: 8px;
-  border: 1px solid rgba(217, 119, 87, 0.2);
-}
-
-.warningIcon {
-  font-size: 1.25rem;
-  flex-shrink: 0;
+  padding: 1.1rem 1.2rem;
+  background: rgba(217, 119, 87, 0.12);
+  border-radius: 16px;
+  border: 1px solid rgba(217, 119, 87, 0.28);
+  box-shadow: 0 14px 26px rgba(44, 30, 21, 0.08);
 }
 
 .paymentMethods {
@@ -217,36 +220,59 @@
 
 .paymentRadio {
   display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 1rem;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 1.05rem 1.15rem 1.1rem 1.25rem;
   border: 1px solid rgba(139, 115, 85, 0.2);
-  border-radius: 8px;
+  border-radius: 16px;
   cursor: pointer;
   transition: all 0.2s;
+  position: relative;
+  background: white;
+  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.06);
+  overflow: hidden;
+}
+
+.paymentRadio::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #8b7355;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .paymentRadio:hover:not(.paymentRadioDisabled) {
-  border-color: #d97757;
-  background: rgba(247, 235, 225, 0.3);
+  border-color: rgba(139, 115, 85, 0.38);
+  box-shadow: 0 18px 30px rgba(44, 30, 21, 0.12);
+  transform: translateY(-1px);
 }
 
 .paymentRadioActive {
-  border-color: #d97757;
-  background: rgba(247, 235, 225, 0.3);
+  border-color: #8b7355;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.12), 0 20px 34px rgba(44, 30, 21, 0.14);
+}
+
+.paymentRadioActive::before {
+  opacity: 1;
 }
 
 .paymentRadioDisabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: rgba(139, 115, 85, 0.02);
+  background: #f5efe8;
+  box-shadow: none;
 }
 
 .paymentRadio input[type="radio"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #d97757;
+  accent-color: #8b7355;
 }
 
 .paymentRadioDisabled input[type="radio"] {
@@ -261,14 +287,14 @@
 }
 
 .link {
-  color: #d97757;
-  font-weight: 600;
+  color: #7b654b;
+  font-weight: 700;
   text-decoration: underline;
   transition: color 0.2s;
 }
 
 .link:hover {
-  color: #c16643;
+  color: #5a4a42;
 }
 
 /* Participants Section */
@@ -286,26 +312,27 @@
 .participantsTitle {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2d3748;
+  color: #3f342e;
   margin: 0;
 }
 
 .addButton {
-  padding: 0.625rem 1rem;
-  background: linear-gradient(135deg, #feb297 0%, #f09674 100%);
+  padding: 0.65rem 1.05rem;
+  background: #8b7355;
   color: white;
-  border: none;
-  border-radius: 6px;
+  border: 1px solid rgba(139, 115, 85, 0.7);
+  border-radius: 12px;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 6px rgba(240, 150, 116, 0.2);
+  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.16);
 }
 
 .addButton:hover {
-  background: linear-gradient(135deg, #f09674 0%, #e8865e 100%);
-  box-shadow: 0 3px 8px rgba(240, 150, 116, 0.3);
+  background: #7b654b;
+  border-color: #7b654b;
+  box-shadow: 0 16px 28px rgba(44, 30, 21, 0.22);
   transform: translateY(-1px);
 }
 
@@ -396,28 +423,30 @@
 
 /* Buttons */
 .primaryButton {
-  padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #feb297 0%, #f09674 100%);
+  padding: 0.9rem 1.8rem;
+  background: #8b7355;
   color: white;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid rgba(139, 115, 85, 0.82);
+  border-radius: 14px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 3px 10px rgba(240, 150, 116, 0.25);
+  box-shadow: 0 18px 32px rgba(44, 30, 21, 0.18);
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f09674 0%, #e8865e 100%);
-  box-shadow: 0 4px 14px rgba(240, 150, 116, 0.35);
-  transform: translateY(-2px);
+  background: #7b654b;
+  border-color: #7b654b;
+  box-shadow: 0 22px 38px rgba(44, 30, 21, 0.26);
+  transform: translateY(-1px);
 }
 
 .primaryButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .secondaryButton {

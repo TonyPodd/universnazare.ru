@@ -262,7 +262,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                 <span className={styles.errorMessage}>Введите корректный email</span>
               )}
               {emailValid === true && (
-                <span className={styles.successMessage}>✓ Email корректен</span>
+                <span className={styles.successMessage}>Email корректен</span>
               )}
               <p className={styles.fieldHint}>Письмо с деталями придёт на этот адрес</p>
             </div>
@@ -274,7 +274,6 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                   {canUseSubscription ? (
                     <div className={styles.paymentOption}>
                       <div className={styles.paymentHeader}>
-                        <span className={styles.checkmark}>✓</span>
                         <span className={styles.paymentTitle}>Абонемент</span>
                       </div>
                       <div className={styles.paymentDetails}>
@@ -283,7 +282,6 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                     </div>
                   ) : (
                     <div className={styles.paymentWarning}>
-                      <span className={styles.warningIcon}>⚠️</span>
                       <div>
                         <strong>Требуется активный абонемент</strong>
                         <br />
@@ -440,7 +438,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                           <span className={styles.errorMessage}>{phoneErrors[index]}</span>
                         )}
                         {phoneValid[index] && (
-                          <span className={styles.successMessage}>✓ Телефон корректен</span>
+                          <span className={styles.successMessage}>Телефон корректен</span>
                         )}
                       </div>
 
