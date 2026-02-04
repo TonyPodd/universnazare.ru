@@ -4,8 +4,8 @@ import { Providers } from './providers';
 import { ToastContainer } from '../components/ui/ToastContainer';
 
 export const metadata: Metadata = {
-  title: 'На заре - Творческое пространство',
-  description: 'Творческое пространство для мастер-классов и направлений',
+  title: 'Творческое пространство «На Заре»',
+  description: 'Творческое пространство «На Заре»',
   icons: {
     icon: '/icon.svg',
     apple: '/apple-icon.svg',
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   metadataBase: new URL('https://nazare.ru'),
   openGraph: {
-    title: 'На заре - Творческое пространство',
-    description: 'Творческое пространство для мастер-классов и направлений',
+    title: 'Творческое пространство «На Заре»',
+    description: 'Творческое пространство «На Заре»',
     url: 'https://nazare.ru',
     siteName: 'На заре',
     locale: 'ru_RU',

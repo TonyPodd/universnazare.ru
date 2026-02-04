@@ -6,7 +6,7 @@ export default function Footer() {
       <div className={styles.container}>
         <div className={styles.brand}>
           <div className={styles.brandName}>На заре</div>
-          <div className={styles.brandDesc}>Творческая студия мастер-классов</div>
+          <div className={styles.brandDesc}>Творческое пространство «На Заре»</div>
         </div>
 
         <div className={styles.contacts}>
