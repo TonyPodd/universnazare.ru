@@ -8,6 +8,10 @@ import { apiClient } from '../../../../lib/api';
 import { Master, Event } from '@mss/shared';
 import ImageUpload from '../../../../components/ImageUpload';
 import styles from '../../new/event-form.module.css';
+import {
+  formatDateTimeLocalKrasnoyarsk,
+  toKrasnoyarskOffsetDateTime,
+} from '../../../../lib/krasnoyarsk-time';
 
 export default function EditEventPage() {
   const router = useRouter();
@@ -47,8 +51,9 @@ export default function EditEventPage() {
         title: event.title,
         description: event.description,
         type: event.type,
-        startDate: new Date(event.startDate).toISOString().slice(0, 16),
-        endDate: new Date(event.endDate).toISOString().slice(0, 16),
+        // event.startDate is stored as UTC instant; show it as business time (Krasnoyarsk) in datetime-local.
+        startDate: formatDateTimeLocalKrasnoyarsk(event.startDate),
+        endDate: formatDateTimeLocalKrasnoyarsk(event.endDate),
         maxParticipants: event.maxParticipants,
         price: event.price,
         imageUrl: event.imageUrl || '',
@@ -73,8 +78,9 @@ export default function EditEventPage() {
         title: formData.title,
         description: formData.description,
         type: formData.type,
-        startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString(),
+        // Always send with +07:00 so the backend validates and stores the intended business time.
+        startDate: toKrasnoyarskOffsetDateTime(formData.startDate),
+        endDate: toKrasnoyarskOffsetDateTime(formData.endDate),
         maxParticipants: Number(formData.maxParticipants),
         price: Number(formData.price),
         imageUrl: formData.imageUrl || null,

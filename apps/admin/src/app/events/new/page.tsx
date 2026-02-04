@@ -8,6 +8,7 @@ import { apiClient } from '../../../lib/api';
 import { Master } from '@mss/shared';
 import ImageUpload from '../../../components/ImageUpload';
 import styles from './event-form.module.css';
+import { toKrasnoyarskOffsetDateTime } from '../../../lib/krasnoyarsk-time';
 
 export default function NewEventPage() {
   const router = useRouter();
@@ -52,8 +53,9 @@ export default function NewEventPage() {
         title: formData.title,
         description: formData.description,
         type: formData.type,
-        startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString(),
+        // Always send with +07:00 so the backend validates and stores the intended business time.
+        startDate: toKrasnoyarskOffsetDateTime(formData.startDate),
+        endDate: toKrasnoyarskOffsetDateTime(formData.endDate),
         maxParticipants: Number(formData.maxParticipants),
         price: Number(formData.price),
         imageUrl: formData.imageUrl || null,
