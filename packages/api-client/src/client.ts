@@ -40,6 +40,24 @@ export class ApiClient {
         if (error.response?.status === 401) {
           // TODO: Implement token refresh logic
           this.clearToken();
+          const w = (globalThis as any).window as any | undefined;
+          if (w) {
+            try {
+              w.localStorage?.removeItem?.('token');
+            } catch {
+              // ignore
+            }
+            // Notify apps (admin/web) to redirect to login.
+            try {
+              w.dispatchEvent?.(new w.Event('mss:unauthorized'));
+            } catch {
+              try {
+                w.dispatchEvent?.({ type: 'mss:unauthorized' });
+              } catch {
+                // ignore
+              }
+            }
+          }
         }
         return Promise.reject(error);
       }

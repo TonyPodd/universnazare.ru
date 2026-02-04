@@ -23,6 +23,23 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     setIsChecking(false);
   }, [pathname, router]);
 
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      try {
+        localStorage.removeItem('token');
+      } catch {
+        // ignore
+      }
+      apiClient.clearToken();
+      if (pathname !== '/login') {
+        router.push('/login');
+      }
+    };
+
+    window.addEventListener('mss:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('mss:unauthorized', handleUnauthorized);
+  }, [pathname, router]);
+
   // Показываем загрузку пока проверяем токен
   if (isChecking && pathname !== '/login') {
     return (

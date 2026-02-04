@@ -35,9 +35,14 @@ export default function UsersPage() {
       const data = await apiClient.users.getAllUsers(currentPage, 20, search);
       setUsers(data.users as UserWithSubscriptions[]);
       setTotalPages(data.pagination.totalPages);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка загрузки пользователей:', error);
-      alert('Не удалось загрузить пользователей');
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Не удалось загрузить пользователей';
+      alert(message);
     } finally {
       setLoading(false);
     }

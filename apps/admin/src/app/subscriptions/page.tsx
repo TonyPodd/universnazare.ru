@@ -15,9 +15,14 @@ export default function SubscriptionsPage() {
       setLoading(true);
       const data = await apiClient.subscriptionTypes.getAll();
       setSubscriptionTypes(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка загрузки типов абонементов:', error);
-      alert('Не удалось загрузить типы абонементов');
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Не удалось загрузить типы абонементов';
+      alert(message);
     } finally {
       setLoading(false);
     }
@@ -31,9 +36,14 @@ export default function SubscriptionsPage() {
     try {
       await apiClient.subscriptionTypes.toggleActive(id);
       await loadSubscriptionTypes();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка изменения статуса:', error);
-      alert('Не удалось изменить статус');
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Не удалось изменить статус';
+      alert(message);
     }
   };
 
@@ -45,9 +55,14 @@ export default function SubscriptionsPage() {
     try {
       await apiClient.subscriptionTypes.delete(id);
       await loadSubscriptionTypes();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка удаления:', error);
-      alert('Не удалось удалить тип абонемента');
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Не удалось удалить тип абонемента';
+      alert(message);
     }
   };
 

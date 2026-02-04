@@ -151,29 +151,22 @@ export class GroupsService {
         try {
           const now = new Date();
 
-          // Удаляем будущие занятия без подтвержденных броней
+          // При смене расписания удаляем все будущие занятия и связанные с ними записи.
+          // Записи для занятий направления создаются автоматически из enrollments, поэтому
+          // безопасно пересоздать их вместе с новым расписанием.
+          await this.prisma.booking.deleteMany({
+            where: {
+              groupSession: {
+                groupId: id,
+                date: { gt: now },
+              },
+            },
+          });
+
           await this.prisma.groupSession.deleteMany({
             where: {
               groupId: id,
-              date: {
-                gt: now,
-              },
-              OR: [
-                {
-                  bookings: {
-                    none: {},
-                  },
-                },
-                {
-                  bookings: {
-                    every: {
-                      status: {
-                        in: ['CANCELLED'],
-                      },
-                    },
-                  },
-                },
-              ],
+              date: { gt: now },
             },
           });
 
