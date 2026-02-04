@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api';
 import styles from './bookings.module.css';
+import { PaymentMethod } from '@mss/shared';
 
 interface BookingParticipant {
   fullName: string;
@@ -20,7 +21,7 @@ interface BookingWithDetails {
   totalPrice: number;
   participants: BookingParticipant[];
   contactEmail: string;
-  paymentMethod: 'SUBSCRIPTION' | 'ON_SITE';
+  paymentMethod: PaymentMethod;
   notes?: string;
   createdAt: Date;
   event?: {
