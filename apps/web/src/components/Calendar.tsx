@@ -111,7 +111,8 @@ export default function Calendar({ events, onEventClick }: CalendarProps) {
                 const firstEvent = dayEvents[0];
                 const eventTime = new Date(firstEvent.startDate).toLocaleTimeString('ru-RU', {
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
+                  timeZone: 'Asia/Krasnoyarsk',
                 });
                 const availableSeats = firstEvent.maxParticipants - firstEvent.currentParticipants;
                 const isLowSeats = availableSeats <= 3 && availableSeats > 0;
@@ -145,7 +146,8 @@ export default function Calendar({ events, onEventClick }: CalendarProps) {
               {dayEvents.slice(0, 2).map((event) => {
                 const eventTime = new Date(event.startDate).toLocaleTimeString('ru-RU', {
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
+                  timeZone: 'Asia/Krasnoyarsk',
                 });
                 const availableSeats = event.maxParticipants - event.currentParticipants;
 
@@ -231,7 +233,8 @@ export default function Calendar({ events, onEventClick }: CalendarProps) {
             {selectedDayEvents.map(event => {
               const eventTime = new Date(event.startDate).toLocaleTimeString('ru-RU', {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                timeZone: 'Asia/Krasnoyarsk',
               });
               const seatsLeft = event.maxParticipants - event.currentParticipants;
 

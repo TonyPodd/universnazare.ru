@@ -4,6 +4,12 @@ import { EmailService } from '../email/email.service';
 import { GenerateSessionsDto } from './dto/generate-sessions.dto';
 import { CancelSessionDto } from './dto/cancel-session.dto';
 import { SessionStatus } from '@prisma/client';
+import {
+  addDaysUTC,
+  buildKrasnoyarskDateTimeForDay,
+  getKrasnoyarskDayOfWeek,
+  startOfDayKrasnoyarsk,
+} from '../utils/krasnoyarsk-time';
 
 @Injectable()
 export class GroupSessionsService {
@@ -27,16 +33,15 @@ export class GroupSessionsService {
     }
 
     const sessions = [];
-    const currentDate = new Date(dto.startDate);
-    const endDate = new Date(dto.endDate);
+    // Normalize iteration bounds to Krasnoyarsk days to avoid server-TZ dependent behavior.
+    let currentDay = startOfDayKrasnoyarsk(new Date(dto.startDate));
+    const endDay = startOfDayKrasnoyarsk(new Date(dto.endDate));
 
-    while (currentDate <= endDate) {
-      const dayOfWeek = currentDate.getDay();
+    while (currentDay <= endDay) {
+      const dayOfWeek = getKrasnoyarskDayOfWeek(currentDay);
 
       if (schedule.daysOfWeek.includes(dayOfWeek)) {
-        const [hours, minutes] = schedule.time.split(':').map(Number);
-        const sessionDate = new Date(currentDate);
-        sessionDate.setHours(hours, minutes, 0, 0);
+        const sessionDate = buildKrasnoyarskDateTimeForDay(currentDay, schedule.time);
 
         // Проверяем, что занятие ещё не создано
         const existingSession = await this.prisma.groupSession.findFirst({
@@ -62,7 +67,7 @@ export class GroupSessionsService {
         }
       }
 
-      currentDate.setDate(currentDate.getDate() + 1);
+      currentDay = addDaysUTC(currentDay, 1);
     }
 
     return sessions;

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventStatus } from '@prisma/client';
+import { parseKrasnoyarskDateTime } from '../utils/krasnoyarsk-time';
 
 @Injectable()
 export class EventsService {
@@ -12,8 +13,9 @@ export class EventsService {
     return this.prisma.event.create({
       data: {
         ...createEventDto,
-        startDate: new Date(createEventDto.startDate),
-        endDate: new Date(createEventDto.endDate),
+        // Admin sends datetime-local without timezone; interpret as Krasnoyarsk time (+07:00).
+        startDate: parseKrasnoyarskDateTime(createEventDto.startDate),
+        endDate: parseKrasnoyarskDateTime(createEventDto.endDate),
         resultImages: createEventDto.resultImages || [],
         materials: createEventDto.materials || [],
       },
@@ -154,11 +156,11 @@ export class EventsService {
     const data: any = { ...updateEventDto };
 
     if (updateEventDto.startDate) {
-      data.startDate = new Date(updateEventDto.startDate);
+      data.startDate = parseKrasnoyarskDateTime(updateEventDto.startDate);
     }
 
     if (updateEventDto.endDate) {
-      data.endDate = new Date(updateEventDto.endDate);
+      data.endDate = parseKrasnoyarskDateTime(updateEventDto.endDate);
     }
 
     return this.prisma.event.update({

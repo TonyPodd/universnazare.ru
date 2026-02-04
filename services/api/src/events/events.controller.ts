@@ -14,6 +14,7 @@ import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { parseKrasnoyarskDateTime } from '../utils/krasnoyarsk-time';
 
 @ApiTags('Events')
 @Controller('events')
@@ -50,7 +51,10 @@ export class EventsController {
   @ApiQuery({ name: 'startDate', required: true, type: String })
   @ApiQuery({ name: 'endDate', required: true, type: String })
   findCalendarEvents(@Query('startDate') startDate: string, @Query('endDate') endDate: string) {
-    return this.eventsService.findCalendarEvents(new Date(startDate), new Date(endDate));
+    return this.eventsService.findCalendarEvents(
+      parseKrasnoyarskDateTime(startDate),
+      parseKrasnoyarskDateTime(endDate),
+    );
   }
 
   @Get(':id')
