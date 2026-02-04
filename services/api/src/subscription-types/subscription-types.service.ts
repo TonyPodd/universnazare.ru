@@ -55,6 +55,16 @@ export class SubscriptionTypesService {
         where: { id },
       });
     } catch (error) {
+      if ((error as { code?: string })?.code === 'P2003') {
+        try {
+          return await this.prisma.subscriptionType.update({
+            where: { id },
+            data: { isActive: false },
+          });
+        } catch {
+          throw new NotFoundException('Тип абонемента не найден');
+        }
+      }
       throw new NotFoundException('Тип абонемента не найден');
     }
   }

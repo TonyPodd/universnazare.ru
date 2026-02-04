@@ -71,8 +71,18 @@ export class MastersService {
   async remove(id: string) {
     await this.findOne(id); // проверка существования
 
-    return this.prisma.master.delete({
-      where: { id },
-    });
+    try {
+      return await this.prisma.master.delete({
+        where: { id },
+      });
+    } catch (error) {
+      if ((error as { code?: string })?.code === 'P2003') {
+        return this.prisma.master.update({
+          where: { id },
+          data: { isActive: false },
+        });
+      }
+      throw error;
+    }
   }
 }
