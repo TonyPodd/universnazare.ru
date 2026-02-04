@@ -84,6 +84,21 @@ export class BookingsService {
     return this.client.get<Booking[]>('/bookings');
   }
 
+  async getListPaginated(
+    page = 1,
+    limit = 20,
+    params?: { status?: string; eventOnly?: boolean },
+  ): Promise<PaginatedResponse<Booking> & { totalPages: number }> {
+    return this.client.get<PaginatedResponse<Booking> & { totalPages: number }>('/bookings/paginated', {
+      params: {
+        page,
+        limit,
+        status: params?.status,
+        eventOnly: params?.eventOnly,
+      },
+    });
+  }
+
   async getById(id: string): Promise<Booking> {
     return this.client.get<Booking>(`/bookings/${id}`);
   }

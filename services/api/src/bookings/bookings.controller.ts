@@ -10,6 +10,9 @@ import {
   UseGuards,
   Request,
   BadRequestException,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { OptionalJwtAuthGuard } from '../auth/optional-auth.guard';
@@ -17,6 +20,13 @@ import { OptionalJwtAuthGuard } from '../auth/optional-auth.guard';
 @Controller('bookings')
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
+
+  private normalizeStatus(status?: string) {
+    const allowed = new Set(['PENDING', 'CONFIRMED', 'CANCELLED', 'ATTENDED']);
+    if (!status) return undefined;
+    if (!allowed.has(status)) return undefined;
+    return status as 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'ATTENDED';
+  }
 
   @Post()
   @UseGuards(OptionalJwtAuthGuard)
@@ -48,6 +58,22 @@ export class BookingsController {
   @Get()
   findAll() {
     return this.bookingsService.findAll();
+  }
+
+  @Get('paginated')
+  findPaginated(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('status') status?: string,
+    @Query('eventOnly') eventOnly?: string,
+  ) {
+    const onlyEvents = eventOnly === 'true' || eventOnly === '1';
+    return this.bookingsService.findPaginated({
+      page,
+      limit,
+      status: this.normalizeStatus(status && status !== 'all' ? status : undefined),
+      eventOnly: onlyEvents,
+    });
   }
 
   @Get('event/:eventId')

@@ -333,6 +333,66 @@ export class BookingsService {
     });
   }
 
+  async findPaginated(options: {
+    page: number;
+    limit: number;
+    status?: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'ATTENDED';
+    eventOnly?: boolean;
+  }) {
+    const { page, limit, status, eventOnly } = options;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    if (status) where.status = status;
+    if (eventOnly) where.eventId = { not: null };
+
+    const [data, total] = await Promise.all([
+      this.prisma.booking.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          event: {
+            select: {
+              title: true,
+              startDate: true,
+              type: true,
+            },
+          },
+          groupSession: {
+            include: {
+              group: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              phone: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.booking.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   async findOne(id: string) {
     const booking = await this.prisma.booking.findUnique({
       where: { id },

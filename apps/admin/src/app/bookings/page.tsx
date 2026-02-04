@@ -41,16 +41,24 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<BookingWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     loadBookings();
-  }, []);
+  }, [page, filter]);
 
   const loadBookings = async () => {
     try {
       setLoading(true);
-      const data = await apiClient.bookings.getList();
-      setBookings(data);
+      const result = await apiClient.bookings.getListPaginated(page, 25, {
+        status: filter === 'all' ? undefined : filter,
+        eventOnly: true,
+      });
+      setBookings(result.data as any);
+      setTotal(result.total ?? 0);
+      setTotalPages(result.totalPages || 1);
     } catch (error) {
       console.error('Ошибка загрузки записей:', error);
     } finally {
@@ -115,13 +123,11 @@ export default function BookingsPage() {
         <div className={styles.stats}>
           <div className={styles.statItem}>
             <span className={styles.statLabel}>Всего записей:</span>
-            <span className={styles.statValue}>{bookings.length}</span>
+            <span className={styles.statValue}>{total}</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Ожидают:</span>
-            <span className={styles.statValue}>
-              {bookings.filter((b) => b.status === 'PENDING').length}
-            </span>
+            <span className={styles.statLabel}>На странице:</span>
+            <span className={styles.statValue}>{bookings.length}</span>
           </div>
         </div>
       </div>
@@ -129,31 +135,46 @@ export default function BookingsPage() {
       <div className={styles.filters}>
         <button
           className={`${styles.filterBtn} ${filter === 'all' ? styles.filterActive : ''}`}
-          onClick={() => setFilter('all')}
+          onClick={() => {
+            setPage(1);
+            setFilter('all');
+          }}
         >
           Все
         </button>
         <button
           className={`${styles.filterBtn} ${filter === 'PENDING' ? styles.filterActive : ''}`}
-          onClick={() => setFilter('PENDING')}
+          onClick={() => {
+            setPage(1);
+            setFilter('PENDING');
+          }}
         >
           Ожидают
         </button>
         <button
           className={`${styles.filterBtn} ${filter === 'CONFIRMED' ? styles.filterActive : ''}`}
-          onClick={() => setFilter('CONFIRMED')}
+          onClick={() => {
+            setPage(1);
+            setFilter('CONFIRMED');
+          }}
         >
           Подтверждены
         </button>
         <button
           className={`${styles.filterBtn} ${filter === 'ATTENDED' ? styles.filterActive : ''}`}
-          onClick={() => setFilter('ATTENDED')}
+          onClick={() => {
+            setPage(1);
+            setFilter('ATTENDED');
+          }}
         >
           Посетили
         </button>
         <button
           className={`${styles.filterBtn} ${filter === 'CANCELLED' ? styles.filterActive : ''}`}
-          onClick={() => setFilter('CANCELLED')}
+          onClick={() => {
+            setPage(1);
+            setFilter('CANCELLED');
+          }}
         >
           Отменены
         </button>
@@ -248,6 +269,28 @@ export default function BookingsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            className={styles.pageButton}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1 || loading}
+          >
+            ← Назад
+          </button>
+          <span className={styles.pageInfo}>
+            Страница {page} из {totalPages}
+          </span>
+          <button
+            className={styles.pageButton}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages || loading}
+          >
+            Вперёд →
+          </button>
         </div>
       )}
     </div>
