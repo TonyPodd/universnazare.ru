@@ -138,6 +138,29 @@
   box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
+.deleteButton {
+  margin-left: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  background: #fff;
+  color: #c0392b;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteButton:hover:not(:disabled) {
+  border-color: #c0392b;
+  background: #fff5f5;
+}
+
+.deleteButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Pagination */
 .pagination {
   display: flex;

@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Body,
   UseGuards,
   Request,
@@ -93,5 +94,12 @@ export class UsersController {
     @Body('amount') amount: number,
   ) {
     return this.usersService.addBalanceToUser(userId, amount);
+  }
+
+  @Delete('admin/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  async removeUser(@Param('id') userId: string) {
+    return this.usersService.removeUser(userId);
   }
 }

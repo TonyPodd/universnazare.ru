@@ -23,6 +23,7 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<UserWithSubscriptions | null>(null);
   const [addBalanceAmount, setAddBalanceAmount] = useState('');
   const [isAddingBalance, setIsAddingBalance] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
   useEffect(() => {
     loadUsers();
@@ -70,6 +71,23 @@ export default function UsersPage() {
       alert(error.response?.data?.message || 'Не удалось пополнить баланс');
     } finally {
       setIsAddingBalance(false);
+    }
+  };
+
+  const handleDeleteUser = async (user: UserWithSubscriptions) => {
+    if (!confirm(`Удалить пользователя ${user.firstName} ${user.lastName}?`)) {
+      return;
+    }
+
+    try {
+      setDeletingUserId(user.id);
+      await apiClient.users.deleteUser(user.id);
+      await loadUsers();
+    } catch (error: any) {
+      console.error('Ошибка удаления пользователя:', error);
+      alert(error.response?.data?.message || 'Не удалось удалить пользователя');
+    } finally {
+      setDeletingUserId(null);
     }
   };
 
@@ -148,6 +166,13 @@ export default function UsersPage() {
                     className={styles.addBalanceButton}
                   >
                     💰 Пополнить
+                  </button>
+                  <button
+                    onClick={() => handleDeleteUser(user)}
+                    className={styles.deleteButton}
+                    disabled={deletingUserId === user.id}
+                  >
+                    {deletingUserId === user.id ? 'Удаление...' : 'Удалить'}
                   </button>
                 </td>
               </tr>

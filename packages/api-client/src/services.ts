@@ -423,6 +423,10 @@ export class UsersService {
   async addBalance(userId: string, amount: number): Promise<Subscription> {
     return this.client.post(`/users/admin/${userId}/add-balance`, { amount });
   }
+
+  async deleteUser(userId: string): Promise<{ deleted: boolean }> {
+    return this.client.delete(`/users/admin/${userId}`);
+  }
 }
 
 export interface SubscriptionPaymentInitResponse {

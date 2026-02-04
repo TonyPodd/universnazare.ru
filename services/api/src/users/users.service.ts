@@ -615,4 +615,30 @@ export class UsersService {
 
     return subscription;
   }
+
+  async removeUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, role: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+
+    if (user.role === 'ADMIN') {
+      throw new BadRequestException('Нельзя удалить администратора');
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.booking.deleteMany({ where: { userId } }),
+      this.prisma.groupEnrollment.deleteMany({ where: { userId } }),
+      this.prisma.subscriptionPayment.deleteMany({ where: { userId } }),
+      this.prisma.subscription.deleteMany({ where: { userId } }),
+      this.prisma.order.deleteMany({ where: { userId } }),
+      this.prisma.user.delete({ where: { id: userId } }),
+    ]);
+
+    return { deleted: true };
+  }
 }
