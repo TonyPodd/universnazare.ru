@@ -86,9 +86,20 @@ export class ProductsService {
   async remove(id: string) {
     await this.findOne(id); // проверка существования
 
-    return this.prisma.product.delete({
-      where: { id },
-    });
+    try {
+      return await this.prisma.product.delete({
+        where: { id },
+      });
+    } catch (error) {
+      // If product is referenced by order items, archive it instead of deleting.
+      if ((error as { code?: string })?.code === 'P2003') {
+        return this.prisma.product.update({
+          where: { id },
+          data: { isAvailable: false, stockQuantity: 0 },
+        });
+      }
+      throw error;
+    }
   }
 
   async decreaseStock(id: string, quantity: number) {
