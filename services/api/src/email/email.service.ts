@@ -6,6 +6,30 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
   private readonly logger = new Logger(EmailService.name);
 
+  private getBrandName(): string {
+    return process.env.BUSINESS_NAME || 'Творческое пространство «На Заре»';
+  }
+
+  private getSupportPhone(): { href: string; text: string } {
+    // Defaults match the website footer.
+    const raw = (process.env.BUSINESS_PHONE || '+79164468385').trim();
+    const href = `tel:${raw.replace(/\s+/g, '')}`;
+    const text = (process.env.BUSINESS_PHONE_TEXT || '+7 916 446 8385').trim();
+    return { href, text };
+  }
+
+  private getSupportEmail(): { href: string; text: string } {
+    // Defaults match the website footer.
+    const email = (process.env.BUSINESS_EMAIL || 'nazare@univers.su').trim();
+    return { href: `mailto:${email}`, text: email };
+  }
+
+  private getSupportContactsHtml(): string {
+    const phone = this.getSupportPhone();
+    const email = this.getSupportEmail();
+    return `<a href="${phone.href}" style="color:#5a4a42;text-decoration:none;">${phone.text}</a> • <a href="${email.href}" style="color:#5a4a42;text-decoration:none;">${email.text}</a>`;
+  }
+
   private formatCurrency(value: number): string {
     if (!Number.isFinite(value)) return '0';
     const rounded = Math.round((value + Number.EPSILON) * 100) / 100;
@@ -112,7 +136,7 @@ export class EmailService {
       .join('');
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"На заре" <noreply@mss-studio.ru>',
+      from: process.env.SMTP_FROM || `"На заре" <${this.getSupportEmail().text}>`,
       to,
       subject: `Подтверждение записи: ${bookingData.eventTitle}`,
       html: `
@@ -239,7 +263,7 @@ export class EmailService {
                           Есть вопросы? Свяжитесь с нами:
                         </p>
                         <p style="margin: 0; color: #5a4a42; font-size: 15px; font-weight: 600;">
-                          📞 +7 916 446 8385 • 📧 nazare@univers.su
+                          ${this.getSupportContactsHtml()}
                         </p>
                       </div>
 
@@ -253,7 +277,7 @@ export class EmailService {
                         До встречи на мастер-классе!
                       </p>
                       <p style="margin: 0; color: #8b7b70; font-size: 13px;">
-                        С уважением, творческая студия «На заре»
+                        С уважением, ${this.getBrandName()}
                       </p>
                     </td>
                   </tr>
@@ -265,7 +289,7 @@ export class EmailService {
                   <tr>
                     <td style="text-align: center; color: #8b7b70; font-size: 12px; line-height: 1.6;">
                       <p style="margin: 0;">
-                        Вы получили это письмо, потому что записались на мастер-класс в творческой студии «На заре».<br>
+                        Вы получили это письмо, потому что записались на мастер-класс в ${this.getBrandName()}.<br>
                         Если у вас возникли вопросы, свяжитесь с нами по указанным выше контактам.
                       </p>
                     </td>
@@ -357,7 +381,7 @@ export class EmailService {
       .join('');
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"На заре" <noreply@mss-studio.ru>',
+      from: process.env.SMTP_FROM || `"На заре" <${this.getSupportEmail().text}>`,
       to,
       subject: `Подтверждение записи на занятие: ${bookingData.groupName}`,
       html: `
@@ -485,7 +509,7 @@ export class EmailService {
                           Есть вопросы? Свяжитесь с нами:
                         </p>
                         <p style="margin: 0; color: #5a4a42; font-size: 15px; font-weight: 600;">
-                          📞 +7 916 446 8385 • 📧 nazare@univers.su
+                          ${this.getSupportContactsHtml()}
                         </p>
                       </div>
 
@@ -499,7 +523,7 @@ export class EmailService {
                         До встречи на занятии!
                       </p>
                       <p style="margin: 0; color: #8b7b70; font-size: 13px;">
-                        С уважением, творческая студия «На заре»
+                        С уважением, ${this.getBrandName()}
                       </p>
                     </td>
                   </tr>
@@ -511,7 +535,7 @@ export class EmailService {
                   <tr>
                     <td style="text-align: center; color: #8b7b70; font-size: 12px; line-height: 1.6;">
                       <p style="margin: 0;">
-                        Вы получили это письмо, потому что записались на занятие направления в творческой студии «На заре».<br>
+                        Вы получили это письмо, потому что записались на занятие направления в ${this.getBrandName()}.<br>
                         Если у вас возникли вопросы, свяжитесь с нами по указанным выше контактам.
                       </p>
                     </td>
@@ -557,7 +581,7 @@ export class EmailService {
     }).format(new Date(sessionDate));
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"MSS Студия" <noreply@mss-studio.ru>',
+      from: process.env.SMTP_FROM || `"На заре" <${this.getSupportEmail().text}>`,
       to,
       subject: `Отмена занятия: ${groupName}`,
       html: `
@@ -578,7 +602,7 @@ export class EmailService {
 
           <p style="color: #666; font-size: 12px;">
             С уважением,<br>
-            Команда MSS Студия
+            Команда ${this.getBrandName()}
           </p>
         </div>
       `,
@@ -616,7 +640,7 @@ export class EmailService {
     };
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"На заре" <noreply@mss-studio.ru>',
+      from: process.env.SMTP_FROM || `"На заре" <${this.getSupportEmail().text}>`,
       to,
       subject: 'Пополнение баланса абонемента',
       html: `
@@ -688,7 +712,7 @@ export class EmailService {
 
                       <!-- CTA Button -->
                       <div style="text-align: center; margin: 30px 0;">
-                        <a href="${process.env.FRONTEND_URL || 'https://nazare.ru'}/profile"
+                        <a href="${process.env.FRONTEND_URL || 'https://universnazare.ru'}/profile"
                            style="display: inline-block; background: linear-gradient(135deg, #feb297 0%, #f09674 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(254, 178, 151, 0.3);">
                           Перейти в профиль
                         </a>
@@ -712,7 +736,7 @@ export class EmailService {
                           Есть вопросы? Свяжитесь с нами:
                         </p>
                         <p style="margin: 0; color: #5a4a42; font-size: 15px; font-weight: 600;">
-                          📞 +7 916 446 8385 • 📧 nazare@univers.su
+                          ${this.getSupportContactsHtml()}
                         </p>
                       </div>
 
@@ -726,7 +750,7 @@ export class EmailService {
                         Спасибо, что с нами!
                       </p>
                       <p style="margin: 0; color: #8b7b70; font-size: 13px;">
-                        С уважением, творческая студия «На заре»
+                        С уважением, ${this.getBrandName()}
                       </p>
                     </td>
                   </tr>
