@@ -239,7 +239,7 @@ export class EmailService {
                           Есть вопросы? Свяжитесь с нами:
                         </p>
                         <p style="margin: 0; color: #5a4a42; font-size: 15px; font-weight: 600;">
-                          📞 +7 (999) 123-45-67 • 📧 info@mss-studio.ru
+                          📞 +7 916 446 8385 • 📧 nazare@univers.su
                         </p>
                       </div>
 
@@ -485,7 +485,7 @@ export class EmailService {
                           Есть вопросы? Свяжитесь с нами:
                         </p>
                         <p style="margin: 0; color: #5a4a42; font-size: 15px; font-weight: 600;">
-                          📞 +7 (999) 123-45-67 • 📧 info@mss-studio.ru
+                          📞 +7 916 446 8385 • 📧 nazare@univers.su
                         </p>
                       </div>
 
@@ -712,7 +712,7 @@ export class EmailService {
                           Есть вопросы? Свяжитесь с нами:
                         </p>
                         <p style="margin: 0; color: #5a4a42; font-size: 15px; font-weight: 600;">
-                          📞 +7 (999) 123-45-67 • 📧 info@mss-studio.ru
+                          📞 +7 916 446 8385 • 📧 nazare@univers.su
                         </p>
                       </div>
 
