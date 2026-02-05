@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { apiClient } from '../../lib/api';
 import ImageUpload from '../../components/ImageUpload';
 import styles from './products.module.css';
+import { safeGetToken } from '../../lib/token-storage';
 
 interface Product {
   id: string;
@@ -166,7 +167,7 @@ export default function ProductsPage() {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const url = editingProduct
         ? `${process.env.NEXT_PUBLIC_API_URL}/products/${editingProduct.id}`
         : `${process.env.NEXT_PUBLIC_API_URL}/products`;
@@ -199,7 +200,7 @@ export default function ProductsPage() {
     if (!confirm('Удалить этот товар?')) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
         method: 'DELETE',
         headers: {

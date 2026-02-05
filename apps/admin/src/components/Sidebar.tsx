@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { apiClient } from '../lib/api';
 import styles from './Sidebar.module.css';
+import { safeRemoveToken } from '../lib/token-storage';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -25,7 +26,7 @@ export default function Sidebar() {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    safeRemoveToken();
     apiClient.clearToken();
     router.push('/login');
   };

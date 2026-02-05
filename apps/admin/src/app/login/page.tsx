@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../../lib/api';
 import styles from './login.module.css';
+import { safeSetToken } from '../../lib/token-storage';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function AdminLoginPage() {
       }
 
       // Сохраняем токен
-      localStorage.setItem('token', response.accessToken);
+      safeSetToken(response.accessToken);
 
       // Устанавливаем токен в API клиент
       apiClient.setToken(response.accessToken);

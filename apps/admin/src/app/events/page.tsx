@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { apiClient } from '../../lib/api';
 import { Event } from '@mss/shared';
 import styles from './events.module.css';
+import { safeGetToken } from '../../lib/token-storage';
 
 interface Booking {
   id: string;
@@ -73,7 +74,7 @@ export default function EventsPage() {
     setLoadingBookings(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const response = await fetch(`${apiUrl}/bookings/event/${eventId}`, {
         headers: {
           Authorization: `Bearer ${token}`,

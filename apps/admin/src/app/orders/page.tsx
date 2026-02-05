@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import styles from './orders.module.css';
+import { safeGetToken } from '../../lib/token-storage';
 
 const QRScanner = dynamic(() => import('../../components/QRScanner'), { ssr: false });
 
@@ -43,7 +44,7 @@ export default function OrdersPage() {
 
   const loadOrders = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       const response = await fetch(`${apiUrl}/orders`, {
         headers: {
@@ -65,7 +66,7 @@ export default function OrdersPage() {
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       const response = await fetch(`${apiUrl}/orders/${orderId}/status`, {
         method: 'PATCH',
@@ -91,7 +92,7 @@ export default function OrdersPage() {
     if (!scanInput.trim()) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       const response = await fetch(`${apiUrl}/orders/qr/${scanInput.trim()}`, {
         headers: {
@@ -114,7 +115,7 @@ export default function OrdersPage() {
     setShowCameraScanner(false);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = safeGetToken();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       const response = await fetch(`${apiUrl}/orders/qr/${decodedText.trim()}`, {
         headers: {

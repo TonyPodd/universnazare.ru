@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { apiClient } from '../lib/api';
+import { safeGetToken, safeRemoveToken } from '../lib/token-storage';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,7 +12,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Установить токен из localStorage при загрузке приложения
-    const token = localStorage.getItem('token');
+    const token = safeGetToken();
 
     if (token) {
       apiClient.setToken(token);
@@ -25,11 +26,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const handleUnauthorized = () => {
-      try {
-        localStorage.removeItem('token');
-      } catch {
-        // ignore
-      }
+      safeRemoveToken();
       apiClient.clearToken();
       if (pathname !== '/login') {
         router.push('/login');
