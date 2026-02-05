@@ -6,6 +6,11 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
   private readonly logger = new Logger(EmailService.name);
 
+  private getBusinessTimeZone(): string {
+    // Keep all user-facing email times consistent with the studio timezone.
+    return process.env.BUSINESS_TIMEZONE || 'Asia/Krasnoyarsk';
+  }
+
   private getBrandName(): string {
     return process.env.BUSINESS_NAME || 'Творческое пространство «На Заре»';
   }
@@ -88,6 +93,7 @@ export class EmailService {
     },
   ): Promise<void> {
     const formattedDate = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: this.getBusinessTimeZone(),
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -95,6 +101,7 @@ export class EmailService {
     }).format(new Date(bookingData.startDate));
 
     const formattedTime = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: this.getBusinessTimeZone(),
       hour: '2-digit',
       minute: '2-digit',
     }).format(new Date(bookingData.startDate));
@@ -333,6 +340,7 @@ export class EmailService {
     },
   ): Promise<void> {
     const formattedDate = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: this.getBusinessTimeZone(),
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -340,6 +348,7 @@ export class EmailService {
     }).format(new Date(bookingData.startDate));
 
     const formattedTime = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: this.getBusinessTimeZone(),
       hour: '2-digit',
       minute: '2-digit',
     }).format(new Date(bookingData.startDate));
@@ -573,6 +582,7 @@ export class EmailService {
     reason?: string,
   ): Promise<void> {
     const formattedDate = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: this.getBusinessTimeZone(),
       day: 'numeric',
       month: 'long',
       year: 'numeric',
