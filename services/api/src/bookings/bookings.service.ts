@@ -9,6 +9,102 @@ export class BookingsService {
     private emailService: EmailService,
   ) {}
 
+  private async cancelInternal(
+    booking: Awaited<ReturnType<BookingsService['findOne']>>,
+    opts: { enforceTimeWindow: boolean },
+  ) {
+    // If already cancelled, do nothing (idempotent).
+    if (booking.status === 'CANCELLED') {
+      return booking;
+    }
+
+    // If cancellation is requested by a user flow, enforce 24h window.
+    if (opts.enforceTimeWindow) {
+      const now = new Date();
+      const hoursBeforeEvent = 24;
+      const minCancellationTime = hoursBeforeEvent * 60 * 60 * 1000;
+
+      let eventDate: Date | null = null;
+      if (booking.eventId && booking.event?.startDate) {
+        eventDate = new Date(booking.event.startDate);
+      } else if (booking.groupSessionId && booking.groupSession?.date) {
+        eventDate = new Date(booking.groupSession.date);
+      }
+
+      if (eventDate) {
+        const timeUntilEvent = eventDate.getTime() - now.getTime();
+        if (timeUntilEvent < minCancellationTime) {
+          throw new BadRequestException(
+            `Отменить запись можно только за ${hoursBeforeEvent} часов до начала занятия. До занятия осталось ${Math.floor(timeUntilEvent / (60 * 60 * 1000))} часов.`,
+          );
+        }
+      }
+    }
+
+    // Free seats in event/session.
+    if (booking.eventId) {
+      const event = await this.prisma.event.findUnique({
+        where: { id: booking.eventId },
+        select: { currentParticipants: true },
+      });
+
+      if (event && event.currentParticipants >= booking.participantsCount) {
+        await this.prisma.event.update({
+          where: { id: booking.eventId },
+          data: {
+            currentParticipants: {
+              decrement: booking.participantsCount,
+            },
+          },
+        });
+      }
+    } else if (booking.groupSessionId) {
+      const session = await this.prisma.groupSession.findUnique({
+        where: { id: booking.groupSessionId },
+        select: { currentParticipants: true },
+      });
+
+      if (session && session.currentParticipants >= booking.participantsCount) {
+        await this.prisma.groupSession.update({
+          where: { id: booking.groupSessionId },
+          data: {
+            currentParticipants: {
+              decrement: booking.participantsCount,
+            },
+          },
+        });
+      }
+    }
+
+    // Refund subscription balance (if paid via subscription).
+    if (booking.paymentMethod === 'SUBSCRIPTION' && booking.subscriptionId) {
+      await this.prisma.subscription.update({
+        where: { id: booking.subscriptionId },
+        data: {
+          remainingBalance: {
+            increment: booking.totalPrice,
+          },
+        },
+      });
+
+      const subscription = await this.prisma.subscription.findUnique({
+        where: { id: booking.subscriptionId },
+      });
+
+      if (subscription && subscription.status === 'DEPLETED' && subscription.remainingBalance > 0) {
+        await this.prisma.subscription.update({
+          where: { id: booking.subscriptionId },
+          data: { status: 'ACTIVE' },
+        });
+      }
+    }
+
+    return this.prisma.booking.update({
+      where: { id: booking.id },
+      data: { status: 'CANCELLED' },
+    });
+  }
+
   async create(createBookingDto: {
     eventId?: string;
     groupSessionId?: string;
@@ -429,87 +525,7 @@ export class BookingsService {
 
     // Если отменяем бронирование, проверяем временное ограничение
     if (status === 'CANCELLED' && booking.status !== 'CANCELLED') {
-      const now = new Date();
-      const hoursBeforeEvent = 24;
-      const minCancellationTime = hoursBeforeEvent * 60 * 60 * 1000; // 24 часа в миллисекундах
-
-      // Получаем дату события или занятия
-      let eventDate: Date | null = null;
-
-      if (booking.eventId && booking.event?.startDate) {
-        eventDate = new Date(booking.event.startDate);
-      } else if (booking.groupSessionId && booking.groupSession?.date) {
-        eventDate = new Date(booking.groupSession.date);
-      }
-
-      // Проверяем, что отмена происходит минимум за 24 часа
-      if (eventDate) {
-        const timeUntilEvent = eventDate.getTime() - now.getTime();
-        if (timeUntilEvent < minCancellationTime) {
-          throw new BadRequestException(
-            `Отменить запись можно только за ${hoursBeforeEvent} часов до начала занятия. До занятия осталось ${Math.floor(timeUntilEvent / (60 * 60 * 1000))} часов.`
-          );
-        }
-      }
-
-      // Освобождаем места в событии или занятии
-      if (booking.eventId) {
-        const event = await this.prisma.event.findUnique({
-          where: { id: booking.eventId },
-          select: { currentParticipants: true },
-        });
-
-        if (event && event.currentParticipants >= booking.participantsCount) {
-          await this.prisma.event.update({
-            where: { id: booking.eventId },
-            data: {
-              currentParticipants: {
-                decrement: booking.participantsCount,
-              },
-            },
-          });
-        }
-      } else if (booking.groupSessionId) {
-        const session = await this.prisma.groupSession.findUnique({
-          where: { id: booking.groupSessionId },
-          select: { currentParticipants: true },
-        });
-
-        if (session && session.currentParticipants >= booking.participantsCount) {
-          await this.prisma.groupSession.update({
-            where: { id: booking.groupSessionId },
-            data: {
-              currentParticipants: {
-                decrement: booking.participantsCount,
-              },
-            },
-          });
-        }
-      }
-
-      // Если запись была оплачена через абонемент, возвращаем средства
-      if (booking.paymentMethod === 'SUBSCRIPTION' && booking.subscriptionId) {
-        await this.prisma.subscription.update({
-          where: { id: booking.subscriptionId },
-          data: {
-            remainingBalance: {
-              increment: booking.totalPrice,
-            },
-          },
-        });
-
-        // Обновляем статус абонемента если он был исчерпан
-        const subscription = await this.prisma.subscription.findUnique({
-          where: { id: booking.subscriptionId },
-        });
-
-        if (subscription && subscription.status === 'DEPLETED' && subscription.remainingBalance > 0) {
-          await this.prisma.subscription.update({
-            where: { id: booking.subscriptionId },
-            data: { status: 'ACTIVE' },
-          });
-        }
-      }
+      return this.cancelInternal(booking, { enforceTimeWindow: true });
     }
 
     return this.prisma.booking.update({
@@ -520,6 +536,11 @@ export class BookingsService {
 
   async cancel(id: string) {
     return this.updateStatus(id, 'CANCELLED');
+  }
+
+  async adminCancel(id: string) {
+    const booking = await this.findOne(id);
+    return this.cancelInternal(booking, { enforceTimeWindow: false });
   }
 
   async getUpcomingUserBookings(userId: string) {

@@ -16,6 +16,10 @@ import {
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { OptionalJwtAuthGuard } from '../auth/optional-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('bookings')
 export class BookingsController {
@@ -98,6 +102,14 @@ export class BookingsController {
   @HttpCode(HttpStatus.OK)
   cancel(@Param('id') id: string) {
     return this.bookingsService.cancel(id);
+  }
+
+  @Patch(':id/admin-cancel')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  adminCancel(@Param('id') id: string) {
+    return this.bookingsService.adminCancel(id);
   }
 
   @Get('my/upcoming')

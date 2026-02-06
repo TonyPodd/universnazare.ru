@@ -107,6 +107,10 @@ export class BookingsService {
     return this.client.patch<Booking>(`/bookings/${id}/cancel`, {});
   }
 
+  async adminCancel(id: string): Promise<Booking> {
+    return this.client.patch<Booking>(`/bookings/${id}/admin-cancel`, {});
+  }
+
   async updateStatus(id: string, status: string): Promise<Booking> {
     return this.client.patch<Booking>(`/bookings/${id}/status`, { status });
   }

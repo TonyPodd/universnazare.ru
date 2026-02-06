@@ -99,7 +99,11 @@ export default function BookingsPage() {
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
-      await apiClient.bookings.updateStatus(id, status);
+      if (status === 'CANCELLED') {
+        await apiClient.bookings.adminCancel(id);
+      } else {
+        await apiClient.bookings.updateStatus(id, status);
+      }
       await loadBookings();
     } catch (error) {
       console.error('Ошибка обновления статуса:', error);
