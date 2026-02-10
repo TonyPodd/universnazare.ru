@@ -129,6 +129,80 @@ export class GroupEnrollmentsService {
     });
   }
 
+  async getAdminPaginated(options: {
+    page: number;
+    limit: number;
+    status?: EnrollmentStatus;
+    groupId?: string;
+    search?: string;
+  }) {
+    const { page, limit, status, groupId, search } = options;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    if (status) where.status = status;
+    if (groupId) where.groupId = groupId;
+    if (search) {
+      where.OR = [
+        { contactEmail: { contains: search, mode: 'insensitive' as const } },
+        { group: { name: { contains: search, mode: 'insensitive' as const } } },
+        { user: { firstName: { contains: search, mode: 'insensitive' as const } } },
+        { user: { lastName: { contains: search, mode: 'insensitive' as const } } },
+        { user: { email: { contains: search, mode: 'insensitive' as const } } },
+        { user: { phone: { contains: search, mode: 'insensitive' as const } } },
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.groupEnrollment.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              phone: true,
+            },
+          },
+          group: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          subscription: {
+            select: {
+              id: true,
+              remainingBalance: true,
+              status: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.groupEnrollment.count({ where }),
+    ]);
+
+    return {
+      data: data.map((item) => ({
+        ...item,
+        participantsCount: Array.isArray(item.participants)
+          ? item.participants.length
+          : 0,
+      })),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   async getEnrollmentById(id: string) {
     const enrollment = await this.prisma.groupEnrollment.findUnique({
       where: { id },

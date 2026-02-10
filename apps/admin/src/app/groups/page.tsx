@@ -119,6 +119,9 @@ export default function GroupsPage() {
                     <Link href={`/groups/${group.id}/edit`} className={styles.button}>
                       Редактировать
                     </Link>
+                    <Link href={`/group-enrollments?groupId=${group.id}`} className={styles.button}>
+                      Участники
+                    </Link>
                     <button
                       className={`${styles.button} ${styles.buttonToggle}`}
                       onClick={() => handleToggleActive(group.id)}

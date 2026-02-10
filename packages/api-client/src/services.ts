@@ -230,6 +230,25 @@ export class GroupEnrollmentsService {
     return this.client.get<GroupEnrollment[]>('/group-enrollments/my');
   }
 
+  async getAdminPaginated(
+    page = 1,
+    limit = 20,
+    params?: { status?: string; groupId?: string; search?: string },
+  ): Promise<PaginatedResponse<GroupEnrollment> & { totalPages: number }> {
+    return this.client.get<PaginatedResponse<GroupEnrollment> & { totalPages: number }>(
+      '/group-enrollments/admin',
+      {
+        params: {
+          page,
+          limit,
+          status: params?.status,
+          groupId: params?.groupId,
+          search: params?.search,
+        },
+      },
+    );
+  }
+
   async getEnrollmentById(id: string): Promise<GroupEnrollment> {
     return this.client.get<GroupEnrollment>(`/group-enrollments/${id}`);
   }

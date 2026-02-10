@@ -7,14 +7,44 @@ import {
   Param,
   UseGuards,
   Request,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { GroupEnrollmentsService } from './group-enrollments.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role, EnrollmentStatus } from '@prisma/client';
 
 @Controller('group-enrollments')
 export class GroupEnrollmentsController {
   constructor(private readonly enrollmentsService: GroupEnrollmentsService) {}
+
+  @Get('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async getAdminPaginated(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('status') status?: string,
+    @Query('groupId') groupId?: string,
+    @Query('search') search?: string,
+  ) {
+    const normalizedStatus =
+      status === 'ACTIVE' || status === 'PAUSED' || status === 'CANCELLED'
+        ? (status as EnrollmentStatus)
+        : undefined;
+
+    return this.enrollmentsService.getAdminPaginated({
+      page,
+      limit,
+      status: normalizedStatus,
+      groupId,
+      search,
+    });
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)
