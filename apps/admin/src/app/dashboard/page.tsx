@@ -20,6 +20,7 @@ interface RecentBooking {
   id: string;
   eventId?: string;
   groupSessionId?: string;
+  groupEnrollmentId?: string;
   event?: {
     title: string;
     startDate: Date;
@@ -47,6 +48,7 @@ export default function DashboardPage() {
     pendingBookings: 0,
   });
   const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([]);
+  const [recentGroupEnrollments, setRecentGroupEnrollments] = useState<RecentBooking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -75,6 +77,19 @@ export default function DashboardPage() {
       });
 
       setRecentBookings(recentMasterClassBookings.data as RecentBooking[]);
+
+      // For group directions, one enrollment creates many generated bookings.
+      // Deduplicate by groupEnrollmentId to avoid noisy dashboard cards.
+      const uniqueDirectionEnrollments: RecentBooking[] = [];
+      const seenEnrollmentIds = new Set<string>();
+      for (const booking of bookings as RecentBooking[]) {
+        if (!booking.groupEnrollmentId) continue;
+        if (seenEnrollmentIds.has(booking.groupEnrollmentId)) continue;
+        seenEnrollmentIds.add(booking.groupEnrollmentId);
+        uniqueDirectionEnrollments.push(booking);
+        if (uniqueDirectionEnrollments.length >= 5) break;
+      }
+      setRecentGroupEnrollments(uniqueDirectionEnrollments);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -197,6 +212,36 @@ export default function DashboardPage() {
           <div className={styles.bookingsList}>
             {recentBookings.map((booking) => (
               <div key={booking.id} className={styles.bookingCard}>
+                <div className={styles.bookingInfo}>
+                  <h4>{getBookingTitle(booking)}</h4>
+                  <p className={styles.bookingMeta}>
+                    {booking.participantsCount} участник(ов) • {formatDate(booking.createdAt)}
+                  </p>
+                </div>
+                <span className={`${styles.bookingStatus} ${styles[`status${booking.status}`]}`}>
+                  {getStatusLabel(booking.status)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className={styles.recentSection}>
+        <div className={styles.sectionHeader}>
+          <h2>Последние записи на направления</h2>
+          <Link href="/group-enrollments" className={styles.viewAllLink}>
+            Все записи →
+          </Link>
+        </div>
+        {recentGroupEnrollments.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>Нет записей</p>
+          </div>
+        ) : (
+          <div className={styles.bookingsList}>
+            {recentGroupEnrollments.map((booking) => (
+              <div key={booking.groupEnrollmentId || booking.id} className={styles.bookingCard}>
                 <div className={styles.bookingInfo}>
                   <h4>{getBookingTitle(booking)}</h4>
                   <p className={styles.bookingMeta}>
