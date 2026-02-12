@@ -55,11 +55,12 @@ export default function DashboardPage() {
 
   const loadDashboardData = async () => {
     try {
-      const [events, masters, news, bookings] = await Promise.all([
+      const [events, masters, news, bookings, recentMasterClassBookings] = await Promise.all([
         apiClient.events.getList(1, 100),
         apiClient.masters.getList(),
         apiClient.news.getAll(),
         apiClient.bookings.getList(),
+        apiClient.bookings.getListPaginated(1, 5, { eventOnly: true }),
       ]);
 
       setStats({
@@ -73,7 +74,7 @@ export default function DashboardPage() {
         pendingBookings: bookings.filter((b: any) => b.status === 'PENDING').length,
       });
 
-      setRecentBookings(bookings.slice(0, 5) as RecentBooking[]);
+      setRecentBookings(recentMasterClassBookings.data as RecentBooking[]);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -183,7 +184,7 @@ export default function DashboardPage() {
 
       <div className={styles.recentSection}>
         <div className={styles.sectionHeader}>
-          <h2>Последние записи</h2>
+          <h2>Последние записи на МК</h2>
           <Link href="/bookings" className={styles.viewAllLink}>
             Все записи →
           </Link>
