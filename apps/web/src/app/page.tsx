@@ -32,7 +32,10 @@ export default async function HomePage() {
         <div className={styles.container}>
           <section className={styles.hero}>
             <div className={styles.heroContent}>
-              <h1>Творческое пространство «На Заре»</h1>
+              <h1>
+                <span className={styles.heroTitleMain}>Творческое пространство</span>
+                <span className={styles.heroTitleBrand}>«На&nbsp;Заре»</span>
+              </h1>
               <p>Рисование • Лепка • Декор • Рукоделие</p>
               <div className={styles.heroMeta}>
                 <div className={styles.heroMetaChip}>{events.length} ближайших событий</div>

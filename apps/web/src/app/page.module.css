@@ -31,9 +31,19 @@
   font-size: clamp(2.1rem, 4.6vw, 2.5rem);
   margin-bottom: 0.7rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.14;
   color: #3f342e;
   letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.heroTitleMain,
+.heroTitleBrand {
+  display: block;
+}
+
+.heroTitleBrand {
+  white-space: nowrap;
 }
 
 .hero p {
@@ -129,7 +139,8 @@
   }
 
   .hero h1 {
-    font-size: 1.9rem;
+    font-size: 1.72rem;
+    line-height: 1.1;
   }
 
   .hero p {
