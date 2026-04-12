@@ -128,7 +128,6 @@ export default function GroupsPage() {
                   return (
                     <div key={group.id} className={styles.groupCard}>
                       <div className={styles.groupHeader}>
-                        <div className={styles.groupBadge}>Постоянное направление</div>
                         {group.imageUrl && (
                           <div className={styles.groupImage}>
                             <img
@@ -140,6 +139,7 @@ export default function GroupsPage() {
                       </div>
 
                       <div className={styles.groupContent}>
+                        <div className={styles.groupBadge}>Постоянное направление</div>
                         <h2 className={styles.groupName}>{group.name}</h2>
                         <p className={styles.groupShort}>{group.shortDescription}</p>
 
