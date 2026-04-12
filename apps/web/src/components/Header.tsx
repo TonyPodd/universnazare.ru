@@ -80,8 +80,7 @@ export default function Header() {
     <header className={styles.header} ref={headerRef}>
       <div className={styles.container}>
         <Link href="/" className={styles.logoWrapper}>
-          <img src="/logo-na-zare.png" alt="На заре" className={styles.logoImage} />
-          <span className={styles.logoText}>На заре</span>
+          <img src="/logo-na-zare.png" alt="На Заре" className={styles.logoImage} />
         </Link>
 
         <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>

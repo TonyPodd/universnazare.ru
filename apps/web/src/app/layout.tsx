@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: 'Творческое пространство «На Заре»',
     description: 'Творческое пространство «На Заре»',
     url: 'https://nazare.ru',
-    siteName: 'На заре',
+    siteName: 'На Заре',
     locale: 'ru_RU',
     type: 'website',
   },

@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.brand}>
-          <div className={styles.brandName}>На заре</div>
+          <div className={styles.brandName}>На Заре</div>
           <div className={styles.brandDesc}>Творческое пространство «На Заре»</div>
         </div>
 

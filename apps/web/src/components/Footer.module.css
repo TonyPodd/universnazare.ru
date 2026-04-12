@@ -1,8 +1,8 @@
 .footer {
-  background: linear-gradient(180deg, #342822 0%, #2a1f1a 100%);
-  color: #e8ddd1;
+  background: #ffffff;
+  color: #1f5f99;
   margin-top: 4rem;
-  border-top: 1px solid rgba(139, 115, 85, 0.12);
+  border-top: 1px solid rgba(31, 95, 153, 0.12);
 }
 
 .container {
@@ -26,13 +26,13 @@
 .brandName {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #f5ede3;
+  color: #1f5f99;
   letter-spacing: 0.01em;
 }
 
 .brandDesc {
   font-size: 0.8125rem;
-  color: #b8a595;
+  color: #6a91b6;
   font-weight: 400;
 }
 
@@ -47,19 +47,19 @@
 }
 
 .contactLink {
-  color: #e8ddd1;
+  color: #1f5f99;
   text-decoration: none;
   transition: all 0.2s ease;
   border-bottom: 1px solid transparent;
 }
 
 .contactLink:hover {
-  color: #feb297;
-  border-bottom-color: #feb297;
+  color: #ef8627;
+  border-bottom-color: #ef8627;
 }
 
 .separator {
-  color: #6b5b52;
+  color: #9cb9d4;
   user-select: none;
 }
 
@@ -81,12 +81,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #b8a595;
+  color: #6a91b6;
   transition: all 0.2s ease;
 }
 
 .social a:hover {
-  color: #feb297;
+  color: #ef8627;
   transform: translateY(-2px);
 }
 
@@ -95,17 +95,17 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: #8b7b70;
+  color: #6a91b6;
 }
 
 .legal a {
-  color: #8b7b70;
+  color: #6a91b6;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .legal a:hover {
-  color: #feb297;
+  color: #ef8627;
   text-decoration: underline;
 }
 

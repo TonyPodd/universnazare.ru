@@ -1,24 +1,24 @@
 /* ===================================
-   CSS Variables - Теплая палитра "На заре"
+   CSS Variables - Палитра "На Заре"
    =================================== */
 :root {
   /* Primary Colors */
-  --color-primary-dark: #47403A;
-  --color-primary-medium: #8A817C;
-  --color-primary-light: #BCB7B1;
-  --color-accent: #E0AFA0;
+  --color-primary-dark: #1f5f99;
+  --color-primary-medium: #5f8eb9;
+  --color-primary-light: #c8ddf0;
+  --color-accent: #ef8627;
 
   /* Backgrounds */
-  --color-bg-main: #FAF8F6;
+  --color-bg-main: #ffffff;
   --color-bg-card: #FFFFFF;
-  --color-bg-subtle: #F5F1ED;
-  --color-bg-hover: #FFF5F0;
+  --color-bg-subtle: #f7fbff;
+  --color-bg-hover: #fff6eb;
 
   /* Text */
-  --color-text-primary: #47403A;
-  --color-text-secondary: #8A817C;
-  --color-text-tertiary: #BCB7B1;
-  --color-text-on-dark: #FAF8F6;
+  --color-text-primary: #1f5f99;
+  --color-text-secondary: #5e83a7;
+  --color-text-tertiary: #96b5d2;
+  --color-text-on-dark: #ffffff;
 
   /* Status */
   --color-success: #A8C090;
@@ -33,18 +33,18 @@
   --color-info-bg: #E8F1F5;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #E0AFA0 0%, #D4978B 100%);
-  --gradient-subtle: linear-gradient(135deg, #FAF8F6 0%, #F5F1ED 100%);
-  --gradient-accent-light: linear-gradient(135deg, #F0C8BC 0%, #E0AFA0 100%);
+  --gradient-primary: linear-gradient(135deg, #ffbf7c 0%, #ef8627 100%);
+  --gradient-subtle: linear-gradient(135deg, #ffffff 0%, #f5faff 100%);
+  --gradient-accent-light: linear-gradient(135deg, #ffd8ae 0%, #ffb15f 100%);
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(71, 64, 58, 0.08);
-  --shadow-md: 0 4px 16px rgba(71, 64, 58, 0.12);
-  --shadow-lg: 0 8px 24px rgba(71, 64, 58, 0.16);
-  --shadow-accent: 0 4px 12px rgba(224, 175, 160, 0.3);
+  --shadow-sm: 0 2px 8px rgba(31, 95, 153, 0.08);
+  --shadow-md: 0 4px 16px rgba(31, 95, 153, 0.12);
+  --shadow-lg: 0 8px 24px rgba(31, 95, 153, 0.16);
+  --shadow-accent: 0 6px 18px rgba(239, 134, 39, 0.24);
 
   /* Borders */
-  --border-color: #E8E5E2;
+  --border-color: #dce8f3;
   --border-color-hover: var(--color-accent);
 
   /* Border Radius */
@@ -191,7 +191,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(224, 175, 160, 0.1);
+  box-shadow: 0 0 0 3px rgba(239, 134, 39, 0.12);
 }
 
 input::placeholder,

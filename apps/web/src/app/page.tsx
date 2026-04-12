@@ -31,6 +31,9 @@ export default async function HomePage() {
       <main className={styles.main}>
         <div className={styles.container}>
           <section className={styles.hero}>
+            <img src="/decor-book.png" alt="" className={`${styles.heroDecor} ${styles.heroDecorBook}`} aria-hidden="true" />
+            <img src="/decor-prince.png" alt="" className={`${styles.heroDecor} ${styles.heroDecorPrince}`} aria-hidden="true" />
+            <img src="/decor-planets.png" alt="" className={`${styles.heroDecor} ${styles.heroDecorPlanets}`} aria-hidden="true" />
             <div className={styles.heroContent}>
               <h1>
                 <span className={styles.heroTitleMain}>Творческое пространство</span>
@@ -57,6 +60,8 @@ export default async function HomePage() {
               <NewsSlider news={news} />
             </section>
             <section id="events" className={styles.sectionBlock}>
+              <img src="/decor-easel.png" alt="" className={`${styles.sectionDecor} ${styles.sectionDecorEasel}`} aria-hidden="true" />
+              <img src="/decor-dome.png" alt="" className={`${styles.sectionDecor} ${styles.sectionDecorDome}`} aria-hidden="true" />
               <UpcomingEvents events={events} />
             </section>
           </div>
