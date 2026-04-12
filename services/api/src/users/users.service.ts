@@ -216,9 +216,10 @@ export class UsersService {
     typeId: string,
     options?: { bypassPayment?: boolean },
   ) {
-    const allowDirectPurchase = options?.bypassPayment || !process.env.TINKOFF_TERMINAL_KEY;
-    if (!allowDirectPurchase) {
-      throw new BadRequestException('Оплата абонемента доступна только онлайн');
+    if (!options?.bypassPayment) {
+      throw new BadRequestException(
+        'Онлайн-покупка абонементов отключена. Для оформления обратитесь к администратору.',
+      );
     }
 
     // Получить тип абонемента

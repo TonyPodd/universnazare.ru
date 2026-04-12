@@ -285,9 +285,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                       <div>
                         <strong>Требуется активный абонемент</strong>
                         <br />
-                        <Link href="/profile" className={styles.link}>
-                          Приобрести абонемент
-                        </Link>
+                        Абонемент оформляется через администратора студии
                       </div>
                     </div>
                   )}

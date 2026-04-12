@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiClient } from '../../lib/api';
-import { Subscription, Booking, SubscriptionType, GroupEnrollment, Order } from '@mss/shared';
+import { Subscription, Booking, GroupEnrollment, Order } from '@mss/shared';
 import Header from '../../components/Header';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
@@ -42,9 +42,6 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrderQR, setSelectedOrderQR] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [subscriptionTypes, setSubscriptionTypes] = useState<SubscriptionType[]>([]);
-  const [purchasing, setPurchasing] = useState<string | null>(null);
   const [tabsHasScroll, setTabsHasScroll] = useState(false);
   const tabsRef = useRef<HTMLDivElement>(null);
   const handledPaymentRef = useRef<string | null>(null);
@@ -234,45 +231,6 @@ export default function ProfilePage() {
       month: 'long',
       day: 'numeric',
     });
-  };
-
-  const loadSubscriptionTypes = async () => {
-    try {
-      const types = await apiClient.subscriptionTypes.getActive();
-      setSubscriptionTypes(types);
-    } catch (error) {
-      console.error('Ошибка загрузки типов абонементов:', error);
-    }
-  };
-
-  const handlePurchaseClick = async () => {
-    setShowPurchaseModal(true);
-    await loadSubscriptionTypes();
-  };
-
-  const handlePurchase = async (typeId: string) => {
-    try {
-      setPurchasing(typeId);
-      const payment = await apiClient.payments.initSubscriptionPayment(typeId);
-      if (!payment?.paymentUrl) {
-        throw new Error('Не удалось создать платеж');
-      }
-      addToast('Перенаправляем на оплату...', 'success');
-      window.location.href = payment.paymentUrl;
-    } catch (error: any) {
-      console.error('Ошибка покупки абонемента:', error);
-      addToast(error.response?.data?.message || 'Не удалось приобрести абонемент', 'error', 8000);
-    } finally {
-      setPurchasing(null);
-    }
-  };
-
-  const formatDuration = (days?: number) => {
-    if (!days) return 'Бессрочный';
-    if (days === 30) return '1 месяц';
-    if (days === 60) return '2 месяца';
-    if (days === 90) return '3 месяца';
-    return `${days} дней`;
   };
 
   const handleCancelEnrollment = async (enrollmentId: string) => {
@@ -627,19 +585,17 @@ export default function ProfilePage() {
                   <div className={styles.tabSectionHeader}>
                     <div>
                       <h3 className={styles.tabSectionTitle}>Абонементы</h3>
-                      <p className={styles.tabSectionSubtitle}>Баланс, срок действия и история пополнений</p>
+                      <p className={styles.tabSectionSubtitle}>Баланс и срок действия активных абонементов</p>
                     </div>
-                    <button onClick={handlePurchaseClick} className={styles.purchaseButton}>
-                      Купить абонемент
-                    </button>
                   </div>
-                  <button onClick={handlePurchaseClick} className={styles.mobilePurchaseButton}>
-                    Купить абонемент
-                  </button>
+                  <div className={styles.subscriptionNotice}>
+                    Новые абонементы оформляются через администратора студии.
+                  </div>
                   <div className={styles.subscriptionsList}>
                     {subscriptions.length === 0 ? (
                       <div className={styles.emptyState}>
                         <p>У вас пока нет абонементов</p>
+                        <p>Чтобы оформить новый абонемент, обратитесь к администратору.</p>
                       </div>
                   ) : (
                     subscriptions.map((subscription) => {
@@ -933,71 +889,6 @@ export default function ProfilePage() {
               <div className={styles.qrCodeContainer}>
                 <img src={selectedOrderQR} alt="QR код заказа" className={styles.qrCodeImage} />
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showPurchaseModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowPurchaseModal(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h2>Приобрести абонемент</h2>
-              <button className={styles.modalClose} onClick={() => setShowPurchaseModal(false)}>
-                ×
-              </button>
-            </div>
-
-            <div className={styles.modalBody}>
-              {subscriptionTypes.length === 0 ? (
-                <div className={styles.emptyState}>
-                  <p>В данный момент нет доступных абонементов</p>
-                </div>
-              ) : (
-                <>
-                  <p style={{ marginBottom: '1.5rem', color: '#6b5b52', lineHeight: '1.6' }}>
-                    Абонемент дает вам баланс для оплаты занятий со скидкой 10%.
-                    Выберите подходящий вариант:
-                  </p>
-                  <div className={styles.subscriptionTypesGrid}>
-                    {subscriptionTypes.map((type) => {
-                      const discount = type.amount - type.price;
-                      const discountPercent = ((discount / type.amount) * 100).toFixed(0);
-
-                      return (
-                        <div key={type.id} className={styles.typeCard}>
-                          <h3 className={styles.typeName}>{type.name}</h3>
-                          <div className={styles.typePrice}>{type.price} ₽</div>
-                          {type.description && (
-                            <p className={styles.typeDescription}>{type.description}</p>
-                          )}
-                          <div className={styles.typeFeatures}>
-                            <div className={styles.typeFeature}>
-                              Баланс на счете: {type.amount.toFixed(0)} ₽
-                            </div>
-                            <div className={styles.typeFeature}>
-                              Экономия: {discount.toFixed(0)} ₽ ({discountPercent}%)
-                            </div>
-                            <div className={styles.typeFeature}>
-                              Срок действия: {formatDuration(type.durationDays)}
-                            </div>
-                            <div className={styles.typeFeature}>
-                              Скидка 10% на все занятия
-                            </div>
-                          </div>
-                          <button
-                            className={styles.typePurchaseButton}
-                            onClick={() => handlePurchase(type.id)}
-                            disabled={purchasing === type.id}
-                          >
-                            {purchasing === type.id ? 'Оформление...' : `Купить за ${type.price} ₽`}
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
             </div>
           </div>
         </div>

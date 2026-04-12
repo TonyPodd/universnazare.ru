@@ -60,27 +60,6 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
     setParticipants(newParticipants);
   };
 
-  const handlePurchaseSubscription = async () => {
-    // Получаем первый доступный тип абонемента
-    try {
-      const types = await apiClient.subscriptionTypes.getActive();
-      if (types.length === 0) {
-        setError('Нет доступных абонементов');
-        return;
-      }
-
-      // Покупаем первый абонемент
-      const payment = await apiClient.payments.initSubscriptionPayment(types[0].id);
-      if (!payment?.paymentUrl) {
-        setError('Не удалось создать платеж');
-        return;
-      }
-      window.location.href = payment.paymentUrl;
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Ошибка при покупке абонемента');
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!group) return;
@@ -180,9 +159,7 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
             <div className={styles.warningBox}>
               <p>У вас нет активного абонемента</p>
               <p>Для записи на направление необходим абонемент</p>
-              <button type="button" onClick={handlePurchaseSubscription} className={styles.purchaseButton}>
-                Купить абонемент
-              </button>
+              <p>Оформление абонемента доступно через администратора студии.</p>
             </div>
           )}
 

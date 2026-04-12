@@ -739,31 +739,15 @@
   font-size: 1.0625rem;
 }
 
-/* Кнопка покупки */
-.purchaseButton {
-  width: 100%;
-  padding: 1rem;
-  background: #8b7355;
-  color: white;
-  border: 1px solid rgba(139, 115, 85, 0.35);
+.subscriptionNotice {
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.25rem;
   border-radius: 14px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.12);
-}
-
-.mobilePurchaseButton {
-  display: none;
-}
-
-.purchaseButton:hover {
-  background: #7b654b;
-  border-color: rgba(123, 101, 75, 0.55);
-  transform: translateY(-1px);
-  box-shadow: 0 16px 28px rgba(44, 30, 21, 0.16);
+  background: rgba(139, 115, 85, 0.08);
+  border: 1px solid rgba(139, 115, 85, 0.16);
+  color: #6b5b52;
+  line-height: 1.55;
+  font-weight: 600;
 }
 
 /* Модальное окно */

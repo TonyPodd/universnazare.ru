@@ -11,6 +11,10 @@ export class PaymentsService {
   ) {}
 
   async initSubscriptionPayment(userId: string, typeId: string) {
+    throw new BadRequestException(
+      'Онлайн-покупка абонементов отключена. Для оформления обратитесь к администратору.',
+    );
+
     const subscriptionType = await this.prisma.subscriptionType.findUnique({
       where: { id: typeId },
     });
