@@ -14,12 +14,12 @@
   font-size: 2.05rem;
   font-weight: 800;
   margin-bottom: 0.35rem;
-  color: #4a3d35;
+  color: #17436b;
 }
 
 .subtitle {
   margin: 0;
-  color: #6b5b52;
+  color: #5e83a7;
   font-size: 1rem;
   line-height: 1.6;
   max-width: 720px;
@@ -29,20 +29,20 @@
   text-decoration: none;
   font-weight: 800;
   font-size: 0.92rem;
-  color: #8b7355;
+  color: #ef8627;
   padding: 0.6rem 0.9rem;
   border-radius: 12px;
-  border: 1px solid rgba(139, 115, 85, 0.26);
+  border: 1px solid rgba(31, 95, 153, 0.26);
   background: white;
   transition: all 0.2s ease;
   white-space: nowrap;
-  box-shadow: 0 10px 20px rgba(44, 30, 21, 0.06);
+  box-shadow: 0 10px 20px rgba(31, 95, 153, 0.06);
 }
 
 .headerLink:hover {
-  background: rgba(139, 115, 85, 0.08);
-  border-color: rgba(139, 115, 85, 0.4);
-  color: #6b5b52;
+  background: rgba(255, 155, 61, 0.08);
+  border-color: rgba(31, 95, 153, 0.4);
+  color: #5e83a7;
 }
 
 .swiper {
@@ -56,15 +56,15 @@
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 16px 34px rgba(44, 30, 21, 0.12);
-  border: 1px solid rgba(139, 115, 85, 0.14);
+  box-shadow: 0 16px 34px rgba(31, 95, 153, 0.1);
+  border: 1px solid rgba(31, 95, 153, 0.14);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .slide:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 40px rgba(44, 30, 21, 0.16);
-  border-color: rgba(139, 115, 85, 0.3);
+  box-shadow: 0 20px 40px rgba(31, 95, 153, 0.12);
+  border-color: rgba(31, 95, 153, 0.3);
 }
 
 .slideImage {
@@ -89,9 +89,9 @@
   height: 70%;
   background: linear-gradient(
     to top,
-    rgba(44, 30, 21, 0.88) 0%,
-    rgba(44, 30, 21, 0.68) 42%,
-    rgba(44, 30, 21, 0.32) 72%,
+    rgba(23, 67, 107, 0.86) 0%,
+    rgba(23, 67, 107, 0.6) 42%,
+    rgba(23, 67, 107, 0.26) 72%,
     transparent 100%
   );
   z-index: 2;
@@ -171,17 +171,17 @@
   height: 100%;
   padding: 2.6rem 2.4rem;
   z-index: 2;
-  color: #3f342e;
+  color: #17436b;
 }
 
 .slideNoImage .slideMeta {
-  background: rgba(139, 115, 85, 0.12);
-  border: 1px solid rgba(139, 115, 85, 0.2);
-  color: #6b5b52;
+  background: rgba(31, 95, 153, 0.12);
+  border: 1px solid rgba(31, 95, 153, 0.2);
+  color: #5e83a7;
 }
 
 .slideNoImage .slideContent h3 {
-  color: #3f342e;
+  color: #17436b;
   text-shadow: none;
   margin-bottom: 0.4rem;
 }
@@ -198,12 +198,12 @@
   text-align: center;
   background: white;
   border-radius: 16px;
-  border: 1px solid rgba(139, 115, 85, 0.14);
-  box-shadow: 0 14px 28px rgba(44, 30, 21, 0.06);
+  border: 1px solid rgba(31, 95, 153, 0.14);
+  box-shadow: 0 14px 28px rgba(31, 95, 153, 0.06);
 }
 
 .empty p {
-  color: #6b5b52;
+  color: #5e83a7;
   font-size: 1.05rem;
   font-weight: 700;
 }

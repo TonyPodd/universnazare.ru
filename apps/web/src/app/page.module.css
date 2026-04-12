@@ -146,6 +146,13 @@
   opacity: 0.95;
 }
 
+.heroDecorFox {
+  left: 78px;
+  bottom: 14px;
+  width: 92px;
+  opacity: 0.9;
+}
+
 .sections {
   display: flex;
   flex-direction: column;
@@ -169,6 +176,22 @@
   left: 18px;
   top: 42px;
   opacity: 0.82;
+  z-index: 1;
+}
+
+.sectionDecorStarsPair {
+  width: 84px;
+  top: -20px;
+  left: 26px;
+  opacity: 0.92;
+  z-index: 1;
+}
+
+.sectionDecorMoon {
+  width: 70px;
+  right: 30px;
+  bottom: 26px;
+  opacity: 0.88;
   z-index: 1;
 }
 
@@ -214,6 +237,13 @@
     opacity: 0.72;
   }
 
+  .heroDecorFox {
+    left: -10px;
+    bottom: -20px;
+    width: 70px;
+    opacity: 0.66;
+  }
+
   .heroButtons {
     gap: 0.75rem;
   }
@@ -235,7 +265,9 @@
   }
 
   .sectionDecorEasel,
-  .sectionDecorDome {
+  .sectionDecorDome,
+  .sectionDecorStarsPair,
+  .sectionDecorMoon {
     display: none;
   }
 }

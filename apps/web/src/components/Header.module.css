@@ -389,14 +389,14 @@
     width: 42px;
     height: 42px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(33, 24, 20, 0.08);
+    box-shadow: 0 8px 16px rgba(31, 95, 153, 0.08);
   }
 
   .avatar {
     width: 40px;
     height: 40px;
     font-size: 0.95rem;
-    box-shadow: 0 10px 18px rgba(139, 115, 85, 0.22);
+    box-shadow: 0 10px 18px rgba(31, 95, 153, 0.22);
   }
 
   .profileButton {

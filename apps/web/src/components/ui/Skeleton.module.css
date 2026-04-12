@@ -2,9 +2,9 @@
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(139, 115, 85, 0.08) 0%,
-    rgba(139, 115, 85, 0.12) 50%,
-    rgba(139, 115, 85, 0.08) 100%
+    rgba(255, 155, 61, 0.08) 0%,
+    rgba(31, 95, 153, 0.12) 50%,
+    rgba(255, 155, 61, 0.08) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -101,7 +101,7 @@
 }
 
 .skeletonTableRow:first-child {
-  background: rgba(139, 115, 85, 0.04);
+  background: rgba(31, 95, 153, 0.04);
   font-weight: 600;
 }
 

@@ -1,6 +1,6 @@
 .main {
   min-height: calc(100vh - 200px);
-  background: #f6f3ef;
+  background: #ffffff;
 }
 
 .container {
@@ -14,12 +14,12 @@
   padding: 2.35rem 1.9rem 2.2rem;
   background: white;
   margin: 1.15rem 0 2.05rem;
-  color: #5a4a42;
+  color: #1f5f99;
   border-radius: 22px;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(139, 115, 85, 0.14);
-  box-shadow: 0 28px 58px rgba(33, 24, 20, 0.12);
+  border: 1px solid rgba(31, 95, 153, 0.14);
+  box-shadow: 0 28px 58px rgba(31, 95, 153, 0.1);
 }
 
 .hero::before {
@@ -38,13 +38,13 @@
   margin-bottom: 0.65rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #3f342e;
+  color: #17436b;
   letter-spacing: -0.01em;
 }
 
 .hero p {
   font-size: 1.02rem;
-  color: #7a6a60;
+  color: #7a9fc1;
   margin-bottom: 1.05rem;
   line-height: 1.65;
   max-width: 680px;
@@ -57,11 +57,11 @@
   align-items: center;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #6b5b52;
+  color: #5e83a7;
   padding: 0.52rem 0.85rem;
   border-radius: 999px;
-  background: #f7f1eb;
-  border: 1px solid rgba(139, 115, 85, 0.18);
+  background: #f7fbff;
+  border: 1px solid rgba(31, 95, 153, 0.18);
 }
 
 .groupsSection {
@@ -76,22 +76,22 @@
   margin-bottom: 1.4rem;
   padding: 1.15rem 1.25rem;
   background: white;
-  border: 1px solid rgba(139, 115, 85, 0.14);
+  border: 1px solid rgba(31, 95, 153, 0.14);
   border-radius: 18px;
-  box-shadow: 0 12px 26px rgba(44, 30, 21, 0.06);
+  box-shadow: 0 12px 26px rgba(31, 95, 153, 0.06);
 }
 
 .groupsTitle {
   margin: 0 0 0.35rem 0;
   font-size: 1.55rem;
   font-weight: 800;
-  color: #4a3d35;
+  color: #17436b;
 }
 
 .groupsSubtitle {
   margin: 0;
   font-size: 0.98rem;
-  color: #6b5b52;
+  color: #5e83a7;
   line-height: 1.65;
   max-width: 720px;
 }
@@ -102,14 +102,14 @@
   align-items: flex-end;
   gap: 0.15rem;
   padding: 0.25rem 0 0.25rem 1rem;
-  border-left: 1px dashed rgba(139, 115, 85, 0.28);
+  border-left: 1px dashed rgba(31, 95, 153, 0.28);
   min-width: 170px;
 }
 
 .groupsCount {
   font-size: 2.1rem;
   font-weight: 800;
-  color: #8b7355;
+  color: #ef8627;
   line-height: 1;
 }
 
@@ -118,25 +118,25 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #8b7b70;
+  color: #7a9fc1;
 }
 
 .groupsLink {
   margin-top: 0.35rem;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #8b7355;
+  color: #ef8627;
   text-decoration: none;
   padding: 0.45rem 0.7rem;
   border-radius: 10px;
-  border: 1px solid rgba(139, 115, 85, 0.22);
+  border: 1px solid rgba(31, 95, 153, 0.22);
   transition: all 0.2s ease;
 }
 
 .groupsLink:hover {
-  background: rgba(139, 115, 85, 0.08);
-  border-color: rgba(139, 115, 85, 0.38);
-  color: #6b5b52;
+  background: rgba(255, 155, 61, 0.08);
+  border-color: rgba(239, 134, 39, 0.38);
+  color: #5e83a7;
 }
 
 .groupsGrid {
@@ -149,17 +149,17 @@
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 12px 28px rgba(44, 30, 21, 0.08);
+  box-shadow: 0 12px 28px rgba(31, 95, 153, 0.08);
   transition: all 0.3s ease;
-  border: 1px solid rgba(139, 115, 85, 0.14);
+  border: 1px solid rgba(31, 95, 153, 0.14);
   display: flex;
   flex-direction: column;
 }
 
 .groupCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgba(44, 30, 21, 0.14);
-  border-color: rgba(139, 115, 85, 0.28);
+  box-shadow: 0 18px 34px rgba(239, 134, 39, 0.14);
+  border-color: rgba(31, 95, 153, 0.28);
 }
 
 .groupHeader {
@@ -179,7 +179,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   z-index: 10;
-  box-shadow: 0 8px 18px rgba(44, 30, 21, 0.2);
+  box-shadow: 0 8px 18px rgba(239, 134, 39, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.15);
   pointer-events: none;
 }
@@ -193,7 +193,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  border-bottom: 1px solid rgba(139, 115, 85, 0.14);
+  border-bottom: 1px solid rgba(31, 95, 153, 0.14);
 }
 
 .groupImage::after {
@@ -222,7 +222,7 @@
 .groupName {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #5a4a42;
+  color: #1f5f99;
   margin: 0 0 0.5rem 0;
   line-height: 1.25;
   display: flex;
@@ -236,15 +236,15 @@
   font-weight: 600;
   padding: 0.25rem 0.75rem;
   border-radius: 8px;
-  background: rgba(139, 115, 85, 0.1);
-  color: #8b7355;
+  background: rgba(255, 155, 61, 0.1);
+  color: #ef8627;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .groupShort {
   font-size: 0.98rem;
-  color: #6b5b52;
+  color: #5e83a7;
   margin: 0 0 1.25rem 0;
   line-height: 1.7;
 }
@@ -252,7 +252,7 @@
 .scheduleHighlight {
   margin-bottom: 1.05rem;
   padding-bottom: 1.05rem;
-  border-bottom: 1px solid rgba(139, 115, 85, 0.16);
+  border-bottom: 1px solid rgba(31, 95, 153, 0.16);
 }
 
 .scheduleRow {
@@ -261,13 +261,13 @@
   gap: 0.5rem;
   flex-wrap: wrap;
   font-size: 1rem;
-  color: #5a4a42;
+  color: #1f5f99;
   line-height: 1.6;
 }
 
 .scheduleRow strong {
   font-weight: 700;
-  color: #8b7355;
+  color: #ef8627;
 }
 
 .scheduleLink {
@@ -275,7 +275,7 @@
   align-items: center;
   gap: 0.375rem;
   font-size: 0.875rem;
-  color: #8b7355;
+  color: #ef8627;
   text-decoration: none;
   margin-top: 0.5rem;
   font-weight: 600;
@@ -283,7 +283,7 @@
 }
 
 .scheduleLink:hover {
-  color: #a08060;
+  color: #ffb15f;
   text-decoration: underline;
 }
 
@@ -293,9 +293,9 @@
   gap: 1.1rem;
   margin-bottom: 1.25rem;
   font-size: 0.98rem;
-  color: #6b5b52;
+  color: #5e83a7;
   padding-bottom: 1.05rem;
-  border-bottom: 1px solid rgba(139, 115, 85, 0.16);
+  border-bottom: 1px solid rgba(31, 95, 153, 0.16);
   flex-wrap: wrap;
 }
 
@@ -307,7 +307,7 @@
 
 .detailText {
   font-weight: 600;
-  color: #5a4a42;
+  color: #1f5f99;
 }
 
 .groupDescription {
@@ -317,7 +317,7 @@
 .groupDescription h3 {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #8b7355;
+  color: #ef8627;
   margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -325,7 +325,7 @@
 
 .groupDescription p {
   font-size: 0.9375rem;
-  color: #6b5b52;
+  color: #5e83a7;
   line-height: 1.65;
   margin: 0;
   display: -webkit-box;
@@ -354,17 +354,17 @@
 }
 
 .primaryButton {
-  background: #8b7355;
+  background: #ef8627;
   color: white;
   width: 100%;
-  box-shadow: 0 14px 26px rgba(139, 115, 85, 0.24);
+  box-shadow: 0 14px 26px rgba(239, 134, 39, 0.24);
   border: none;
 }
 
 .primaryButton:hover {
-  background: #7b654b;
+  background: #d96f12;
   transform: translateY(-1px);
-  box-shadow: 0 18px 32px rgba(139, 115, 85, 0.3);
+  box-shadow: 0 18px 32px rgba(31, 95, 153, 0.3);
 }
 
 .primaryButton:disabled {
@@ -375,14 +375,14 @@
 
 .secondaryButton {
   background: transparent;
-  color: #8b7355;
+  color: #ef8627;
   border: none;
   flex: 1;
   padding: 0.85rem 1rem;
 }
 
 .secondaryButton:hover {
-  color: #5a4a42;
+  color: #1f5f99;
   text-decoration: underline;
 }
 
@@ -407,11 +407,11 @@
 
 .noSessionsMessage {
   padding: 1.125rem 1.25rem;
-  background: rgba(160, 128, 96, 0.08);
-  border-left: 3px solid #a08060;
+  background: rgba(255, 155, 61, 0.08);
+  border-left: 3px solid #ffb15f;
   border-radius: 10px;
   font-size: 0.9375rem;
-  color: #5a4a42;
+  color: #1f5f99;
   font-weight: 600;
   text-align: center;
   margin-bottom: 1rem;
@@ -455,7 +455,7 @@
     width: 100%;
     align-items: flex-start;
     border-left: none;
-    border-top: 1px dashed rgba(139, 115, 85, 0.28);
+    border-top: 1px dashed rgba(31, 95, 153, 0.28);
     padding: 0.65rem 0 0;
     min-width: 0;
   }

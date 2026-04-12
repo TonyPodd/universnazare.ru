@@ -99,7 +99,7 @@ export default function Calendar({ events, onEventClick }: CalendarProps) {
               {dayEvents.length > 3 && (
                 <div
                   className={styles.eventDot}
-                  style={{ backgroundColor: '#8b7355' }}
+                  style={{ backgroundColor: '#ef8627' }}
                 />
               )}
             </div>

@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(33, 24, 20, 0.62);
+  background: rgba(23, 67, 107, 0.28);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -21,8 +21,8 @@
   width: 100%;
   max-height: 90vh;
   position: relative;
-  border: 1px solid rgba(139, 115, 85, 0.16);
-  box-shadow: 0 28px 80px rgba(33, 24, 20, 0.28);
+  border: 1px solid rgba(31, 95, 153, 0.16);
+  box-shadow: 0 28px 80px rgba(31, 95, 153, 0.18);
   display: flex;
   flex-direction: column;
 }
@@ -33,10 +33,10 @@
   top: 1.5rem;
   right: 1.5rem;
   background: white;
-  border: 1px solid rgba(139, 115, 85, 0.18);
+  border: 1px solid rgba(31, 95, 153, 0.18);
   font-size: 1.6rem;
   cursor: pointer;
-  color: #5a4a42;
+  color: #1f5f99;
   width: 38px;
   height: 38px;
   display: flex;
@@ -45,30 +45,30 @@
   border-radius: 999px;
   transition: all 0.2s;
   z-index: 10;
-  box-shadow: 0 10px 20px rgba(33, 24, 20, 0.16);
+  box-shadow: 0 10px 20px rgba(31, 95, 153, 0.12);
 }
 
 .closeButton:hover {
-  background: rgba(139, 115, 85, 0.08);
-  border-color: rgba(139, 115, 85, 0.32);
+  background: rgba(255, 155, 61, 0.08);
+  border-color: rgba(31, 95, 153, 0.32);
   transform: translateY(-1px);
 }
 
 /* Header */
 .header {
   padding: 2rem 2.5rem 1.5rem;
-  border-bottom: 1px solid rgba(139, 115, 85, 0.14);
+  border-bottom: 1px solid rgba(31, 95, 153, 0.14);
 }
 
 .header h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #3f342e;
+  color: #17436b;
   margin: 0 0 0.5rem 0;
 }
 
 .header h3 {
-  color: #8b7355;
+  color: #ef8627;
   font-weight: 500;
   margin: 0;
   font-size: 1rem;
@@ -95,8 +95,8 @@
   border-radius: 16px;
   padding: 1.35rem;
   margin-bottom: 1.75rem;
-  border: 1px solid rgba(139, 115, 85, 0.14);
-  box-shadow: 0 12px 24px rgba(44, 30, 21, 0.06);
+  border: 1px solid rgba(31, 95, 153, 0.14);
+  box-shadow: 0 12px 24px rgba(31, 95, 153, 0.06);
 }
 
 .infoItem {
@@ -104,7 +104,7 @@
   align-items: flex-start;
   margin-bottom: 1.05rem;
   padding-bottom: 1.05rem;
-  border-bottom: 1px solid rgba(139, 115, 85, 0.12);
+  border-bottom: 1px solid rgba(31, 95, 153, 0.12);
 }
 
 .infoItem:last-child {
@@ -121,14 +121,14 @@
 
 .infoItem strong {
   display: block;
-  color: #5a4a42;
+  color: #1f5f99;
   margin-bottom: 0.25rem;
   font-size: 0.9375rem;
 }
 
 .infoItem p {
   margin: 0;
-  color: #6b5b52;
+  color: #5e83a7;
   font-size: 0.9375rem;
   line-height: 1.5;
 }
@@ -162,8 +162,8 @@
 
 /* Subscription Info */
 .subscriptionInfo {
-  background: rgba(139, 115, 85, 0.08);
-  border: 1px solid rgba(139, 115, 85, 0.22);
+  background: rgba(255, 155, 61, 0.08);
+  border: 1px solid rgba(31, 95, 153, 0.22);
   padding: 1.2rem 1.25rem;
   border-radius: 14px;
   margin-bottom: 1.5rem;
@@ -178,13 +178,13 @@
 
 .subscriptionInfo p {
   margin: 0.25rem 0;
-  color: #6b5b52;
+  color: #5e83a7;
   font-size: 0.9375rem;
 }
 
 .subscriptionInfo .note {
   font-size: 0.875rem;
-  color: #8b7355;
+  color: #ef8627;
   margin-top: 0.5rem;
   font-weight: 600;
 }
@@ -200,7 +200,7 @@
 
 .warningBox p {
   margin: 0.5rem 0;
-  color: #5a4a42;
+  color: #1f5f99;
   font-size: 0.9375rem;
   font-weight: 600;
 }
@@ -221,22 +221,22 @@
 .purchaseButton {
   margin-top: 0.875rem;
   padding: 0.875rem 1.5rem;
-  background: #8b7355;
+  background: #ef8627;
   color: white;
-  border: 1px solid rgba(139, 115, 85, 0.35);
+  border: 1px solid rgba(239, 134, 39, 0.35);
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   width: 100%;
-  box-shadow: 0 12px 22px rgba(44, 30, 21, 0.16);
+  box-shadow: 0 12px 22px rgba(31, 95, 153, 0.12);
 }
 
 .purchaseButton:hover {
-  background: #7b654b;
+  background: #d96f12;
   border-color: rgba(123, 101, 75, 0.55);
-  box-shadow: 0 16px 28px rgba(44, 30, 21, 0.2);
+  box-shadow: 0 16px 28px rgba(239, 134, 39, 0.14);
   transform: translateY(-1px);
 }
 
@@ -250,7 +250,7 @@
 
 .formGroup label {
   font-weight: 600;
-  color: #5a4a42;
+  color: #1f5f99;
   font-size: 0.9375rem;
 }
 
@@ -258,7 +258,7 @@
 .formGroup select,
 .formGroup textarea {
   padding: 0.875rem;
-  border: 1px solid rgba(139, 115, 85, 0.2);
+  border: 1px solid rgba(31, 95, 153, 0.2);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s;
@@ -282,7 +282,7 @@
   padding: 1.25rem;
   background: rgba(247, 235, 225, 0.2);
   border-radius: 8px;
-  border: 1px solid rgba(139, 115, 85, 0.1);
+  border: 1px solid rgba(255, 155, 61, 0.1);
 }
 
 /* Error Message */
@@ -302,7 +302,7 @@
   gap: 1rem;
   justify-content: flex-end;
   padding: 1.5rem 2.5rem;
-  border-top: 1px solid rgba(139, 115, 85, 0.08);
+  border-top: 1px solid rgba(255, 155, 61, 0.08);
   background: #fff;
 }
 
@@ -317,14 +317,14 @@
 }
 
 .cancelButton {
-  background: rgba(139, 115, 85, 0.08);
-  color: #5a4a42;
-  border: 1px solid rgba(139, 115, 85, 0.2);
+  background: rgba(255, 155, 61, 0.08);
+  color: #1f5f99;
+  border: 1px solid rgba(31, 95, 153, 0.2);
 }
 
 .cancelButton:hover {
-  background: rgba(139, 115, 85, 0.12);
-  border-color: #8b7355;
+  background: rgba(31, 95, 153, 0.12);
+  border-color: #ef8627;
 }
 
 .submitButton {
@@ -353,13 +353,13 @@
 }
 
 .successMessage h2 {
-  color: #8b7355;
+  color: #ef8627;
   margin-bottom: 1rem;
   font-size: 1.75rem;
 }
 
 .successMessage p {
-  color: #5a4a42;
+  color: #1f5f99;
   margin: 0.75rem 0;
   font-size: 1.0625rem;
   line-height: 1.6;

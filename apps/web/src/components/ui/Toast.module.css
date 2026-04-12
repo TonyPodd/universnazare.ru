@@ -7,7 +7,7 @@
   background: var(--color-bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 16px 32px rgba(71, 64, 58, 0.14);
+  box-shadow: 0 16px 32px rgba(31, 95, 153, 0.14);
   animation: toastSlideIn 0.3s ease-out;
   position: relative;
   overflow: hidden;
@@ -20,7 +20,7 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background: rgba(139, 115, 85, 0.6);
+  background: rgba(31, 95, 153, 0.6);
 }
 
 .toast.exiting {
@@ -47,8 +47,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(71, 64, 58, 0.06);
-  border: 1px solid rgba(71, 64, 58, 0.08);
+  background: rgba(31, 95, 153, 0.06);
+  border: 1px solid rgba(31, 95, 153, 0.08);
   border-radius: 999px;
   color: var(--color-text-secondary);
   font-size: 20px;
@@ -61,8 +61,8 @@
 
 .closeButton:hover {
   color: var(--color-text-primary);
-  background: rgba(71, 64, 58, 0.12);
-  border-color: rgba(71, 64, 58, 0.2);
+  background: rgba(31, 95, 153, 0.12);
+  border-color: rgba(31, 95, 153, 0.2);
 }
 
 /* ===================================
