@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { apiClient } from '../lib/api';
-import { RegularGroup, BookingParticipant, Subscription } from '@mss/shared';
+import { RegularGroup, BookingParticipant } from '@mss/shared';
 import { useAuth } from '../contexts/AuthContext';
 import styles from './EnrollmentForm.module.css';
 
@@ -24,7 +24,6 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
   const { user, isAuthenticated } = useAuth();
   const [participants, setParticipants] = useState<BookingParticipant[]>([{ fullName: '', phone: '' }]);
   const [contactEmail, setContactEmail] = useState('');
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -37,18 +36,8 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
         phone: user.phone || '',
         age: user.age,
       }]);
-      loadActiveSubscription();
     }
   }, [isAuthenticated, user]);
-
-  const loadActiveSubscription = async () => {
-    try {
-      const activeSub = await apiClient.users.getActiveSubscription();
-      setSubscription(activeSub);
-    } catch (err) {
-      console.error('Error loading subscription:', err);
-    }
-  };
 
   const handleParticipantChange = (index: number, field: keyof BookingParticipant, value: string | number | undefined) => {
     const newParticipants = [...participants];
@@ -70,12 +59,6 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
       return;
     }
 
-    // Проверяем наличие абонемента
-    if (!subscription) {
-      setError('Для записи на направление необходим активный абонемент');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
@@ -84,7 +67,6 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
         groupId: group.id,
         participants,
         contactEmail,
-        subscriptionId: subscription.id,
       });
 
       setSuccess(true);
@@ -149,15 +131,10 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
               <p>Для записи на направление нужна авторизация</p>
               <a href="/login" className={styles.link}>Войти в аккаунт</a>
             </div>
-          ) : subscription ? (
-            <div className={styles.subscriptionInfo}>
-              <h4>Доступ к занятиям активен</h4>
-              <p>Вы можете записаться на это направление и посещать занятия по расписанию.</p>
-            </div>
           ) : (
-            <div className={styles.warningBox}>
-              <p>Для записи на направление нужен активный доступ</p>
-              <p>Оформление доступа выполняет администратор студии.</p>
+            <div className={styles.subscriptionInfo}>
+              <h4>Запись доступна</h4>
+              <p>После записи оплата за занятия производится у администратора студии.</p>
             </div>
           )}
 
@@ -215,7 +192,7 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
             <button type="button" onClick={onClose} className={styles.cancelButton}>
               Отмена
             </button>
-            {isAuthenticated && subscription && (
+            {isAuthenticated && (
               <button type="submit" disabled={loading} className={styles.submitButton}>
                 {loading ? 'Записываем...' : 'Записаться на направление'}
               </button>

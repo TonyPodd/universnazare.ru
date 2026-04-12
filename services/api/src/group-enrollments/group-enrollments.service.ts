@@ -38,27 +38,12 @@ export class GroupEnrollmentsService {
       throw new BadRequestException('Вы уже записаны в это направление');
     }
 
-    // Проверяем наличие активного абонемента у пользователя
-    const activeSubscription = await this.prisma.subscription.findFirst({
-      where: {
-        userId,
-        status: 'ACTIVE',
-        remainingBalance: {
-          gt: 0,
-        },
-      },
-    });
-
-    if (!activeSubscription) {
-      throw new BadRequestException('Для записи на направление требуется активный абонемент с положительным балансом');
-    }
-
-    // Создаем зачисление (деньги не списываем, они будут списываться за каждое занятие)
+    // Создаем зачисление без привязки к абонементу.
+    // Оплата занятий направления выполняется у администратора.
     const enrollment = await this.prisma.groupEnrollment.create({
       data: {
         userId,
         groupId: dto.groupId,
-        subscriptionId: activeSubscription.id,
         participants: dto.participants as any,
         contactEmail: dto.contactEmail,
         notes: dto.notes,
@@ -90,7 +75,7 @@ export class GroupEnrollmentsService {
     if (nextSession) {
       const participants = enrollment.participants as any[];
       const participantsCount = participants.length || 1;
-      const price = group.price * 0.9;
+      const price = group.price;
       const totalPrice = price * participantsCount;
       const startDate = new Date(nextSession.date);
       const endDate = new Date(startDate.getTime() + nextSession.duration * 60 * 1000);
@@ -103,7 +88,7 @@ export class GroupEnrollmentsService {
           price: group.price,
           participants,
           totalPrice,
-          paymentMethod: 'SUBSCRIPTION',
+          paymentMethod: 'ON_SITE',
           notes: dto.notes,
         });
       } catch (error) {
@@ -430,11 +415,10 @@ export class GroupEnrollmentsService {
             userId,
             groupSessionId: session.id,
             groupEnrollmentId: enrollmentId,
-            subscriptionId: enrollment.subscriptionId,
-            status: 'CONFIRMED',
+            status: 'PENDING',
             participantsCount,
             totalPrice: price * participantsCount,
-            paymentMethod: 'SUBSCRIPTION',
+            paymentMethod: 'ON_SITE',
             participants: enrollment.participants,
             contactEmail: enrollment.contactEmail,
           },

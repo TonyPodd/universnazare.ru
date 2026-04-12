@@ -329,19 +329,17 @@ export class GroupSessionsService {
       });
 
       if (!existingBooking) {
-        // Рассчитываем цену со скидкой 10%
-        const price = session.group.price * 0.9;
+        const price = session.group.price;
 
         await this.prisma.booking.create({
           data: {
             userId: enrollment.userId,
             groupSessionId: sessionId,
             groupEnrollmentId: enrollment.id,
-            subscriptionId: enrollment.subscriptionId,
-            status: 'CONFIRMED',
+            status: 'PENDING',
             participantsCount: (enrollment.participants as any).length || 1,
             totalPrice: price * ((enrollment.participants as any).length || 1),
-            paymentMethod: 'SUBSCRIPTION',
+            paymentMethod: 'ON_SITE',
             participants: enrollment.participants,
             contactEmail: enrollment.contactEmail,
           },
