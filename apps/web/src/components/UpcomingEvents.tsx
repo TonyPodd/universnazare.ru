@@ -85,12 +85,6 @@ export default function UpcomingEvents({ events }: UpcomingEventsProps) {
 
             return (
               <div key={event.id} className={styles.card}>
-                <div className={styles.cardBadge}>
-                  {event.type === 'MASTER_CLASS' && 'Мастер-класс'}
-                  {event.type === 'REGULAR_GROUP' && 'Группа'}
-                  {event.type === 'ONE_TIME_EVENT' && 'Событие'}
-                </div>
-
                 {event.imageUrl && (
                   <div
                     className={styles.cardImage}
@@ -99,6 +93,12 @@ export default function UpcomingEvents({ events }: UpcomingEventsProps) {
                 )}
 
                 <div className={styles.cardContent}>
+                  <div className={styles.cardBadge}>
+                    {event.type === 'MASTER_CLASS' && 'Мастер-класс'}
+                    {event.type === 'REGULAR_GROUP' && 'Группа'}
+                    {event.type === 'ONE_TIME_EVENT' && 'Событие'}
+                  </div>
+
                   <h3>{event.title}</h3>
 
                   <div className={styles.cardDate}>
