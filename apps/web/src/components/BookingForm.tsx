@@ -6,7 +6,6 @@ import { apiClient } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { validatePhone, validateEmail } from '../lib/validation';
-import Link from 'next/link';
 import styles from './BookingForm.module.css';
 
 interface BookingFormProps {
@@ -43,10 +42,9 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
 
   const availableSeats = event.maxParticipants - event.currentParticipants;
   const totalPrice = event.price * participants.length;
-  const discountedPrice = totalPrice * 0.9;
   const canUseSubscription = isGroupSession
     ? (isAuthenticated && activeSubscription && activeSubscription.remainingBalance > 0)
-    : (isAuthenticated && activeSubscription && activeSubscription.remainingBalance >= discountedPrice);
+    : false;
 
   useEffect(() => {
     if (user) {
@@ -198,7 +196,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
 
       if (errorMessage.includes('достаточным балансом') || errorMessage.includes('Недостаточно средств')) {
         addToast(
-          'Недостаточно средств на абонементе. Пополните баланс в профиле или выберите оплату на месте.',
+          'Недостаточно средств для подтверждения записи. Свяжитесь с администратором или выберите оплату на месте.',
           'warning',
           8000
         );
@@ -210,7 +208,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
     }
   };
 
-  const finalPrice = paymentMethod === PaymentMethod.SUBSCRIPTION ? discountedPrice : totalPrice;
+  const finalPrice = totalPrice;
 
   return (
     <div className={styles.form}>
@@ -274,18 +272,18 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                   {canUseSubscription ? (
                     <div className={styles.paymentOption}>
                       <div className={styles.paymentHeader}>
-                        <span className={styles.paymentTitle}>Абонемент</span>
+                        <span className={styles.paymentTitle}>Доступ подтверждён</span>
                       </div>
                       <div className={styles.paymentDetails}>
-                        Баланс: {activeSubscription?.remainingBalance.toFixed(2)} ₽ · Деньги списываются за день до занятия
+                        Запись на занятие будет подтверждена автоматически
                       </div>
                     </div>
                   ) : (
                     <div className={styles.paymentWarning}>
                       <div>
-                        <strong>Требуется активный абонемент</strong>
+                        <strong>Нужен активный доступ</strong>
                         <br />
-                        Абонемент оформляется через администратора студии
+                        Обратитесь к администратору студии
                       </div>
                     </div>
                   )}
@@ -305,38 +303,12 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                       <span className={styles.paymentTitle}>На месте</span>
                     </div>
                   </label>
-
-                  <label className={`${styles.paymentRadio} ${paymentMethod === PaymentMethod.SUBSCRIPTION ? styles.paymentRadioActive : ''} ${!canUseSubscription ? styles.paymentRadioDisabled : ''}`}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value={PaymentMethod.SUBSCRIPTION}
-                      checked={paymentMethod === PaymentMethod.SUBSCRIPTION}
-                      onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                      disabled={!canUseSubscription}
-                      className={styles.radio}
-                    />
-                    <div className={styles.paymentContent}>
-                      <span className={styles.paymentTitle}>Абонемент</span>
-                      {canUseSubscription && (
-                        <span className={styles.paymentDetails}>
-                          Баланс: {activeSubscription?.remainingBalance.toFixed(2)} ₽ · Скидка: 10%
-                        </span>
-                      )}
-                      {!canUseSubscription && (
-                        <span className={styles.paymentDetails}>Недоступно</span>
-                      )}
-                    </div>
-                  </label>
                 </div>
               )}
 
               {!isGroupSession && !isAuthenticated && (
                 <div className={styles.hint}>
-                  <Link href="/login" className={styles.link}>
-                    Войдите в аккаунт
-                  </Link>
-                  {' '}для оплаты по абонементу со скидкой 10%
+                  Войдите в аккаунт, чтобы оформить запись
                 </div>
               )}
             </div>

@@ -151,15 +151,13 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
             </div>
           ) : subscription ? (
             <div className={styles.subscriptionInfo}>
-              <h4>У вас есть активный абонемент</h4>
-              <p>{subscription.name} - осталось {subscription.remainingBalance.toFixed(2)}₽</p>
-              <p className={styles.note}>При оплате с абонемента действует скидка 10%</p>
+              <h4>Доступ к занятиям активен</h4>
+              <p>Вы можете записаться на это направление и посещать занятия по расписанию.</p>
             </div>
           ) : (
             <div className={styles.warningBox}>
-              <p>У вас нет активного абонемента</p>
-              <p>Для записи на направление необходим абонемент</p>
-              <p>Оформление абонемента доступно через администратора студии.</p>
+              <p>Для записи на направление нужен активный доступ</p>
+              <p>Оформление доступа выполняет администратор студии.</p>
             </div>
           )}
 

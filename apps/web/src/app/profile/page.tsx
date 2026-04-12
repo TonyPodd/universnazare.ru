@@ -4,15 +4,15 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiClient } from '../../lib/api';
-import { Subscription, Booking, GroupEnrollment, Order } from '@mss/shared';
+import { Booking, GroupEnrollment, Order } from '@mss/shared';
 import Header from '../../components/Header';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
 import styles from './profile.module.css';
 
-type TabKey = 'subscriptions' | 'bookings' | 'upcoming' | 'enrollments' | 'orders';
+type TabKey = 'bookings' | 'upcoming' | 'enrollments' | 'orders';
 
-const TAB_KEYS: TabKey[] = ['upcoming', 'subscriptions', 'enrollments', 'bookings', 'orders'];
+const TAB_KEYS: TabKey[] = ['upcoming', 'enrollments', 'bookings', 'orders'];
 
 const isTabKey = (value: string | null): value is TabKey => {
   return value !== null && TAB_KEYS.includes(value as TabKey);
@@ -20,10 +20,9 @@ const isTabKey = (value: string | null): value is TabKey => {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading, refreshUser, activeSubscription, refreshSubscription } = useAuth();
+  const { user, isAuthenticated, isLoading, refreshUser } = useAuth();
   const { handleError } = useErrorHandler();
   const { addToast } = useToast();
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
   const [enrollments, setEnrollments] = useState<GroupEnrollment[]>([]);
@@ -89,9 +88,7 @@ export default function ProfilePage() {
     handledPaymentRef.current = paymentStatus;
 
     if (paymentStatus === 'success') {
-      addToast('Абонемент успешно оплачен!', 'success');
-      loadData();
-      refreshSubscription();
+      addToast('Оплата успешно проведена!', 'success');
       refreshUser();
     }
 
@@ -105,7 +102,7 @@ export default function ProfilePage() {
     }
     const nextQuery = nextParams.toString();
     router.replace(nextQuery ? `/profile?${nextQuery}` : '/profile');
-  }, [router, addToast, refreshSubscription, refreshUser]);
+  }, [router, addToast, refreshUser]);
 
   useEffect(() => {
     if (user) {
@@ -120,15 +117,13 @@ export default function ProfilePage() {
 
   const loadData = async () => {
     try {
-      const [subs, bookingHistory, upcoming, myEnrollments, myOrders] = await Promise.all([
-        apiClient.users.getSubscriptions(),
+      const [bookingHistory, upcoming, myEnrollments, myOrders] = await Promise.all([
         apiClient.users.getBookingHistory(),
         apiClient.bookings.getMyUpcoming(),
         apiClient.groupEnrollments.getMyEnrollments(),
         user ? apiClient.orders.getMyOrders(user.id) : Promise.resolve([]),
       ]);
       const masterClassHistory = bookingHistory.filter((booking) => booking.eventId);
-      setSubscriptions(subs);
       setBookings(masterClassHistory);
       setUpcomingBookings(upcoming);
       setEnrollments(myEnrollments);
@@ -166,7 +161,7 @@ export default function ProfilePage() {
     checkTabsScroll();
     window.addEventListener('resize', checkTabsScroll);
     return () => window.removeEventListener('resize', checkTabsScroll);
-  }, [subscriptions, bookings, upcomingBookings, enrollments, orders]);
+  }, [bookings, upcomingBookings, enrollments, orders]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -332,23 +327,12 @@ export default function ProfilePage() {
             <h1 className={styles.userName}>{user.firstName} {user.lastName}</h1>
             <p className={styles.userEmail}>{user.email}</p>
             <div className={styles.profileStats}>
-              {activeSubscription ? (
-                <>
-                  <span className={`${styles.statChip} ${styles.active}`}>
-                    Абонемент активен
-                  </span>
-                  <span className={styles.statChip}>
-                    Баланс: {activeSubscription.remainingBalance.toFixed(0)} ₽
-                  </span>
-                  <span className={styles.statChip}>
-                    Скидка 10%
-                  </span>
-                </>
-              ) : (
-                <span className={styles.statChip}>
-                  Нет активного абонемента
-                </span>
-              )}
+              <span className={styles.statChip}>
+                Предстоящие: {upcomingBookings.length}
+              </span>
+              <span className={styles.statChip}>
+                Направления: {enrollments.filter(e => e.status === 'ACTIVE').length}
+              </span>
             </div>
           </div>
           <div className={styles.quickActions}>
@@ -362,9 +346,9 @@ export default function ProfilePage() {
             <button
               type="button"
               className={`${styles.quickActionButton} ${styles.secondary}`}
-              onClick={() => setActiveTabWithUrl('subscriptions')}
+              onClick={() => setActiveTabWithUrl('enrollments')}
             >
-              Абонемент
+              Направления
             </button>
           </div>
         </div>
@@ -465,7 +449,6 @@ export default function ProfilePage() {
             <div className={styles.mobileNav}>
               {([
                 { key: 'upcoming', label: 'Предстоящие', count: upcomingBookings.length },
-                { key: 'subscriptions', label: 'Абонемент', count: subscriptions.length },
                 { key: 'enrollments', label: 'Направления', count: enrollments.filter(e => e.status === 'ACTIVE').length },
                 { key: 'bookings', label: 'История', count: bookings.length },
                 { key: 'orders', label: 'Заказы', count: orders.length },
@@ -489,13 +472,6 @@ export default function ProfilePage() {
                 >
                   Предстоящие
                   <span className={styles.tabBadge}>{upcomingBookings.length}</span>
-                </button>
-                <button
-                  className={`${styles.tab} ${activeTab === 'subscriptions' ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTabWithUrl('subscriptions')}
-                >
-                  Абонемент
-                  <span className={styles.tabBadge}>{subscriptions.length}</span>
                 </button>
                 <button
                   className={`${styles.tab} ${activeTab === 'enrollments' ? styles.tabActive : ''}`}
@@ -580,65 +556,6 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              {activeTab === 'subscriptions' && (
-                <div className={styles.tabSection}>
-                  <div className={styles.tabSectionHeader}>
-                    <div>
-                      <h3 className={styles.tabSectionTitle}>Абонементы</h3>
-                      <p className={styles.tabSectionSubtitle}>Баланс и срок действия активных абонементов</p>
-                    </div>
-                  </div>
-                  <div className={styles.subscriptionNotice}>
-                    Новые абонементы оформляются через администратора студии.
-                  </div>
-                  <div className={styles.subscriptionsList}>
-                    {subscriptions.length === 0 ? (
-                      <div className={styles.emptyState}>
-                        <p>У вас пока нет абонементов</p>
-                        <p>Чтобы оформить новый абонемент, обратитесь к администратору.</p>
-                      </div>
-                  ) : (
-                    subscriptions.map((subscription) => {
-                      const totalBalance = subscription.totalBalance || 0;
-                      const remainingBalance = subscription.remainingBalance || 0;
-                      const balancePercent = totalBalance > 0
-                        ? Math.min(100, Math.round((remainingBalance / totalBalance) * 100))
-                        : 0;
-
-                      return (
-                        <div key={subscription.id} className={styles.listCard}>
-                          <div className={styles.listCardHeader}>
-                            <div>
-                              <h3 className={styles.listCardTitle}>
-                                {subscription.name}
-                              </h3>
-                              <div className={styles.balanceRow}>
-                                <div className={styles.balanceBlock}>
-                                  <span className={styles.balanceLabel}>Доступно</span>
-                                  <span className={styles.balanceValue}>{remainingBalance.toFixed(2)} ₽</span>
-                                </div>
-                                <div className={styles.balanceBlock}>
-                                  <span className={styles.balanceLabel}>Всего пополнено</span>
-                                  <span className={styles.balanceValue}>{totalBalance.toFixed(2)} ₽</span>
-                                </div>
-                              </div>
-                              <div className={styles.balanceBar}>
-                                <div className={styles.balanceFill} style={{ width: `${balancePercent}%` }} />
-                              </div>
-                            </div>
-                            {getStatusBadge(subscription.status)}
-                          </div>
-                          <div className={styles.listCardFooter}>
-                            <span>Действителен до: {subscription.expiresAt ? formatDate(subscription.expiresAt) : 'Бессрочный'}</span>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                  </div>
-                </div>
-              )}
-
               {activeTab === 'bookings' && (
                 <div className={styles.tabSection}>
                   <div className={styles.tabSectionHeader}>
@@ -668,9 +585,6 @@ export default function ProfilePage() {
                                 </span>
                                 <span className={styles.metaChip}>
                                   {booking.participantsCount} участник(ов)
-                                </span>
-                                <span className={styles.metaChip}>
-                                  {booking.paymentMethod === 'SUBSCRIPTION' ? 'Абонемент' : 'Оплата на месте'}
                                 </span>
                               </div>
                             </div>

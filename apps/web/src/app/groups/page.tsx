@@ -103,7 +103,7 @@ export default function GroupsPage() {
               <div>
                 <h2 className={styles.groupsTitle}>Выберите направление</h2>
                 <p className={styles.groupsSubtitle}>
-                  Это регулярные занятия по расписанию. Запись и оплата происходят через абонемент.
+                  Это регулярные занятия по расписанию. Условия записи уточняются у администратора студии.
                 </p>
               </div>
               <div className={styles.groupsMeta}>

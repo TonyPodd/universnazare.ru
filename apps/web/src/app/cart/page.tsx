@@ -13,7 +13,7 @@ import styles from './cart.module.css';
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
-  const { user, isAuthenticated, activeSubscription } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { addToast } = useToast();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -57,7 +57,7 @@ export default function CartPage() {
       // Проверяем, если это ошибка о недостатке средств
       if (errorMessage.includes('достаточным балансом') || errorMessage.includes('Недостаточно средств')) {
         addToast(
-          'Недостаточно средств на абонементе. Пополните баланс или выберите оплату при получении.',
+          'Недостаточно средств для оформления заказа. Выберите оплату при получении.',
           'warning',
           8000
         );
@@ -180,32 +180,6 @@ export default function CartPage() {
                         <div>
                           <div className={styles.paymentOptionTitle}>Оплата при получении</div>
                           <div className={styles.paymentOptionDesc}>Оплатите наличными или картой в мастерской</div>
-                        </div>
-                      </div>
-                    </label>
-
-                    <label className={`${styles.paymentOption} ${paymentMethod === PaymentMethod.SUBSCRIPTION ? styles.paymentOptionActive : ''}`}>
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value={PaymentMethod.SUBSCRIPTION}
-                        checked={paymentMethod === PaymentMethod.SUBSCRIPTION}
-                        onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                        disabled={!activeSubscription}
-                      />
-                      <div className={styles.paymentOptionContent}>
-                        <div>
-                          <div className={styles.paymentOptionTitle}>Оплата по абонементу</div>
-                          <div className={styles.paymentOptionDesc}>
-                            {activeSubscription
-                              ? `Баланс: ${activeSubscription.remainingBalance.toFixed(2)} ₽`
-                              : 'У вас нет активного абонемента'}
-                          </div>
-                          {activeSubscription && activeSubscription.remainingBalance < getTotalPrice() && (
-                            <div className={styles.paymentWarning}>
-                              Недостаточно средств (требуется {getTotalPrice()} ₽)
-                            </div>
-                          )}
                         </div>
                       </div>
                     </label>

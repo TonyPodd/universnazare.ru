@@ -23,7 +23,6 @@ export default function Header() {
   const profileLinks = [
     { href: '/profile', label: 'Мой профиль' },
     { href: '/profile?tab=upcoming', label: 'Предстоящие' },
-    { href: '/profile?tab=subscriptions', label: 'Абонемент' },
     { href: '/profile?tab=enrollments', label: 'Направления' },
     { href: '/profile?tab=bookings', label: 'История' },
     { href: '/profile?tab=orders', label: 'Заказы' },
