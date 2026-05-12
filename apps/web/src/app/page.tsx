@@ -8,11 +8,13 @@ import styles from './page.module.css';
 // Перезапрашивать данные каждые 10 секунд (ISR - Incremental Static Regeneration)
 export const revalidate = 10;
 
+const HOMEPAGE_UPCOMING_EVENTS_LIMIT = 12;
+
 async function getHomePageData() {
   try {
     const [news, events] = await Promise.all([
       apiClient.news.getPublished(),
-      apiClient.events.getUpcoming(5),
+      apiClient.events.getUpcoming(HOMEPAGE_UPCOMING_EVENTS_LIMIT),
     ]);
 
     return { news, events };
