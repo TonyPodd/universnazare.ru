@@ -16,7 +16,7 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ event, groupSessionId, onSuccess, onCancel }: BookingFormProps) {
-  const { user, isAuthenticated, activeSubscription } = useAuth();
+  const { user } = useAuth();
   const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
@@ -26,9 +26,7 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
   const [emailValid, setEmailValid] = useState<boolean | null>(null);
   const [emailTouched, setEmailTouched] = useState(false);
   const isGroupSession = !!groupSessionId;
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
-    isGroupSession ? PaymentMethod.SUBSCRIPTION : PaymentMethod.ON_SITE
-  );
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.ON_SITE);
 
   // Step 2 fields
   const [participants, setParticipants] = useState<BookingParticipant[]>([
@@ -42,10 +40,6 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
 
   const availableSeats = event.maxParticipants - event.currentParticipants;
   const totalPrice = event.price * participants.length;
-  const canUseSubscription = isGroupSession
-    ? (isAuthenticated && activeSubscription && activeSubscription.remainingBalance > 0)
-    : false;
-
   useEffect(() => {
     if (user) {
       setContactEmail(user.email);
@@ -77,9 +71,6 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
     if (!contactEmail || !validateEmail(contactEmail)) {
       setEmailTouched(true);
       setEmailValid(false);
-      return;
-    }
-    if (isGroupSession && !canUseSubscription) {
       return;
     }
     setStep(2);
@@ -179,7 +170,6 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
         contactEmail,
         paymentMethod,
         notes,
-        subscriptionId: paymentMethod === PaymentMethod.SUBSCRIPTION && activeSubscription ? activeSubscription.id : undefined,
       });
 
       addToast(
@@ -267,50 +257,23 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
 
             <div className={styles.formGroup}>
               <label>Способ оплаты *</label>
-              {isGroupSession ? (
-                <div className={styles.paymentInfo}>
-                  {canUseSubscription ? (
-                    <div className={styles.paymentOption}>
-                      <div className={styles.paymentHeader}>
-                        <span className={styles.paymentTitle}>Доступ подтверждён</span>
-                      </div>
-                      <div className={styles.paymentDetails}>
-                        Запись на занятие будет подтверждена автоматически
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={styles.paymentWarning}>
-                      <div>
-                        <strong>Нужен активный доступ</strong>
-                        <br />
-                        Обратитесь к администратору студии
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className={styles.paymentMethods}>
-                  <label className={`${styles.paymentRadio} ${paymentMethod === PaymentMethod.ON_SITE ? styles.paymentRadioActive : ''}`}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value={PaymentMethod.ON_SITE}
-                      checked={paymentMethod === PaymentMethod.ON_SITE}
-                      onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                      className={styles.radio}
-                    />
-                    <div className={styles.paymentContent}>
-                      <span className={styles.paymentTitle}>На месте</span>
-                    </div>
-                  </label>
-                </div>
-              )}
-
-              {!isGroupSession && !isAuthenticated && (
-                <div className={styles.hint}>
-                  Войдите в аккаунт, чтобы оформить запись
-                </div>
-              )}
+              <div className={styles.paymentMethods}>
+                <label className={`${styles.paymentRadio} ${paymentMethod === PaymentMethod.ON_SITE ? styles.paymentRadioActive : ''}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value={PaymentMethod.ON_SITE}
+                    checked={paymentMethod === PaymentMethod.ON_SITE}
+                    onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
+                    className={styles.radio}
+                  />
+                  <div className={styles.paymentContent}>
+                    <span className={styles.paymentTitle}>
+                      {isGroupSession ? 'У администратора' : 'На месте'}
+                    </span>
+                  </div>
+                </label>
+              </div>
             </div>
 
             <div className={styles.stepFooter}>
@@ -325,7 +288,6 @@ export default function BookingForm({ event, groupSessionId, onSuccess, onCancel
                 type="button"
                 onClick={handleContinueToStep2}
                 className={styles.primaryButton}
-                disabled={isGroupSession && !canUseSubscription}
               >
                 Продолжить
               </button>

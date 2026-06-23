@@ -14,6 +14,7 @@ import {
 import { GroupEnrollmentsService } from './group-enrollments.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/optional-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role, EnrollmentStatus } from '@prisma/client';
@@ -47,9 +48,9 @@ export class GroupEnrollmentsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(OptionalJwtAuthGuard)
   async create(@Request() req, @Body() dto: CreateEnrollmentDto) {
-    return this.enrollmentsService.create(req.user.id, dto);
+    return this.enrollmentsService.create(req.user?.id, dto);
   }
 
   @Get('my')

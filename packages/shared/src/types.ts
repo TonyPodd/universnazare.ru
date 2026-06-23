@@ -131,7 +131,7 @@ export interface Booking {
   userId?: string;
   eventId?: string; // Для мастер-классов
   groupSessionId?: string; // Для занятий направлений
-  subscriptionId?: string;
+  subscriptionId?: string | null;
   status: BookingStatus;
   participantsCount: number;
   totalPrice: number;
@@ -264,7 +264,7 @@ export enum EnrollmentStatus {
 // Зачисление пользователя в постоянную группу
 export interface GroupEnrollment {
   id: string;
-  userId: string;
+  userId?: string | null;
   groupId: string;
   subscriptionId?: string;
   status: EnrollmentStatus;

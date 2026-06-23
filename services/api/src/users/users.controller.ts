@@ -1,5 +1,6 @@
 import {
   Controller,
+  BadRequestException,
   Get,
   Post,
   Patch,
@@ -58,11 +59,8 @@ export class UsersController {
   }
 
   @Post('me/subscriptions/purchase')
-  async purchaseSubscription(
-    @Request() req,
-    @Body('typeId') typeId: string,
-  ) {
-    return this.usersService.purchaseSubscription(req.user.id, typeId);
+  async purchaseSubscription() {
+    throw new BadRequestException('Покупка абонемента на сайте отключена');
   }
 
   // ADMIN ENDPOINTS

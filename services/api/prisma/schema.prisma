@@ -164,7 +164,7 @@ enum SessionStatus {
 // Записи пользователей на постоянные направления (зачисление в группу)
 model GroupEnrollment {
   id             String           @id @default(uuid())
-  userId         String
+  userId         String?
   groupId        String
   subscriptionId String? // ID абонемента для оплаты занятий
   status         EnrollmentStatus @default(ACTIVE)
@@ -176,7 +176,7 @@ model GroupEnrollment {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   group        RegularGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
   bookings     Booking[] // Связанные записи на конкретные занятия

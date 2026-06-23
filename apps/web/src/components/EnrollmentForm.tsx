@@ -53,12 +53,6 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
     e.preventDefault();
     if (!group) return;
 
-    // Проверяем авторизацию
-    if (!isAuthenticated) {
-      setError('Необходимо войти в аккаунт для записи на направление');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
@@ -125,18 +119,10 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
                 <strong>Важно:</strong> Вы записываетесь на все занятия по расписанию, а не на одно занятие.
               </div>
             </div>
-          {!isAuthenticated ? (
-            <div className={styles.warningBox}>
-              <p>Необходимо войти в аккаунт</p>
-              <p>Для записи на направление нужна авторизация</p>
-              <a href="/login" className={styles.link}>Войти в аккаунт</a>
-            </div>
-          ) : (
-            <div className={styles.subscriptionInfo}>
-              <h4>Запись доступна</h4>
-              <p>После записи оплата за занятия производится у администратора студии.</p>
-            </div>
-          )}
+          <div className={styles.subscriptionInfo}>
+            <h4>Запись доступна без регистрации</h4>
+            <p>После записи оплата за занятия производится у администратора студии.</p>
+          </div>
 
           <div className={styles.section}>
             <h4>Контактная информация</h4>
@@ -192,11 +178,9 @@ export default function EnrollmentForm({ group, onClose }: EnrollmentFormProps) 
             <button type="button" onClick={onClose} className={styles.cancelButton}>
               Отмена
             </button>
-            {isAuthenticated && (
-              <button type="submit" disabled={loading} className={styles.submitButton}>
-                {loading ? 'Записываем...' : 'Записаться на направление'}
-              </button>
-            )}
+            <button type="submit" disabled={loading} className={styles.submitButton}>
+              {loading ? 'Записываем...' : 'Записаться на направление'}
+            </button>
           </div>
         </form>
       </div>

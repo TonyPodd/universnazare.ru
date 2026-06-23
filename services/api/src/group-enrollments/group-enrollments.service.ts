@@ -11,7 +11,7 @@ export class GroupEnrollmentsService {
     private emailService: EmailService,
   ) {}
 
-  async create(userId: string, dto: CreateEnrollmentDto) {
+  async create(userId: string | undefined, dto: CreateEnrollmentDto) {
     // Проверяем существование группы
     const group = await this.prisma.regularGroup.findUnique({
       where: { id: dto.groupId },
@@ -25,12 +25,11 @@ export class GroupEnrollmentsService {
       throw new BadRequestException('Направление неактивно');
     }
 
-    // Проверяем, что пользователь уже не записан в эту группу
     const existingEnrollment = await this.prisma.groupEnrollment.findFirst({
       where: {
-        userId,
         groupId: dto.groupId,
         status: EnrollmentStatus.ACTIVE,
+        ...(userId ? { userId } : { contactEmail: dto.contactEmail }),
       },
     });
 
@@ -42,7 +41,7 @@ export class GroupEnrollmentsService {
     // Оплата занятий направления выполняется у администратора.
     const enrollment = await this.prisma.groupEnrollment.create({
       data: {
-        userId,
+        ...(userId ? { userId } : {}),
         groupId: dto.groupId,
         participants: dto.participants as any,
         contactEmail: dto.contactEmail,
@@ -57,7 +56,7 @@ export class GroupEnrollmentsService {
     });
 
     // Автоматически создаем bookings для всех будущих запланированных занятий
-    await this.createBookingsForEnrollment(enrollment.id, userId, dto.groupId);
+    await this.createBookingsForEnrollment(enrollment.id, dto.groupId);
 
     const nextSession = await this.prisma.groupSession.findFirst({
       where: {
@@ -131,10 +130,10 @@ export class GroupEnrollmentsService {
       where.OR = [
         { contactEmail: { contains: search, mode: 'insensitive' as const } },
         { group: { name: { contains: search, mode: 'insensitive' as const } } },
-        { user: { firstName: { contains: search, mode: 'insensitive' as const } } },
-        { user: { lastName: { contains: search, mode: 'insensitive' as const } } },
-        { user: { email: { contains: search, mode: 'insensitive' as const } } },
-        { user: { phone: { contains: search, mode: 'insensitive' as const } } },
+        { user: { is: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+        { user: { is: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+        { user: { is: { email: { contains: search, mode: 'insensitive' as const } } } },
+        { user: { is: { phone: { contains: search, mode: 'insensitive' as const } } } },
       ];
     }
 
@@ -369,7 +368,7 @@ export class GroupEnrollmentsService {
   }
 
   // Создать bookings для enrollment на все будущие занятия
-  async createBookingsForEnrollment(enrollmentId: string, userId: string, groupId: string) {
+  async createBookingsForEnrollment(enrollmentId: string, groupId: string) {
     const enrollment = await this.prisma.groupEnrollment.findUnique({
       where: { id: enrollmentId },
       include: { group: true, subscription: true },
@@ -405,14 +404,14 @@ export class GroupEnrollmentsService {
       const existingBooking = await this.prisma.booking.findFirst({
         where: {
           groupSessionId: session.id,
-          userId,
+          groupEnrollmentId: enrollmentId,
         },
       });
 
       if (!existingBooking) {
         await this.prisma.booking.create({
           data: {
-            userId,
+            ...(enrollment.userId ? { userId: enrollment.userId } : {}),
             groupSessionId: session.id,
             groupEnrollmentId: enrollmentId,
             status: 'PENDING',

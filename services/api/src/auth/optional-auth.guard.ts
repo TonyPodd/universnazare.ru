@@ -3,16 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class OptionalJwtAuthGuard extends AuthGuard('jwt') {
-  // Override handleRequest to not throw an error if no token is provided
+  // Public endpoints can still receive stale/invalid tokens from the browser.
+  // Treat auth failures as guest access, but keep the user when token is valid.
   handleRequest(err, user) {
-    // If no user and no error, return null (guest user)
-    if (!user && !err) {
-      return null;
-    }
-    // If there's an error, throw it
-    if (err) {
-      throw err;
-    }
-    return user;
+    return err ? null : user || null;
   }
 }
