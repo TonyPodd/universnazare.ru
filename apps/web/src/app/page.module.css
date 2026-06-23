@@ -162,41 +162,36 @@
 
 .sectionBlock {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   isolation: isolate;
 }
 
 .sectionDecorEasel {
   width: 112px;
-  top: -10px;
+  top: -18px;
   right: 24px;
-  opacity: 0.38;
-  filter: saturate(1.08) contrast(1.04);
+  opacity: 0.22;
 }
 
-
 .sectionDecorDome {
-  width: 104px;
-  left: 26px;
-  top: 56px;
-  opacity: 0.34;
-  filter: saturate(1.08) contrast(1.04);
+  width: 92px;
+  left: 18px;
+  top: 42px;
+  opacity: 0.18;
 }
 
 .sectionDecorStarsPair {
   width: 84px;
-  top: -10px;
+  top: -20px;
   left: 26px;
-  opacity: 0.34;
-  filter: saturate(1.08) contrast(1.04);
+  opacity: 0.18;
 }
 
 .sectionDecorMoon {
-  width: 78px;
-  right: 34px;
-  bottom: 18px;
-  opacity: 0.28;
-  filter: saturate(1.08) contrast(1.04);
+  width: 70px;
+  right: 30px;
+  bottom: 26px;
+  opacity: 0.14;
 }
 
 @media (max-width: 640px) {
